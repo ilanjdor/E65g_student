@@ -270,14 +270,14 @@ struct Grid {
  */
 // ** your problem 10.1 answer goes here.
 /*
- 
+ When calling the neighbors function, "of" is needed to name the input argument.
  */
 /*:
  2. Explain in one sentence when you would use the word `cell` in relation to this function
  */
 // ** your problem 10.2 answer goes here.
 /*
- 
+ To refer to the input argument from within neighbors' function code.
  */
 // An extension of Grid to add a function for computing the positions
 // of the 8 neighboring cells of a given cell
@@ -287,7 +287,8 @@ extension Grid {
     func neighbors(of cell: Cell) -> [Position] {
         return Grid.offsets.map {
             // ** Your Problem 9 Code goes here! replace the following line **
-            return Position(row: $0, col: $1)
+            return Position(row: (cell.position.row + ($0).row + self.rows) % self.rows,
+                            col: (cell.position.col + ($0).col + self.cols) % self.cols)
         }
     }
 }
