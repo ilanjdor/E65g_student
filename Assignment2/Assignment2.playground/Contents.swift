@@ -300,21 +300,21 @@ extension Grid {
  */
 // ** Your Problem 11.1 answer goes here **
 /*
- 
+ Count the elements in an array of things and then add that count to a subtotal.
  */
 /*:
  2. what is the return type of reduce2?
  */
 // ** Your Problem 11.2 answer goes here **
 /*
- 
+ Int
  */
 /*:
  3. why is there no T parameter here as in map2 above?
  */
 // ** Your Problem 11.3 answer goes here **
 /*
- 
+ Because a function that strictly counts array contents doesn't need to know the type of whatever thing it is counting.
  */
 
 // A function which is useful for counting things in an array of arrays of things
@@ -340,7 +340,7 @@ extension Grid {
     var numLiving: Int {
         return reduce2(self.rows, self.cols) { total, row, col in
             // ** Replace the following line with your Problem 12 code
-            return 0
+            return self.cells[row][col].state == .alive ? total + 1 : total
         }
     }
 }
@@ -372,15 +372,15 @@ extension Grid {
 // Code to initialize a 10x10 grid, set up every cell in the grid
 // and randomly turn each cell on or off.  Uncomment following 4 lines
 // and replace `.empty` with your one line of code
-//var grid = Grid(10, 10) { row, col in 
-//   // ** Your Problem 13 code goes here! **
-//   .empty
-//}
-//grid.numLiving
+var grid = Grid(10, 10) { row, col in
+   // ** Your Problem 13 code goes here! **
+    arc4random_uniform(3) == 2 ? .alive : .empty
+}
+grid.numLiving
 
 // ** Your Problem 13 comment goes here! **
 /*
- 
+ Simulating randomly, for 100 times, a discrete uniform distribution over 3 numbers should result in an approximate 1/3 chance of landing on any particular number in it, but that won't always happen exactly, much like flipping a fair coin 100 times won't always result in an outcome of exactly 50 heads.
  */
 /*:
  ## Problem 14:
