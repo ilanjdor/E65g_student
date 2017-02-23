@@ -270,7 +270,7 @@ struct Grid {
  */
 // ** your problem 10.1 answer goes here.
 /*
- When calling the neighbors function, "of" is needed to name the input argument.
+ When calling the neighbors function, "of" is needed to name the input argument because every instance of Cell has different neighbors.
  */
 /*:
  2. Explain in one sentence when you would use the word `cell` in relation to this function
@@ -380,7 +380,7 @@ grid.numLiving
 
 // ** Your Problem 13 comment goes here! **
 /*
- Simulating randomly, for 100 times, a discrete uniform distribution over 3 numbers should result in an approximate 1/3 chance of landing on any particular number in it, but that won't always happen exactly, much like flipping a fair coin 100 times won't always result in an outcome of exactly 50 heads.
+ Simulating randomly, for 100 times, a discrete uniform distribution over 3 numbers should result in an approximate 1/3 chance of landing on any particular number in it, but that won't always happen exactly, for the same reason that flipping a fair coin 100 times won't always result in an outcome of exactly 50 heads.
  */
 /*:
  ## Problem 14:
@@ -406,11 +406,13 @@ extension Grid {
     subscript (row: Int, col: Int) -> Cell? {
         get {
             // ** Your Problem 14 `get` code goes here! replace the following line **
-            return nil
+            guard row >= 0 && row < self.rows && col >= 0 && col < self.cols else { return nil }
+            return self.cells[row][col]
         }
         set {
             // ** Your Problem 14 `set` code goes here! replace the following line **
-            return
+            guard row >= 0 && row < self.rows && col >= 0 && col < self.cols else { return }
+            self.cells[row][col] = newValue!
         }
     }
 }
@@ -423,7 +425,7 @@ extension Grid {
  */
 // Problem 15.1 answer goes here
 /*
- 
+ Cell
  */
 /*:
  2. what the type of `self[row,col]`?
@@ -456,7 +458,7 @@ extension Grid {
 
 // Problem 16 comment goes here
 /*
- 
+ An Int equal to the number of living neighbors of cell.
  */
 
 /*:
@@ -472,7 +474,7 @@ extension Grid {
 
 // Problem 17 comment goes here
 /*
- 
+ $1 refers to the current Position in self.neighbors(of: cell), the latter being of type [Position].
  */
 
 /*:
@@ -497,8 +499,7 @@ extension Grid {
             .reduce(0) {
                 guard let neighborCell = self[$1.row, $1.col] else { return $0 }
                 // ** Problem 18 code goes here!  replace the following 2 lines **
-                neighborCell
-                return $0
+                return $0 + (neighborCell.state == .alive ? 1 : 0)
         }
     }
 }
