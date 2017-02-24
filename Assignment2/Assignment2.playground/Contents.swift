@@ -411,7 +411,7 @@ extension Grid {
         }
         set {
             // ** Your Problem 14 `set` code goes here! replace the following line **
-            guard row >= 0 && row < self.rows && col >= 0 && col < self.cols else { return }
+            guard row >= 0 && row < self.rows && col >= 0 && col < self.cols && newValue != nil else { return }
             self.cells[row][col] = newValue!
         }
     }
@@ -432,13 +432,14 @@ extension Grid {
  */
 // Problem 15.2 answer goes here
 /*
- 
+ Cell?
  */
 /*:
  3. why those two types are different?
  */
 // Problem 15.3 comment goes here
 /*
+ Because while one can conceivably call livingNeighbors on any valid Cell object, even one that isn't in the Grid, we will want to guard against returning a count of living neighbors for a cell that isn't in the Grid.
  
  */
 /*:
@@ -446,7 +447,7 @@ extension Grid {
  */
 // Problem 15.4 comment goes here
 /*
- 
+ A neighbor of cell has a Position whose row and/or col is invalid (e.g., row is not both >= 0 and < Grid.rows)
  */
 /*:
  ## Problem 16:
@@ -458,7 +459,7 @@ extension Grid {
 
 // Problem 16 comment goes here
 /*
- An Int equal to the number of living neighbors of cell.
+ An Int equal to the number of living neighbors (i.e., neighborCell.state = .alive) of cell.
  */
 
 /*:
@@ -474,7 +475,7 @@ extension Grid {
 
 // Problem 17 comment goes here
 /*
- $1 refers to the current Position in self.neighbors(of: cell), the latter being of type [Position].
+ $1 refers to the neighbor of cell that is currently being processed by the reduce function.
  */
 
 /*:
