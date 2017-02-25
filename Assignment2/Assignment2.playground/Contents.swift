@@ -530,7 +530,12 @@ extension Grid {
 extension Grid {
     func nextState(of cell: Cell) -> CellState {
         // ** Problem 19 code goes here! Replace the following line **
-        return .empty
+        switch livingNeighbors(of: cell) {
+        case 2 where cell.state.isAlive, 3:
+            return .alive
+        default:
+            return .empty
+        }
     }
 }
 /*:
@@ -543,9 +548,11 @@ extension Grid {
 // An extension to grid to jump to the next state of Conway's GoL
 extension Grid {
     func next() -> Grid {
-        let nextGrid = Grid(rows, cols)
+        var nextGrid = Grid(rows, cols)
         map2(self.rows, self.cols) { (row, col)  in
             // ** Problem 20 code goes here! **
+            nextGrid.cells[row][col].state = nextState(of: self.cells[row][col])
+        //map2(rows, cols) { row, col in cells[row][col].state = cellInitializer(row, col)}
         }
         return nextGrid
     }
@@ -560,7 +567,7 @@ extension Grid {
 
 // ** Your Problem 21 comment goes here! **
 /*
- 
+ The existing Grid but with each cell's state advanced by a single cycle.
  */
 /*:
  ## Problem 22:
@@ -568,8 +575,8 @@ extension Grid {
  Verify that the number living is still in the neighborhood of 33
  If it is not please debug all your code
  */
-//grid = grid.next()
-//grid.numLiving
+grid = grid.next()
+grid.numLiving
 /*:
  It works!
  ## For Fun
