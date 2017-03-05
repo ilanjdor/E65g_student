@@ -178,7 +178,7 @@ func map2<T>(_ rows: Int, _ cols: Int, transform: (Int, Int) -> T) -> [[T]] {
 */
 // ** Your Problem 5 comment goes here! **
 /*
- They represent the relative positions of the neighbors of a given cell.
+ They represent the positions, relative to any particular cell, of the neighbors of said particular cell.
  */
 /*:
  ## Problem 6:
@@ -552,7 +552,6 @@ extension Grid {
         map2(self.rows, self.cols) { (row, col)  in
             // ** Problem 20 code goes here! **
             nextGrid.cells[row][col].state = nextState(of: self.cells[row][col])
-        //map2(rows, cols) { row, col in cells[row][col].state = cellInitializer(row, col)}
         }
         return nextGrid
     }
@@ -567,7 +566,7 @@ extension Grid {
 
 // ** Your Problem 21 comment goes here! **
 /*
- The existing Grid but with each cell's state advanced by a single cycle.
+ The existing Grid but with each cell's state advanced by a single 'nextState' transition cycle.
  */
 /*:
  ## Problem 22:
@@ -582,23 +581,23 @@ grid.numLiving
  ## For Fun
  Once you have everything above working, uncomment and think about the following lines of code
  */
-//func gliderInitializer(row: Int, col: Int) -> CellState {
-//    switch (row, col) {
-//    case (0, 1), (1, 2), (2, 0), (2, 1), (2, 2): return .alive
-//    default: return .empty
-//    }
-//}
-//
-//grid = Grid(10, 10, cellInitializer: gliderInitializer)
-//grid.numLiving
-//grid = grid.next()
-//grid.numLiving
-//grid = grid.next()
-//grid.numLiving
-//grid = grid.next()
-//grid.numLiving
-//grid = grid.next()
-//grid.numLiving
-//grid = grid.next()
-//grid.numLiving
+func gliderInitializer(row: Int, col: Int) -> CellState {
+    switch (row, col) {
+    case (0, 1), (1, 2), (2, 0), (2, 1), (2, 2): return .alive
+    default: return .empty
+    }
+}
+
+grid = Grid(10, 10, cellInitializer: gliderInitializer)
+grid.numLiving
+grid = grid.next()
+grid.numLiving
+grid = grid.next()
+grid.numLiving
+grid = grid.next()
+grid.numLiving
+grid = grid.next()
+grid.numLiving
+grid = grid.next()
+grid.numLiving
 let theEnd = "The End"
