@@ -1,4 +1,4 @@
-//
+ //
 //  Grid.swift
 //
 import Foundation
@@ -22,13 +22,42 @@ public func positionSequence (from: Position, to: Position) -> PositionSequence 
         .flatMap { $0 }
 }
 
-public enum CellState {
-    case alive, empty, born, died
+ public enum CellState : String {
+    case alive = "alive"
+    case empty = "empty"
+    case born = "born"
+    case died = "died"
     
     public var isAlive: Bool {
         switch self {
         case .alive, .born: return true
         default: return false
+        }
+    }
+    
+    public func description() -> String {
+        switch self {
+            case .alive:
+                return CellState.alive.rawValue
+            case .empty:
+                return CellState.empty.rawValue
+            case .born:
+                return CellState.born.rawValue
+            case .died:
+                return CellState.died.rawValue
+        }
+    }
+
+    public func allValues() -> [String] {
+        return ["alive", "empty", "born", "died"]
+    }
+    
+    public func toggle(value: CellState) -> CellState {
+        switch value {
+            case .empty, .died:
+                return .alive
+            case .alive, .born:
+                return .empty
         }
     }
 }
