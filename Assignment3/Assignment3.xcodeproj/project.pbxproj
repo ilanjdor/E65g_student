@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		72CE323E1E7A4D0000BF9D89 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CE323D1E7A4D0000BF9D89 /* GridView.swift */; };
 		FB6A68551E6CA1CA0082EFF6 /* Assignment3.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FB6A68541E6CA1CA0082EFF6 /* Assignment3.rtf */; };
 		FB6A68571E6CA3040082EFF6 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6A68561E6CA3040082EFF6 /* Grid.swift */; };
 		FBAD2DE91E2BE34F008207C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAD2DE81E2BE34F008207C0 /* AppDelegate.swift */; };
@@ -18,6 +19,7 @@
 
 /* Begin PBXFileReference section */
 		72CE323C1E79DA4600BF9D89 /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
+		72CE323D1E7A4D0000BF9D89 /* GridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		FB6A68541E6CA1CA0082EFF6 /* Assignment3.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Assignment3.rtf; sourceTree = "<group>"; };
 		FB6A68561E6CA3040082EFF6 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
 		FB6A68581E6CAB270082EFF6 /* NewGrid.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = NewGrid.playground; path = Assignment3/NewGrid.playground; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 			children = (
 				FBAD2DE81E2BE34F008207C0 /* AppDelegate.swift */,
 				FBAD2DEA1E2BE34F008207C0 /* ViewController.swift */,
+				72CE323D1E7A4D0000BF9D89 /* GridView.swift */,
 				FBAD2DEC1E2BE34F008207C0 /* Main.storyboard */,
 				FBAD2DEF1E2BE34F008207C0 /* Assets.xcassets */,
 				FBAD2DF11E2BE34F008207C0 /* LaunchScreen.storyboard */,
@@ -152,6 +155,7 @@
 			files = (
 				FBAD2DEB1E2BE34F008207C0 /* ViewController.swift in Sources */,
 				FBAD2DE91E2BE34F008207C0 /* AppDelegate.swift in Sources */,
+				72CE323E1E7A4D0000BF9D89 /* GridView.swift in Sources */,
 				FB6A68571E6CA3040082EFF6 /* Grid.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
