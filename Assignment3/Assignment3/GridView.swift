@@ -17,7 +17,7 @@ import UIKit
     @IBInspectable var diedColor = UIColor.brown
     @IBInspectable var gridColor = UIColor.cyan
     
-    @IBInspectable var gridWidth = CGFloat(20)
+    @IBInspectable var gridWidth = CGFloat(2)
     
     var grid : (Grid) {
         get {
