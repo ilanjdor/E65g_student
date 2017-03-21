@@ -113,10 +113,7 @@ extension Grid: Sequence {
             let previous:  GridHistory?
             
             static func == (lhs: GridHistory, rhs: GridHistory) -> Bool {
-                guard lhs.positions.count == rhs.positions.count else { return false }
-                let zipped = zip(lhs.positions, rhs.positions)
-                for pair in zipped { if pair.0.row != pair.1.row || pair.0.col != pair.1.col { return false } }
-                return true
+                return lhs.positions.elementsEqual(rhs.positions, by: ==)
             }
             
             init(_ positions: [Position], _ previous: GridHistory? = nil) {

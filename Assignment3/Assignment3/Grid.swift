@@ -1,4 +1,4 @@
- //
+//
 //  Grid.swift
 //
 import Foundation
@@ -22,42 +22,13 @@ public func positionSequence (from: Position, to: Position) -> PositionSequence 
         .flatMap { $0 }
 }
 
- public enum CellState : String {
-    case alive = "alive"
-    case empty = "empty"
-    case born = "born"
-    case died = "died"
+public enum CellState {
+    case alive, empty, born, died
     
     public var isAlive: Bool {
         switch self {
         case .alive, .born: return true
         default: return false
-        }
-    }
-    
-    public func description() -> String {
-        switch self {
-            case .alive:
-                return CellState.alive.rawValue
-            case .empty:
-                return CellState.empty.rawValue
-            case .born:
-                return CellState.born.rawValue
-            case .died:
-                return CellState.died.rawValue
-        }
-    }
-
-    public func allValues() -> [String] {
-        return ["alive", "empty", "born", "died"]
-    }
-    
-    public func toggle(value: CellState) -> CellState {
-        switch value {
-            case .empty, .died:
-                return .alive
-            case .alive, .born:
-                return .empty
         }
     }
 }
@@ -152,10 +123,7 @@ extension Grid: Sequence {
             let previous:  GridHistory?
             
             static func == (lhs: GridHistory, rhs: GridHistory) -> Bool {
-                guard lhs.positions.count == rhs.positions.count else { return false }
-                let zipped = zip(lhs.positions, rhs.positions)
-                for pair in zipped { if pair.0.row != pair.1.row || pair.0.col != pair.1.col { return false } }
-                return true
+                return lhs.positions.elementsEqual(rhs.positions, by: ==)
             }
             
             init(_ positions: [Position], _ previous: GridHistory? = nil) {
