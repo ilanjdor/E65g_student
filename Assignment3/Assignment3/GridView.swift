@@ -58,59 +58,47 @@ import UIKit
                 path.fill()
             }
          }
-         let lineWidth: CGFloat = 2.0
-         
-        //create the path
-        (0 ... self.size).forEach { i in
-            let horizontalPath = UIBezierPath()
-            var start = CGPoint(
-                x: rect.origin.x,
-                y: rect.origin.y + (CGFloat(i) * size.height)
+
+        (0 ... self.size).forEach {
+            drawLine(
+                start: CGPoint(
+                    x: rect.origin.x + (CGFloat($0) * size.width),
+                    y: rect.origin.y
+                ),
+                end: CGPoint(
+                    x: rect.origin.x + (CGFloat($0) * size.width),
+                    y: rect.origin.y + rect.size.height
+                )
             )
-            var end = CGPoint(
-                x: rect.origin.x + rect.size.width,
-                y: rect.origin.y + (CGFloat(i) * size.height)
+            drawLine(
+                start: CGPoint(
+                    x: rect.origin.x,
+                    y: rect.origin.y + (CGFloat($0) * size.height)
+                ),
+                end: CGPoint(
+                    x: rect.origin.x + rect.size.width,
+                    y: rect.origin.y + (CGFloat($0) * size.height)
+                )
             )
-            
-            //set the path's line width
-            horizontalPath.lineWidth = lineWidth
-            
-            //move the initial point of the path
-            //to the start of the horizontal stroke
-            horizontalPath.move(to: start)
-            
-            //add a point to the path at the end of the stroke
-            horizontalPath.addLine(to: end)
-            
-            //draw the stroke
-            gridColor.setStroke()
-            horizontalPath.stroke()
-        
-            //create the path
-            let verticalPath = UIBezierPath()
-            start = CGPoint(
-                x: rect.origin.x + (CGFloat(i) * size.width),
-                y: rect.origin.y
-            )
-            end = CGPoint(
-                x: rect.origin.x + (CGFloat(i) * size.width),
-                y: rect.origin.y + rect.size.height
-            )
-            
-            //set the path's line width
-            verticalPath.lineWidth = lineWidth
-            
-            //move the initial point of the path
-            //to the start of the vertical stroke
-            verticalPath.move(to: start)
-            
-            //add a point to the path at the end of the stroke
-            verticalPath.addLine(to: end)
-            
-            //draw the stroke
-            gridColor.setStroke()
-            verticalPath.stroke()
         }
+    }
+    
+    func drawLine(start:CGPoint, end: CGPoint) {
+        let path = UIBezierPath()
+        
+        //set the path's line width to the height of the stroke
+        path.lineWidth = 2.0
+        
+        //move the initial point of the path
+        //to the start of the horizontal stroke
+        path.move(to: start)
+        
+        //add a point to the path at the end of the stroke
+        path.addLine(to: end)
+        
+        //draw the stroke
+        gridColor.setStroke()
+        path.stroke()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
