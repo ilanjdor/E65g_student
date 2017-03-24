@@ -10,7 +10,12 @@ import UIKit
 
 @IBDesignable class GridView: UIView {
 
-    @IBInspectable var size = 20
+    @IBInspectable var size: Int = 20 {
+        didSet {
+            self.grid = Grid(self.size, self.size)
+        }
+    }
+
     @IBInspectable var livingColor = UIColor.blue
     @IBInspectable var emptyColor = UIColor.red
     @IBInspectable var bornColor = UIColor.green
@@ -19,11 +24,19 @@ import UIKit
     
     @IBInspectable var gridWidth = CGFloat(2)
     
-    var grid : (Grid) {
-        get {
-            return Grid(size, size)
-        }
+    var grid = Grid(0, 0)
+    /*override init(frame: CGRect) {
+        self.grid = Grid(size, size)
+        
+        super.init(frame: frame)
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        grid = Grid(size, size)
+        
+        super.init(coder: aDecoder)
+        //fatalError("init(coder:) has not been implemented")
+    }*/
     
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -124,7 +137,17 @@ import UIKit
             || lastTouchedPosition?.col != pos.col
             else { return pos }
         
+        lastTouchedPosition = pos
+        
         //grid[pos.row][pos.col] = grid[pos.row][pos.col] ? false : true
+        
+        if let lastTouchedPosition = lastTouchedPosition {
+            let gridPosition = grid[lastTouchedPosition]
+            grid[lastTouchedPosition] = gridPosition.toggle(value: gridPosition)
+        }
+        
+        //grid[(2,2)] = .alive
+        
         setNeedsDisplay()
         return pos
     }
@@ -132,10 +155,10 @@ import UIKit
     func convert(touch: UITouch) -> Position {
         let touchY = touch.location(in: self).y
         let gridHeight = frame.size.height
-        let row = touchY / gridHeight * CGFloat(3)
+        let row = touchY / gridHeight * CGFloat(self.size)
         let touchX = touch.location(in: self).x
         let gridWidth = frame.size.width
-        let col = touchX / gridWidth * CGFloat(3)
+        let col = touchX / gridWidth * CGFloat(self.size)
         let position = (row: Int(row), col: Int(col))
         return position
     }

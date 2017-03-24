@@ -28,6 +28,8 @@ public enum CellState : String {
     case born = "born"
     case died = "died"
     
+    //alternatively: case alive, empty, born, died
+    
     public var isAlive: Bool {
         switch self {
         case .alive, .born: return true
@@ -46,9 +48,10 @@ public enum CellState : String {
         case .died:
             return CellState.died.rawValue
         }
+        //alternatively: return self.rawValue
     }
     
-    static func allValues() -> [CellState] {
+    public static func allValues() -> [CellState] {
         return [.alive, .empty, .born, .died]
     }
     
