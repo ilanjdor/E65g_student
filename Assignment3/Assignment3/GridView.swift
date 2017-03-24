@@ -25,18 +25,6 @@ import UIKit
     @IBInspectable var gridWidth = CGFloat(2)
     
     var grid = Grid(0, 0)
-    /*override init(frame: CGRect) {
-        self.grid = Grid(size, size)
-        
-        super.init(frame: frame)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        grid = Grid(size, size)
-        
-        super.init(coder: aDecoder)
-        //fatalError("init(coder:) has not been implemented")
-    }*/
     
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -126,7 +114,6 @@ import UIKit
         lastTouchedPosition = nil
     }
     
-    // Updated since class
     typealias Position = (row: Int, col: Int)
     var lastTouchedPosition: Position?
     
@@ -139,26 +126,22 @@ import UIKit
         
         lastTouchedPosition = pos
         
-        //grid[pos.row][pos.col] = grid[pos.row][pos.col] ? false : true
-        
         if let lastTouchedPosition = lastTouchedPosition {
             let gridPosition = grid[lastTouchedPosition]
             grid[lastTouchedPosition] = gridPosition.toggle(value: gridPosition)
         }
-        
-        //grid[(2,2)] = .alive
         
         setNeedsDisplay()
         return pos
     }
     
     func convert(touch: UITouch) -> Position {
-        let touchY = touch.location(in: self).y
-        let gridHeight = frame.size.height
-        let row = touchY / gridHeight * CGFloat(self.size)
         let touchX = touch.location(in: self).x
         let gridWidth = frame.size.width
-        let col = touchX / gridWidth * CGFloat(self.size)
+        let row = touchX / gridWidth * CGFloat(self.size)
+        let touchY = touch.location(in: self).y
+        let gridHeight = frame.size.height
+        let col = touchY / gridHeight * CGFloat(self.size)
         let position = (row: Int(row), col: Int(col))
         return position
     }

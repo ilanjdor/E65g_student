@@ -53,13 +53,32 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TVU-9I-nzs">
+                                <rect key="frame" x="37" y="160" width="50" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="R5f-hy-7fc"/>
+                                    <constraint firstAttribute="height" constant="20" id="jd0-XZ-GGx"/>
+                                </constraints>
+                                <state key="normal" title="Step"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBorder" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="mc7-Az-TXU" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.8" priority="750" id="42U-hj-a7O"/>
                             <constraint firstItem="mc7-Az-TXU" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.8" priority="750" id="5eM-4J-9UT"/>
                             <constraint firstItem="mc7-Az-TXU" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="HZy-TT-fuY"/>
+                            <constraint firstItem="TVU-9I-nzs" firstAttribute="leading" secondItem="mc7-Az-TXU" secondAttribute="leading" id="V7L-gk-Paa"/>
                             <constraint firstItem="mc7-Az-TXU" firstAttribute="width" relation="lessThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.8" id="akl-3J-2jP"/>
+                            <constraint firstItem="mc7-Az-TXU" firstAttribute="top" secondItem="TVU-9I-nzs" secondAttribute="bottom" constant="3.5" id="mWn-E7-bcs"/>
                             <constraint firstItem="mc7-Az-TXU" firstAttribute="height" relation="lessThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.8" id="uj2-0N-GSU"/>
                             <constraint firstItem="mc7-Az-TXU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="vIz-sy-xcx"/>
                         </constraints>
