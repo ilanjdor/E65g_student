@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var myGrid: GridView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -20,6 +22,11 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-
+    @IBAction func advanceGrid(_ sender: Any) {
+        myGrid?.grid = (myGrid?.grid.next())!
+        if (myGrid?.grid) != nil {
+            myGrid.setNeedsDisplay()
+        }
+    }
 }
 

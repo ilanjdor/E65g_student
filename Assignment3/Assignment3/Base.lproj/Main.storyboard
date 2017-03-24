@@ -31,19 +31,19 @@
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="size">
-                                        <integer key="value" value="10"/>
+                                        <integer key="value" value="20"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="livingColor">
                                         <color key="value" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="emptyColor">
-                                        <color key="value" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="value" red="0.50196081400000003" green="0.50196081400000003" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bornColor">
                                         <color key="value" red="0.0" green="1" blue="0.0" alpha="0.60137392241379306" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="diedColor">
-                                        <color key="value" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="value" red="0.50196081400000003" green="0.50196081400000003" blue="0.50196081400000003" alpha="0.59552801724137927" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="gridColor">
                                         <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -69,6 +69,9 @@
                                         <integer key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="advanceGrid:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bLL-VT-Wct"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -83,6 +86,9 @@
                             <constraint firstItem="mc7-Az-TXU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="vIz-sy-xcx"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="myGrid" destination="mc7-Az-TXU" id="FKs-BS-E69"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
