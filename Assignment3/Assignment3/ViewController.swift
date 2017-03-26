@@ -23,10 +23,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func advanceGrid(_ sender: Any) {
-        myGrid?.grid = (myGrid?.grid.next())!
-        if (myGrid?.grid) != nil {
-            myGrid.setNeedsDisplay()
-        }
+        myGrid.next()
     }
 }
 

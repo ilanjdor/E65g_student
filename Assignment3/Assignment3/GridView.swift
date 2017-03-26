@@ -102,6 +102,11 @@ import UIKit
         path.stroke()
     }
     
+    func next() {
+        grid = grid.next()
+        setNeedsDisplay()
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         lastTouchedPosition = process(touches: touches)
     }

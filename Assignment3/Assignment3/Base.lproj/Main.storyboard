@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -20,11 +20,11 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mc7-Az-TXU" customClass="GridView" customModule="Assignment3" customModuleProvider="target">
-                                <rect key="frame" x="37.5" y="183.5" width="300" height="300"/>
+                                <rect key="frame" x="32" y="156" width="256" height="256"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="mc7-Az-TXU" secondAttribute="height" multiplier="1:1" id="07s-Ol-slS"/>
@@ -54,10 +54,9 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TVU-9I-nzs">
-                                <rect key="frame" x="37" y="160" width="50" height="20"/>
+                                <rect key="frame" x="31.5" y="132" width="50.5" height="20.5"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="R5f-hy-7fc"/>
-                                    <constraint firstAttribute="height" constant="20" id="jd0-XZ-GGx"/>
+                                    <constraint firstAttribute="width" secondItem="TVU-9I-nzs" secondAttribute="height" multiplier="5:2" id="mmt-jc-HH9"/>
                                 </constraints>
                                 <state key="normal" title="Step"/>
                                 <userDefinedRuntimeAttributes>
@@ -82,6 +81,7 @@
                             <constraint firstItem="TVU-9I-nzs" firstAttribute="leading" secondItem="mc7-Az-TXU" secondAttribute="leading" id="V7L-gk-Paa"/>
                             <constraint firstItem="mc7-Az-TXU" firstAttribute="width" relation="lessThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.8" id="akl-3J-2jP"/>
                             <constraint firstItem="mc7-Az-TXU" firstAttribute="top" secondItem="TVU-9I-nzs" secondAttribute="bottom" constant="3.5" id="mWn-E7-bcs"/>
+                            <constraint firstItem="TVU-9I-nzs" firstAttribute="width" secondItem="mc7-Az-TXU" secondAttribute="width" multiplier="0.2" id="qjn-Fk-JV0"/>
                             <constraint firstItem="mc7-Az-TXU" firstAttribute="height" relation="lessThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.8" id="uj2-0N-GSU"/>
                             <constraint firstItem="mc7-Az-TXU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="vIz-sy-xcx"/>
                         </constraints>
