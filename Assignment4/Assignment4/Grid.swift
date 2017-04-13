@@ -24,7 +24,7 @@ public protocol GridProtocol {
     var description: String { get }
     var size: GridSize { get }
     subscript (row: Int, col: Int) -> CellState { get set }
-    func next() -> Self 
+    @discardableResult func next() -> Self 
 }
 
 public let lazyPositions = { (size: GridSize) in
@@ -144,18 +144,17 @@ public extension Grid {
     }
 }
 
-protocol EngineDelegate {
+public protocol EngineDelegate {
     func engineDidUpdate(withGrid: GridProtocol)
 }
 
-protocol EngineProtocol {
+public protocol EngineProtocol {
     var delegate: EngineDelegate { get set }
     var grid: GridProtocol { get }
-    var refreshRate: Double { get set }
+    var refreshRate: Double { get set } //how can you default this to zero?
     var refreshTimer: Timer { get set }
     var rows: Int { get set }
     var cols: Int { get set }
     init(rows: Int, cols: Int)
     func step() -> GridProtocol
 }
-

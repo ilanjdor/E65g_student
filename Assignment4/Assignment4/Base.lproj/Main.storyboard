@@ -4,7 +4,9 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -153,9 +155,75 @@
                     <view key="view" contentMode="scaleToFill" id="QS5-Rx-YEW">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2su-b8-bGq" customClass="GridView" customModule="Assignment4" customModuleProvider="target">
+                                <rect key="frame" x="32" y="156" width="256" height="256"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="2su-b8-bGq" secondAttribute="height" multiplier="1:1" id="Jsw-34-Uxd"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="size">
+                                        <integer key="value" value="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="livingColor">
+                                        <color key="value" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="emptyColor">
+                                        <color key="value" red="0.50196081400000003" green="0.50196081400000003" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="bornColor">
+                                        <color key="value" red="0.0" green="1" blue="0.0" alpha="0.60137392239999998" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="diedColor">
+                                        <color key="value" red="0.50196081400000003" green="0.50196081400000003" blue="0.50196081400000003" alpha="0.59552801720000004" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="gridColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="gridWidth">
+                                        <integer key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iPV-o8-3uZ">
+                                <rect key="frame" x="32" y="130.5" width="51" height="20.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="iPV-o8-3uZ" secondAttribute="height" multiplier="5:2" id="qnI-gM-8TK"/>
+                                </constraints>
+                                <state key="normal" title="Step"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBorder" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="advanceGrid:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="a3u-0F-5cJ"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="0.40576508620689655" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="2su-b8-bGq" firstAttribute="centerY" secondItem="QS5-Rx-YEW" secondAttribute="centerY" id="Gmq-hr-ao3"/>
+                            <constraint firstItem="iPV-o8-3uZ" firstAttribute="width" secondItem="2su-b8-bGq" secondAttribute="width" multiplier="0.2" id="Lhd-e5-kBo"/>
+                            <constraint firstItem="2su-b8-bGq" firstAttribute="height" secondItem="QS5-Rx-YEW" secondAttribute="height" multiplier="0.8" priority="750" id="O0P-na-CNk"/>
+                            <constraint firstItem="2su-b8-bGq" firstAttribute="centerX" secondItem="QS5-Rx-YEW" secondAttribute="centerX" id="WGz-Yo-9hy"/>
+                            <constraint firstItem="2su-b8-bGq" firstAttribute="width" relation="lessThanOrEqual" secondItem="QS5-Rx-YEW" secondAttribute="width" multiplier="0.8" id="knT-sA-Qxu"/>
+                            <constraint firstItem="iPV-o8-3uZ" firstAttribute="leading" secondItem="2su-b8-bGq" secondAttribute="leading" id="mPI-m4-r6x"/>
+                            <constraint firstItem="2su-b8-bGq" firstAttribute="top" secondItem="iPV-o8-3uZ" secondAttribute="bottom" constant="5" id="opV-gi-Ekn"/>
+                            <constraint firstItem="2su-b8-bGq" firstAttribute="height" relation="lessThanOrEqual" secondItem="QS5-Rx-YEW" secondAttribute="height" multiplier="0.8" id="u7q-S1-2fT"/>
+                            <constraint firstItem="2su-b8-bGq" firstAttribute="width" secondItem="QS5-Rx-YEW" secondAttribute="width" multiplier="0.8" priority="750" id="x76-7n-E2T"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Simulation" image="second" id="cPa-gy-q4n"/>
+                    <connections>
+                        <outlet property="myGrid" destination="2su-b8-bGq" id="ESW-Qe-DaW"/>
+                        <outlet property="view" destination="2su-b8-bGq" id="Oev-gD-Z5V"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>

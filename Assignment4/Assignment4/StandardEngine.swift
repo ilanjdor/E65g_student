@@ -8,6 +8,45 @@
 
 import Foundation
 
-class StandardEngine {
-        
+class StandardEngine : EngineProtocol {
+    static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
+    
+    var grid: GridProtocol
+    var delegate: EngineDelegate?
+    
+    //var updateClosure: ((Grid) -> Void)?
+    var refreshTimer: Timer?
+    var refreshRate: TimeInterval = 0.0 {
+        didSet {
+            if refreshRate > 0.0 {
+                refreshTimer = Timer.scheduledTimer(
+                    withTimeInterval: refreshRate,
+                    repeats: true
+                ) { (t: Timer) in
+                    self.step()
+                }
+            }
+            else {
+                refreshTimer?.invalidate()
+                refreshTimer = nil
+            }
+        }
+    }
+    
+    required init(rows: Int, cols: Int) {
+        self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty })
+    }
+    
+    func step() {
+        let newGrid = grid.next()
+        grid = newGrid
+        //updateClosure?(self.grid)
+        delegate?.engineDidUpdate(withGrid: self as! GridProtocol)
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "EngineUpdate")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["engine" : self])
+        nc.post(n)
+    }
 }
