@@ -9,8 +9,8 @@
 import UIKit
 
 @IBDesignable class GridView: UIView {
-    @IBInspectable var fillColor = UIColor.darkGray
-    @IBInspectable var gridSize: Int = 3
+    //@IBInspectable var fillColor = UIColor.darkGray
+    //@IBInspectable var gridSize: Int = 3
     
     @IBInspectable var size: Int = 20 {
         didSet {
@@ -29,11 +29,11 @@ import UIKit
     //var grid = Grid(0, 0)
     var grid: GridProtocol?
     
-    var xColor = UIColor.black
-    var xProportion = CGFloat(1.0)
-    var widthProportion = CGFloat(0.05)
+    //var xColor = UIColor.black
+    //var xProportion = CGFloat(1.0)
+    //var widthProportion = CGFloat(0.05)
     
-    override func draw(_ rect: CGRect) {
+    /*override func draw(_ rect: CGRect) {
         drawOvals(rect)
         drawLines(rect)
     }
@@ -83,9 +83,9 @@ import UIKit
                 end: CGPoint(x: rect.size.width, y: CGFloat($0)/CGFloat(gridSize) * rect.size.height)
             )
         }
-    }
+    }*/
     
-    /*// Only override draw() if you perform custom drawing.
+    // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
     // Drawing code
@@ -105,17 +105,19 @@ import UIKit
                     size: size
                 )
                 let path = UIBezierPath(ovalIn: subRect)
-                switch grid[(i, j)] {
-                    case .alive:
-                        livingColor.setFill()
-                    case .empty:
-                        emptyColor.setFill()
-                    case .born:
-                        bornColor.setFill()
-                    case .died:
-                        diedColor.setFill()
-                }
+                if let grid = grid {
+                    switch grid[(i, j)] {
+                        case .alive:
+                            livingColor.setFill()
+                        case .empty:
+                            emptyColor.setFill()
+                        case .born:
+                            bornColor.setFill()
+                        case .died:
+                            diedColor.setFill()
+                    }
                 path.fill()
+                }
             }
          }
 
@@ -141,7 +143,7 @@ import UIKit
                 )
             )
         }
-    }*/
+    }
     
     func drawLine(start:CGPoint, end: CGPoint) {
         let path = UIBezierPath()
@@ -163,7 +165,7 @@ import UIKit
     
     func next() {
         grid = grid?.next()
-        setNeedsDisplay()
+        self.setNeedsDisplay()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -234,11 +236,11 @@ import UIKit
     func convert(touch: UITouch) -> GridPosition? {
         let touchY = touch.location(in: self).y
         let gridHeight = frame.size.height
-        let row = touchY / gridHeight * CGFloat(gridSize)
+        let row = touchY / gridHeight * CGFloat(self.size) //(gridSize)
         
         let touchX = touch.location(in: self).x
         let gridWidth = frame.size.width
-        let col = touchX / gridWidth * CGFloat(gridSize)
+        let col = touchX / gridWidth * CGFloat(self.size) //(gridSize)
         
         //added by me on 2017/04/10
         guard touchY > 0 && touchY < gridHeight

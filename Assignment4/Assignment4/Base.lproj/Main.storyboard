@@ -203,6 +203,7 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="advanceGrid:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="a3u-0F-5cJ"/>
+                                    <action selector="step:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="pfs-Fp-8Ve"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -221,8 +222,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Simulation" image="second" id="cPa-gy-q4n"/>
                     <connections>
-                        <outlet property="myGrid" destination="2su-b8-bGq" id="ESW-Qe-DaW"/>
-                        <outlet property="view" destination="2su-b8-bGq" id="Oev-gD-Z5V"/>
+                        <outlet property="gridView" destination="2su-b8-bGq" id="sQZ-cF-GUn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>

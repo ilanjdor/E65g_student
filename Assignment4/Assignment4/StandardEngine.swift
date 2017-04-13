@@ -23,7 +23,7 @@ class StandardEngine : EngineProtocol {
                     withTimeInterval: refreshRate,
                     repeats: true
                 ) { (t: Timer) in
-                    self.step()
+                    _ = self.step()
                 }
             }
             else {
@@ -35,12 +35,17 @@ class StandardEngine : EngineProtocol {
     
     required init(rows: Int, cols: Int) {
         self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty })
+        notifyDelegateAndPublishGrid()
     }
     
-    func step() {
+    func step() -> GridProtocol {
         let newGrid = grid.next()
         grid = newGrid
-        //updateClosure?(self.grid)
+        notifyDelegateAndPublishGrid()
+        return grid
+    }
+    
+    func notifyDelegateAndPublishGrid() {
         delegate?.engineDidUpdate(withGrid: self as! GridProtocol)
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")

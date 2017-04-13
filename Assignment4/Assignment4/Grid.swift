@@ -24,7 +24,7 @@ public protocol GridProtocol {
     var description: String { get }
     var size: GridSize { get }
     subscript (row: Int, col: Int) -> CellState { get set }
-    @discardableResult func next() -> Self 
+    func next() -> Self //@discardableResult
 }
 
 public let lazyPositions = { (size: GridSize) in

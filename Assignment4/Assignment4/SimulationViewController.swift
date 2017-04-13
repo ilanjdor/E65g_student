@@ -9,14 +9,13 @@
 import UIKit
 
 class SimulationViewController: UIViewController, EngineDelegate {
-
-    @IBOutlet weak var myGrid: GridView!
+    @IBOutlet weak var gridView: GridView!
     
     var engine: StandardEngine!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let size = myGrid.gridSize
+        let size = gridView.size
         engine = StandardEngine(rows: size, cols: size)
         engine.delegate = self
         // Do any additional setup after loading the view, typically from a nib.
@@ -28,11 +27,11 @@ class SimulationViewController: UIViewController, EngineDelegate {
     }
     
     @IBAction func advanceGrid(_ sender: Any) {
-        engineDidUpdate(withGrid: myGrid as! GridProtocol)
+        engineDidUpdate(withGrid: gridView as! GridProtocol)
     }
     
     func engineDidUpdate(withGrid: GridProtocol) {
-        withGrid.next() //or put _ = in front of function call
+        _ = withGrid.next() //or put _ = in front of function call
         //self.myGrid.setNeedsDisplay()
     }
 }

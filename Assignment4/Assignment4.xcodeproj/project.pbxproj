@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		72573D8F1E9FF11E00187081 /* StandardEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72573D8E1E9FF11E00187081 /* StandardEngine.swift */; };
-		72573D911EA0047B00187081 /* XView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72573D901EA0047B00187081 /* XView.swift */; };
 		72573D931EA009A300187081 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72573D921EA009A300187081 /* GridView.swift */; };
 		72F793121E9F28CC0070647E /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F793111E9F28CC0070647E /* StatisticsViewController.swift */; };
 		FB475A381E8828EF00D2EAD3 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB475A371E8828EF00D2EAD3 /* Grid.swift */; };
@@ -22,7 +21,6 @@
 
 /* Begin PBXFileReference section */
 		72573D8E1E9FF11E00187081 /* StandardEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandardEngine.swift; sourceTree = "<group>"; };
-		72573D901EA0047B00187081 /* XView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XView.swift; sourceTree = "<group>"; };
 		72573D921EA009A300187081 /* GridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		72F793111E9F28CC0070647E /* StatisticsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		FB475A371E8828EF00D2EAD3 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
@@ -68,7 +66,6 @@
 			children = (
 				FB475A371E8828EF00D2EAD3 /* Grid.swift */,
 				FBAD2E061E2BE38C008207C0 /* AppDelegate.swift */,
-				72573D901EA0047B00187081 /* XView.swift */,
 				72573D921EA009A300187081 /* GridView.swift */,
 				FBAD2E081E2BE38C008207C0 /* InstrumentationViewController.swift */,
 				FBAD2E0A1E2BE38C008207C0 /* SimulationViewController.swift */,
@@ -161,7 +158,6 @@
 				FBAD2E071E2BE38C008207C0 /* AppDelegate.swift in Sources */,
 				FBAD2E091E2BE38C008207C0 /* InstrumentationViewController.swift in Sources */,
 				72573D8F1E9FF11E00187081 /* StandardEngine.swift in Sources */,
-				72573D911EA0047B00187081 /* XView.swift in Sources */,
 				FB475A381E8828EF00D2EAD3 /* Grid.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
