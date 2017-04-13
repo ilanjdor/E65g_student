@@ -149,10 +149,10 @@ public protocol EngineDelegate {
 }
 
 public protocol EngineProtocol {
-    var delegate: EngineDelegate { get set }
+    var delegate: EngineDelegate? { get set }
     var grid: GridProtocol { get }
     var refreshRate: Double { get set } //how can you default this to zero?
-    var refreshTimer: Timer { get set }
+    var refreshTimer: Timer? { get set }
     var rows: Int { get set }
     var cols: Int { get set }
     init(rows: Int, cols: Int)

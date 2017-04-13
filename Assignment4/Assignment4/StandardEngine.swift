@@ -13,13 +13,15 @@ class StandardEngine : EngineProtocol {
     
     var grid: GridProtocol
     var delegate: EngineDelegate?
+    var rows: Int = 0
+    var cols: Int = 0
     
     //var updateClosure: ((Grid) -> Void)?
     var refreshTimer: Timer?
     var refreshRate: TimeInterval = 0.0 {
         didSet {
             if refreshRate > 0.0 {
-                refreshTimer = Timer.scheduledTimer(
+                refreshTimer? = Timer.scheduledTimer(
                     withTimeInterval: refreshRate,
                     repeats: true
                 ) { (t: Timer) in
@@ -35,13 +37,13 @@ class StandardEngine : EngineProtocol {
     
     required init(rows: Int, cols: Int) {
         self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty })
-        notifyDelegateAndPublishGrid()
+        self.notifyDelegateAndPublishGrid()
     }
     
     func step() -> GridProtocol {
         let newGrid = grid.next()
         grid = newGrid
-        notifyDelegateAndPublishGrid()
+        self.notifyDelegateAndPublishGrid()
         return grid
     }
     
