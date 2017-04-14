@@ -8,7 +8,7 @@
 
 import Foundation
 
-class StandardEngine : EngineProtocol {
+class StandardEngine: EngineProtocol {
     static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
     
     var grid: GridProtocol
@@ -16,7 +16,6 @@ class StandardEngine : EngineProtocol {
     var rows: Int = 0
     var cols: Int = 0
     
-    //var updateClosure: ((Grid) -> Void)?
     var refreshTimer: Timer?
     var refreshRate: TimeInterval = 0.0 {
         didSet {
@@ -37,23 +36,25 @@ class StandardEngine : EngineProtocol {
     
     required init(rows: Int, cols: Int) {
         self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty })
-        self.notifyDelegateAndPublishGrid()
+        //self.notifyDelegate()
+        delegate?.engineDidUpdate(withGrid: self.grid)
     }
     
     func step() -> GridProtocol {
         let newGrid = grid.next()
-        grid = newGrid
-        self.notifyDelegateAndPublishGrid()
+        self.grid = newGrid
+        //self.notifyDelegate()
+        //delegate?.engineDidUpdate(withGrid: self.grid)
         return grid
     }
     
-    func notifyDelegateAndPublishGrid() {
-        delegate?.engineDidUpdate(withGrid: self as! GridProtocol)
-        let nc = NotificationCenter.default
+    func notifyDelegate() {
+        delegate?.engineDidUpdate(withGrid: self.grid)
+        /*let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         let n = Notification(name: name,
                              object: nil,
                              userInfo: ["engine" : self])
-        nc.post(n)
+        nc.post(n)*/
     }
 }

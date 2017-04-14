@@ -10,13 +10,13 @@ import UIKit
 
 @IBDesignable class GridView: UIView {
     //@IBInspectable var fillColor = UIColor.darkGray
-    //@IBInspectable var gridSize: Int = 3
+    @IBInspectable var size: Int = 3
     
-    @IBInspectable var size: Int = 20 {
+    /*@IBInspectable var size: Int = 10 {
         didSet {
-            self.grid = Grid(self.size, self.size)
+            self.grid = Grid(self.size, self.size) as? GridViewDataSource
         }
-    }
+    }*/
 
     @IBInspectable var livingColor: UIColor = UIColor.blue
     @IBInspectable var emptyColor: UIColor = UIColor.red
@@ -27,7 +27,7 @@ import UIKit
     @IBInspectable var gridWidth:CGFloat = CGFloat(2)
     
     //var grid = Grid(0, 0)
-    var grid: GridProtocol?
+    var grid: GridViewDataSource? //= Grid(0, 0)
     
     //var xColor = UIColor.black
     //var xProportion = CGFloat(1.0)
@@ -105,7 +105,7 @@ import UIKit
                     size: size
                 )
                 let path = UIBezierPath(ovalIn: subRect)
-                if let grid = grid {
+                if let grid = self.grid {
                     switch grid[(i, j)] {
                         case .alive:
                             livingColor.setFill()
@@ -163,10 +163,10 @@ import UIKit
         path.stroke()
     }
     
-    func next() {
+    /*func next() {
         grid = grid?.next()
-        self.setNeedsDisplay()
-    }
+        setNeedsDisplay()
+    }*/
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         lastTouchedPosition = process(touches: touches)
@@ -227,21 +227,22 @@ import UIKit
         //****************************************
         
         if grid != nil {
-            //grid![pos.row, pos.col] = grid![pos.row, pos.col].isAlive ? .empty : .alive
-            grid![pos.col, pos.row] = grid![pos.col, pos.row].isAlive ? .empty : .alive
+            grid![pos.row, pos.col] = grid![pos.row, pos.col].isAlive ? .empty : .alive
+            //grid![pos.col, pos.row] = grid![pos.col, pos.row].isAlive ? .empty : .alive
+            //grid[pos.col, pos.row] = grid[pos.col, pos.row].isAlive ? .empty : .alive
             setNeedsDisplay()
         }
         return pos
     }
     
     func convert(touch: UITouch) -> GridPosition? {
-        let touchY = touch.location(in: self).y
-        let gridHeight = frame.size.height
-        let row = touchY / gridHeight * CGFloat(self.size) //(gridSize)
-        
         let touchX = touch.location(in: self).x
         let gridWidth = frame.size.width
-        let col = touchX / gridWidth * CGFloat(self.size) //(gridSize)
+        let row = touchX / gridWidth * CGFloat(self.size) //(gridSize)
+        
+        let touchY = touch.location(in: self).y
+        let gridHeight = frame.size.height
+        let col = touchY / gridHeight * CGFloat(self.size) //(gridSize)
         
         //added by me on 2017/04/10
         guard touchY > 0 && touchY < gridHeight
