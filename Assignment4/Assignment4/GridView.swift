@@ -18,13 +18,13 @@ import UIKit
         }
     }
 
-    @IBInspectable var livingColor = UIColor.blue
-    @IBInspectable var emptyColor = UIColor.red
-    @IBInspectable var bornColor = UIColor.green
-    @IBInspectable var diedColor = UIColor.brown
-    @IBInspectable var gridColor = UIColor.black
+    @IBInspectable var livingColor: UIColor = UIColor.blue
+    @IBInspectable var emptyColor: UIColor = UIColor.red
+    @IBInspectable var bornColor: UIColor = UIColor.green
+    @IBInspectable var diedColor: UIColor = UIColor.brown
+    @IBInspectable var gridColor: UIColor = UIColor.black
     
-    @IBInspectable var gridWidth = CGFloat(2)
+    @IBInspectable var gridWidth:CGFloat = CGFloat(2)
     
     //var grid = Grid(0, 0)
     var grid: GridProtocol?
@@ -227,7 +227,8 @@ import UIKit
         //****************************************
         
         if grid != nil {
-            grid![pos.row, pos.col] = grid![pos.row, pos.col].isAlive ? .empty : .alive
+            //grid![pos.row, pos.col] = grid![pos.row, pos.col].isAlive ? .empty : .alive
+            grid![pos.col, pos.row] = grid![pos.col, pos.row].isAlive ? .empty : .alive
             setNeedsDisplay()
         }
         return pos

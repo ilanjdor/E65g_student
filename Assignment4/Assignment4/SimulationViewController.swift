@@ -27,7 +27,7 @@ class SimulationViewController: UIViewController, EngineDelegate {
     }
     
     @IBAction func advanceGrid(_ sender: Any) {
-        engineDidUpdate(withGrid: gridView as! GridProtocol)
+        engineDidUpdate(withGrid: gridView.grid!)
     }
     
     func engineDidUpdate(withGrid: GridProtocol) {
