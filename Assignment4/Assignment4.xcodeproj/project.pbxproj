@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		72340DE81EA16CC60038F0C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72340DE71EA16CC60038F0C3 /* Assets.xcassets */; };
 		72573D8F1E9FF11E00187081 /* StandardEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72573D8E1E9FF11E00187081 /* StandardEngine.swift */; };
 		72573D931EA009A300187081 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72573D921EA009A300187081 /* GridView.swift */; };
 		72F793121E9F28CC0070647E /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F793111E9F28CC0070647E /* StatisticsViewController.swift */; };
@@ -15,11 +16,11 @@
 		FBAD2E091E2BE38C008207C0 /* InstrumentationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAD2E081E2BE38C008207C0 /* InstrumentationViewController.swift */; };
 		FBAD2E0B1E2BE38C008207C0 /* SimulationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAD2E0A1E2BE38C008207C0 /* SimulationViewController.swift */; };
 		FBAD2E0E1E2BE38C008207C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FBAD2E0C1E2BE38C008207C0 /* Main.storyboard */; };
-		FBAD2E101E2BE38C008207C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FBAD2E0F1E2BE38C008207C0 /* Assets.xcassets */; };
 		FBAD2E131E2BE38C008207C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FBAD2E111E2BE38C008207C0 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		72340DE71EA16CC60038F0C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		72573D8E1E9FF11E00187081 /* StandardEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandardEngine.swift; sourceTree = "<group>"; };
 		72573D921EA009A300187081 /* GridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		72F793111E9F28CC0070647E /* StatisticsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
@@ -29,7 +30,6 @@
 		FBAD2E081E2BE38C008207C0 /* InstrumentationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstrumentationViewController.swift; sourceTree = "<group>"; };
 		FBAD2E0A1E2BE38C008207C0 /* SimulationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationViewController.swift; sourceTree = "<group>"; };
 		FBAD2E0D1E2BE38C008207C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		FBAD2E0F1E2BE38C008207C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FBAD2E121E2BE38C008207C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FBAD2E141E2BE38C008207C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -68,11 +68,11 @@
 				FBAD2E061E2BE38C008207C0 /* AppDelegate.swift */,
 				72573D921EA009A300187081 /* GridView.swift */,
 				FBAD2E081E2BE38C008207C0 /* InstrumentationViewController.swift */,
+				72340DE71EA16CC60038F0C3 /* Assets.xcassets */,
 				FBAD2E0A1E2BE38C008207C0 /* SimulationViewController.swift */,
 				72F793111E9F28CC0070647E /* StatisticsViewController.swift */,
 				72573D8E1E9FF11E00187081 /* StandardEngine.swift */,
 				FBAD2E0C1E2BE38C008207C0 /* Main.storyboard */,
-				FBAD2E0F1E2BE38C008207C0 /* Assets.xcassets */,
 				FBAD2E111E2BE38C008207C0 /* LaunchScreen.storyboard */,
 				FBAD2E141E2BE38C008207C0 /* Info.plist */,
 			);
@@ -140,7 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FBAD2E131E2BE38C008207C0 /* LaunchScreen.storyboard in Resources */,
-				FBAD2E101E2BE38C008207C0 /* Assets.xcassets in Resources */,
+				72340DE81EA16CC60038F0C3 /* Assets.xcassets in Resources */,
 				FBAD2E0E1E2BE38C008207C0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
