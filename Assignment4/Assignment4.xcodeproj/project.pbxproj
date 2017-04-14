@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		72340DE81EA16CC60038F0C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72340DE71EA16CC60038F0C3 /* Assets.xcassets */; };
+		723422381EA189F300604EE0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 723422371EA189F300604EE0 /* Assets.xcassets */; };
 		72573D8F1E9FF11E00187081 /* StandardEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72573D8E1E9FF11E00187081 /* StandardEngine.swift */; };
 		72573D931EA009A300187081 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72573D921EA009A300187081 /* GridView.swift */; };
 		72F793121E9F28CC0070647E /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F793111E9F28CC0070647E /* StatisticsViewController.swift */; };
@@ -20,7 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		72340DE71EA16CC60038F0C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		723422371EA189F300604EE0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		72573D8E1E9FF11E00187081 /* StandardEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandardEngine.swift; sourceTree = "<group>"; };
 		72573D921EA009A300187081 /* GridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		72F793111E9F28CC0070647E /* StatisticsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
@@ -68,10 +68,10 @@
 				FBAD2E061E2BE38C008207C0 /* AppDelegate.swift */,
 				72573D921EA009A300187081 /* GridView.swift */,
 				FBAD2E081E2BE38C008207C0 /* InstrumentationViewController.swift */,
-				72340DE71EA16CC60038F0C3 /* Assets.xcassets */,
 				FBAD2E0A1E2BE38C008207C0 /* SimulationViewController.swift */,
 				72F793111E9F28CC0070647E /* StatisticsViewController.swift */,
 				72573D8E1E9FF11E00187081 /* StandardEngine.swift */,
+				723422371EA189F300604EE0 /* Assets.xcassets */,
 				FBAD2E0C1E2BE38C008207C0 /* Main.storyboard */,
 				FBAD2E111E2BE38C008207C0 /* LaunchScreen.storyboard */,
 				FBAD2E141E2BE38C008207C0 /* Info.plist */,
@@ -140,7 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FBAD2E131E2BE38C008207C0 /* LaunchScreen.storyboard in Resources */,
-				72340DE81EA16CC60038F0C3 /* Assets.xcassets in Resources */,
+				723422381EA189F300604EE0 /* Assets.xcassets in Resources */,
 				FBAD2E0E1E2BE38C008207C0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,7 +280,6 @@
 		FBAD2E181E2BE38C008207C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 5VT6Z22HYU;
 				INFOPLIST_FILE = Assignment4/Info.plist;
@@ -289,13 +288,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = edu.harvard.Assign4;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		FBAD2E191E2BE38C008207C0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 5VT6Z22HYU;
 				INFOPLIST_FILE = Assignment4/Info.plist;
@@ -304,6 +303,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = edu.harvard.Assign4;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
