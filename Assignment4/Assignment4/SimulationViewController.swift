@@ -12,6 +12,7 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
     @IBOutlet weak var gridView: GridView!
     
     var engine: StandardEngine!
+    var gridDataSource: GridViewDataSource?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,9 +43,11 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
     
     @IBAction func next(_ sender: Any) {
         if self.gridView.grid != nil {
-            let newGrid = self.engine.step()
-            self.gridView.grid = newGrid as? GridViewDataSource
-            self.engineDidUpdate(withGrid: newGrid)
+            //self.gridView.grid = self.engine.step()
+            engine.grid = self.engine.step()
+            //let newGrid = self.engine.step()
+            //self.gridView.grid = newGrid as? GridViewDataSource
+            //self.engineDidUpdate(withGrid: self.gridView.grid as! GridProtocol)
         }
         //engineDidUpdate(withGrid: grid)
     }
