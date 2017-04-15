@@ -6,8 +6,8 @@
 //  Copyright © 2017 Harvard Division of Continuing Education. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-class StatisticsViewController {
+class StatisticsViewController: UIViewController {
     
 }

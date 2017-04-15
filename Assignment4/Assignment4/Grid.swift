@@ -163,3 +163,42 @@ public protocol EngineProtocol {
     init(rows: Int, cols: Int)
     func step() -> GridProtocol
 }
+
+class StandardEngine: EngineProtocol {
+    static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
+    
+    var grid: GridProtocol
+    var delegate: EngineDelegate?
+    var rows: Int = 0
+    var cols: Int = 0
+    
+    var refreshTimer: Timer?
+    var refreshRate: TimeInterval = 0.0 {
+        didSet {
+            if refreshRate > 0.0 {
+                refreshTimer? = Timer.scheduledTimer(
+                    withTimeInterval: refreshRate,
+                    repeats: true
+                ) { (t: Timer) in
+                    _ = self.step()
+                }
+            }
+            else {
+                refreshTimer?.invalidate()
+                refreshTimer = nil
+            }
+        }
+    }
+    
+    required init(rows: Int, cols: Int) {
+        self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty })
+        delegate?.engineDidUpdate(withGrid: self.grid)
+    }
+    
+    func step() -> GridProtocol {
+        let newGrid = grid.next()
+        self.grid = newGrid
+        //delegate?.engineDidUpdate(withGrid: self.grid)
+        return grid
+    }
+}

@@ -9,8 +9,7 @@
 import UIKit
 
 @IBDesignable class GridView: UIView {
-    //@IBInspectable var fillColor = UIColor.darkGray
-    @IBInspectable var size: Int = 3
+    @IBInspectable var size: Int = 10
     
     /*@IBInspectable var size: Int = 10 {
         didSet {
@@ -27,63 +26,7 @@ import UIKit
     @IBInspectable var gridWidth:CGFloat = CGFloat(2)
     
     //var grid = Grid(0, 0)
-    var grid: GridViewDataSource? //= Grid(0, 0)
-    
-    //var xColor = UIColor.black
-    //var xProportion = CGFloat(1.0)
-    //var widthProportion = CGFloat(0.05)
-    
-    /*override func draw(_ rect: CGRect) {
-        drawOvals(rect)
-        drawLines(rect)
-    }
-    
-    func drawOvals(_ rect: CGRect) {
-        let size = CGSize(
-            width: rect.size.width / CGFloat(gridSize),
-            height: rect.size.height / CGFloat(gridSize)
-        )
-        let base = rect.origin
-        (0 ..< gridSize).forEach { i in
-            (0 ..< gridSize).forEach { j in
-                // Inset the oval 2 points from the left and top edges
-                let ovalOrigin = CGPoint(
-                    x: base.x + (CGFloat(j) * size.width) + 2.0,
-                    y: base.y + (CGFloat(i) * size.height + 2.0)
-                )
-                // Make the oval draw 2 points short of the right and bottom edges
-                let ovalSize = CGSize(
-                    width: size.width - 4.0,
-                    height: size.height - 4.0
-                )
-                let ovalRect = CGRect( origin: ovalOrigin, size: ovalSize )
-                if let grid = grid, grid[i,j].isAlive {
-                    drawOval(ovalRect)
-                }
-            }
-        }
-    }
-    
-    func drawOval(_ ovalRect: CGRect) {
-        let path = UIBezierPath(ovalIn: ovalRect)
-        fillColor.setFill()
-        path.fill()
-    }
-    
-    func drawLines(_ rect: CGRect) {
-        //create the path
-        (0 ..< (gridSize + 1)).forEach {
-            drawLine(
-                start: CGPoint(x: CGFloat($0)/CGFloat(gridSize) * rect.size.width, y: 0.0),
-                end:   CGPoint(x: CGFloat($0)/CGFloat(gridSize) * rect.size.width, y: rect.size.height)
-            )
-            
-            drawLine(
-                start: CGPoint(x: 0.0, y: CGFloat($0)/CGFloat(gridSize) * rect.size.height ),
-                end: CGPoint(x: rect.size.width, y: CGFloat($0)/CGFloat(gridSize) * rect.size.height)
-            )
-        }
-    }*/
+    var grid: GridViewDataSource?
     
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -180,38 +123,6 @@ import UIKit
         lastTouchedPosition = nil
     }
     
-    /*typealias Position = (row: Int, col: Int)
-    var lastTouchedPosition: Position?
-    
-    func process(touches: Set<UITouch>) -> Position? {
-        guard touches.count == 1 else { return nil }
-        let pos = convert(touch: touches.first!)
-        guard lastTouchedPosition?.row != pos.row
-            || lastTouchedPosition?.col != pos.col
-            else { return pos }
-        
-        lastTouchedPosition = pos
-        
-        if let lastTouchedPosition = lastTouchedPosition {
-            let gridPosition = grid[lastTouchedPosition]
-            grid[lastTouchedPosition] = gridPosition.toggle(value: gridPosition)
-        }
-        
-        setNeedsDisplay()
-        return pos
-    }
-    
-    func convert(touch: UITouch) -> Position {
-        let touchX = touch.location(in: self).x
-        let gridWidth = frame.size.width
-        let row = touchX / gridWidth * CGFloat(self.size)
-        let touchY = touch.location(in: self).y
-        let gridHeight = frame.size.height
-        let col = touchY / gridHeight * CGFloat(self.size)
-        let position = (row: Int(row), col: Int(col))
-        return position
-    }*/
-    
     // Updated since class
     var lastTouchedPosition: GridPosition?
     
@@ -228,8 +139,6 @@ import UIKit
         
         if grid != nil {
             grid![pos.row, pos.col] = grid![pos.row, pos.col].isAlive ? .empty : .alive
-            //grid![pos.col, pos.row] = grid![pos.col, pos.row].isAlive ? .empty : .alive
-            //grid[pos.col, pos.row] = grid[pos.col, pos.row].isAlive ? .empty : .alive
             setNeedsDisplay()
         }
         return pos
