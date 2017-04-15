@@ -36,8 +36,8 @@ public let lazyPositions = { (size: GridSize) in
         .lazy
         .map { zip( [Int](repeating: $0, count: size.cols) , 0 ..< size.cols ) }
         .flatMap { $0 }
-//        .map { GridPosition($0) }
-        .map { GridPosition(row: $0.0,col: $0.1) }
+        .map { GridPosition($0) }
+//        .map { GridPosition(row: $0.0,col: $0.1) }
 }
 
 
