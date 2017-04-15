@@ -29,21 +29,22 @@ import UIKit
     //var grid = Grid(0, 0)
     var gridViewDataSource: GridViewDataSource?
     
-    /*public subscript (row: Int, col: Int) -> CellState {
+    public subscript (row: Int, col: Int) -> CellState {
         get { return gridViewDataSource![row,col] }
         set { gridViewDataSource?[row,col] = newValue }
-    }*/
+    }
     
-    public subscript (row: Int, col: Int) -> CellState {
+    /*public subscript (row: Int, col: Int) -> CellState {
         get { return engine.grid[row,col] }
         set { engine.grid[row,col] = newValue }
-    }
+    }*/
     
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
-    engine = StandardEngine.getEngine()
-
+        engine = StandardEngine.getEngine()
+        self.size = engine.size
+        
     // Drawing code
          let size = CGSize(
             width: rect.size.width / CGFloat(self.size),
