@@ -195,7 +195,15 @@ class StandardEngine: EngineProtocol {
         self.rows = rows
         self.cols = cols
         delegate?.engineDidUpdate(withGrid: self.grid)
+        //newEmptyGrid(rows: rows, cols: cols)
     }
+    
+    /*func newEmptyGrid(rows: Int, cols: Int) {
+        self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty })
+        self.rows = rows
+        self.cols = cols
+        delegate?.engineDidUpdate(withGrid: self.grid)
+    }*/
     
     func step() -> GridProtocol {
         let newGrid = grid.next()
@@ -205,8 +213,10 @@ class StandardEngine: EngineProtocol {
     }
     
     func updateGridSize(size: Int) {
-        StandardEngine.engine.rows = size
-        StandardEngine.engine.cols = size
+        //newEmptyGrid(rows: size, cols: size)
+        self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty})
+        self.rows = size
+        self.cols = size
         delegate?.engineDidUpdate(withGrid: self.grid)
     }
     

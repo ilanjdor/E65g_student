@@ -9,8 +9,10 @@
 import UIKit
 
 class StatisticsViewController: UIViewController {
-    
-    
+    @IBOutlet weak var aliveCountTextField: UITextField!
+    @IBOutlet weak var emptyCountTextField: UITextField!
+    @IBOutlet weak var bornCountTextField: UITextField!
+    @IBOutlet weak var diedCountTextField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()

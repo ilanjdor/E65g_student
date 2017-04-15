@@ -8,7 +8,7 @@
 
 import UIKit
 
-class InstrumentationViewController: UIViewController, EngineDelegate {
+class InstrumentationViewController: UIViewController {
 
     @IBOutlet weak var sizeTextField: UITextField!
     @IBOutlet weak var sizeStepper: UIStepper!
@@ -17,9 +17,9 @@ class InstrumentationViewController: UIViewController, EngineDelegate {
     @IBOutlet weak var refreshRateSlider: UISlider!
     @IBOutlet weak var refreshOnOffSwitch: UISwitch!
     
-    func engineDidUpdate(withGrid: GridProtocol) {
+    /*func engineDidUpdate(withGrid: GridProtocol) {
         
-    }
+    }*/
 
     override func viewDidLoad() {
         super.viewDidLoad()
