@@ -8,7 +8,7 @@
 
 import UIKit
 
-@IBDesignable class GridView: UIView {
+@IBDesignable class GridView: UIView, GridViewDataSource {
     @IBInspectable var size: Int = 10
     
     /*@IBInspectable var size: Int = 10 {
@@ -27,6 +27,11 @@ import UIKit
     
     //var grid = Grid(0, 0)
     var grid: GridViewDataSource?
+    
+    public subscript (row: Int, col: Int) -> CellState {
+        get { return grid![row,col] }
+        set { grid?[row,col] = newValue }
+    }
     
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.

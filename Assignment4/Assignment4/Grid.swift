@@ -169,8 +169,8 @@ class StandardEngine: EngineProtocol {
     
     var grid: GridProtocol
     var delegate: EngineDelegate?
-    var rows: Int = 0
-    var cols: Int = 0
+    var rows: Int
+    var cols: Int
     
     var refreshTimer: Timer?
     var refreshRate: TimeInterval = 0.0 {
@@ -192,13 +192,15 @@ class StandardEngine: EngineProtocol {
     
     required init(rows: Int, cols: Int) {
         self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty })
+        self.rows = rows
+        self.cols = cols
         delegate?.engineDidUpdate(withGrid: self.grid)
     }
     
     func step() -> GridProtocol {
         let newGrid = grid.next()
         self.grid = newGrid
-        //delegate?.engineDidUpdate(withGrid: self.grid)
+        delegate?.engineDidUpdate(withGrid: self.grid)
         return grid
     }
     
