@@ -165,7 +165,7 @@ public protocol EngineProtocol {
 }
 
 class StandardEngine: EngineProtocol {
-    static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
+    private static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
     
     var grid: GridProtocol
     var delegate: EngineDelegate?
@@ -200,5 +200,15 @@ class StandardEngine: EngineProtocol {
         self.grid = newGrid
         //delegate?.engineDidUpdate(withGrid: self.grid)
         return grid
+    }
+    
+    func updateGridSize(size: Int) {
+        StandardEngine.engine.rows = size
+        StandardEngine.engine.cols = size
+        delegate?.engineDidUpdate(withGrid: self.grid)
+    }
+    
+    static func getEngine() -> StandardEngine {
+        return StandardEngine.engine
     }
 }
