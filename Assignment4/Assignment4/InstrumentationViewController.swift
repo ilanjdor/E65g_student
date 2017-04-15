@@ -8,7 +8,7 @@
 
 import UIKit
 
-class InstrumentationViewController: UIViewController {
+class InstrumentationViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var sizeTextField: UITextField!
     @IBOutlet weak var sizeStepper: UIStepper!
@@ -26,7 +26,9 @@ class InstrumentationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+        engine = StandardEngine.getEngine()
+        sizeTextField.text = "\(engine.size)"
+        sizeStepper.value = Double(engine.size)
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,10 +45,12 @@ class InstrumentationViewController: UIViewController {
             }
             return
         }
-        updateGridSize(size: val)
         sizeStepper.value = Double(val)
+        updateGridSize(size: val)
     }
     
+    @IBAction func gridSizeEditingDidEndOnExit(_ sender: Any) {
+    }
     @IBAction func sizeStep(_ sender: Any) {
         updateGridSize(size: Int(sizeStepper.value))
     }
