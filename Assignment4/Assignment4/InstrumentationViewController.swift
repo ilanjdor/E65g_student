@@ -21,9 +21,12 @@ class InstrumentationViewController: UIViewController {
         
     }*/
 
+    var engine: StandardEngine!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -35,7 +38,8 @@ class InstrumentationViewController: UIViewController {
         guard let text = sender.text else { return }
         guard let val = Int(text) else {
             showErrorAlert(withMessage: "Invalid value: \(text), please try again.") {
-                sender.text = "\(StandardEngine.getEngine().rows)"
+                //sender.text = "\(StandardEngine.getEngine().rows)"
+                sender.text = "\(StandardEngine.getEngine().size)"
             }
             return
         }
@@ -48,8 +52,9 @@ class InstrumentationViewController: UIViewController {
     }
     
     private func updateGridSize(size: Int) {
-        StandardEngine.getEngine().refreshRate = 0.0
-        StandardEngine.getEngine().updateGridSize(size: size)
+        engine = StandardEngine.getEngine()
+        engine.refreshRate = 0.0
+        engine.setGridSize(size: size)
         sizeTextField.text = "\(size)"
     }
     

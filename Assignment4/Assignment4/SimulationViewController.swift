@@ -16,10 +16,11 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let size = gridView.size
-        engine = StandardEngine(rows: size, cols: size)
+        //let size = gridView.size
+        //engine = StandardEngine(rows: size, cols: size)
+        engine = StandardEngine.getEngine()
         engine.delegate = self
-        gridView.grid = self
+        gridView.gridViewDataSource = self
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         nc.addObserver(
@@ -42,20 +43,12 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
     }
     
     @IBAction func next(_ sender: Any) {
-        if self.gridView.grid != nil {
-            //self.gridView.grid = self.engine.step()
+        if self.gridView.gridViewDataSource != nil {
             engine.grid = self.engine.step()
-            //let newGrid = self.engine.step()
-            //self.gridView.grid = newGrid as? GridViewDataSource
-            //self.engineDidUpdate(withGrid: self.gridView.grid as! GridProtocol)
         }
-        //engineDidUpdate(withGrid: grid)
     }
     
     func engineDidUpdate(withGrid: GridProtocol) {
-        //_ = withGrid.next() //or put _ = in front of function call
-        //withGrid.setNeedsDisplay()
-        //self.gridView.setNeedsDisplay()
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         let n = Notification(name: name,

@@ -158,19 +158,33 @@ public protocol EngineProtocol {
     var grid: GridProtocol { get }
     var refreshRate: Double { get set } //how can you default this to zero?
     var refreshTimer: Timer? { get set }
-    var rows: Int { get set }
-    var cols: Int { get set }
-    init(rows: Int, cols: Int)
+    //var rows: Int { get set }
+    //var cols: Int { get set }
+    var size: Int { get set }
+    //init(rows: Int, cols: Int)
+    init(size: Int)
     func step() -> GridProtocol
 }
 
 class StandardEngine: EngineProtocol {
-    private static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
-    
     var grid: GridProtocol
     var delegate: EngineDelegate?
-    var rows: Int
-    var cols: Int
+    //var rows: Int
+    //var cols: Int
+    var size: Int
+    
+    //private static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
+    private static var engine: StandardEngine = StandardEngine(size: 10)
+    
+    //required init(rows: Int, cols: Int) {
+    required init(size: Int) {
+        //self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty })
+        self.grid = Grid(size, size, cellInitializer: { _,_ in .empty })
+        //self.rows = rows
+        //self.cols = cols
+        self.size = size
+        delegate?.engineDidUpdate(withGrid: self.grid)
+    }
     
     var refreshTimer: Timer?
     var refreshRate: TimeInterval = 0.0 {
@@ -190,21 +204,6 @@ class StandardEngine: EngineProtocol {
         }
     }
     
-    required init(rows: Int, cols: Int) {
-        self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty })
-        self.rows = rows
-        self.cols = cols
-        delegate?.engineDidUpdate(withGrid: self.grid)
-        //newEmptyGrid(rows: rows, cols: cols)
-    }
-    
-    /*func newEmptyGrid(rows: Int, cols: Int) {
-        self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty })
-        self.rows = rows
-        self.cols = cols
-        delegate?.engineDidUpdate(withGrid: self.grid)
-    }*/
-    
     func step() -> GridProtocol {
         let newGrid = grid.next()
         self.grid = newGrid
@@ -212,11 +211,11 @@ class StandardEngine: EngineProtocol {
         return grid
     }
     
-    func updateGridSize(size: Int) {
-        //newEmptyGrid(rows: size, cols: size)
-        self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty})
-        self.rows = size
-        self.cols = size
+    func setGridSize(size: Int) {
+        self.grid = Grid(size, size, cellInitializer: { _,_ in .empty})
+        //self.rows = size
+        //self.cols = size
+        self.size = size
         delegate?.engineDidUpdate(withGrid: self.grid)
     }
     

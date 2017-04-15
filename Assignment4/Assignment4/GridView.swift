@@ -25,17 +25,25 @@ import UIKit
     
     @IBInspectable var gridWidth:CGFloat = CGFloat(2)
     
+    var engine: StandardEngine!
     //var grid = Grid(0, 0)
-    var grid: GridViewDataSource?
+    var gridViewDataSource: GridViewDataSource?
+    
+    /*public subscript (row: Int, col: Int) -> CellState {
+        get { return gridViewDataSource![row,col] }
+        set { gridViewDataSource?[row,col] = newValue }
+    }*/
     
     public subscript (row: Int, col: Int) -> CellState {
-        get { return grid![row,col] }
-        set { grid?[row,col] = newValue }
+        get { return engine.grid[row,col] }
+        set { engine.grid[row,col] = newValue }
     }
     
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
+    engine = StandardEngine.getEngine()
+
     // Drawing code
          let size = CGSize(
             width: rect.size.width / CGFloat(self.size),
@@ -53,7 +61,7 @@ import UIKit
                     size: size
                 )
                 let path = UIBezierPath(ovalIn: subRect)
-                if let grid = self.grid {
+                if let grid = self.gridViewDataSource {
                     switch grid[(i, j)] {
                         case .alive:
                             livingColor.setFill()
@@ -142,8 +150,8 @@ import UIKit
             else { return pos }
         //****************************************
         
-        if grid != nil {
-            grid![pos.row, pos.col] = grid![pos.row, pos.col].isAlive ? .empty : .alive
+        if gridViewDataSource != nil {
+            gridViewDataSource![pos.row, pos.col] = gridViewDataSource![pos.row, pos.col].isAlive ? .empty : .alive
             setNeedsDisplay()
         }
         return pos
