@@ -44,9 +44,9 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
     
     @IBAction func next(_ sender: Any) {
         if self.gridView.gridViewDataSource != nil {
-            if engine.refreshRate > 0 {
+            /*if engine.refreshRate > 0 {
                 
-            }
+            }*/
             engine.grid = self.engine.step()
         }
         

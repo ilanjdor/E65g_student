@@ -26,7 +26,7 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         engine = StandardEngine.getEngine()
         sizeTextField.text = "\(engine.size)"
         sizeStepper.value = Double(engine.size)
-        refreshRateSlider.value = 9.0
+        refreshRateSlider.value = refreshRateSlider.maximumValue
         refreshRateSlider.isEnabled = false
         refreshRateTextField.text = "\(refreshRateSlider.value)"
         refreshRateTextField.isEnabled = false
@@ -43,7 +43,7 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         guard let val = Int(text) else {
             showErrorAlert(withMessage: "Invalid value: \(text), please try again.") {
                 //sender.text = "\(StandardEngine.getEngine().rows)"
-                sender.text = "\(StandardEngine.getEngine().size)"
+                sender.text = "\(self.engine.size)"
             }
             return
         }
@@ -59,7 +59,7 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func updateGridSize(size: Int) {
-        engine = StandardEngine.getEngine()
+        //engine = StandardEngine.getEngine()
         if engine.size != size {
             engine.refreshRate = 0.0
             engine.setGridSize(size: size)
@@ -71,7 +71,7 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         guard let text = sender.text else { return }
         guard let val = Double(text) else {
             showErrorAlert(withMessage: "Invalid value: \(text), please try again.") {
-                sender.text = "\(StandardEngine.getEngine().refreshRate)"
+                sender.text = "\(self.engine.refreshRate)"
             }
             return
         }
@@ -83,6 +83,7 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func refreshRate(_ sender: UISlider) {
+        refreshRateTextField.text = "\(refreshRateSlider.value)"
         updateRefreshRate(rate: Double(refreshRateSlider.value))
     }
 
@@ -95,7 +96,7 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
             updateRefreshRate(rate: Double(refreshRateSlider.value))
         } else {
             //refreshRatePreviousValue = refreshRateSlider.value
-            //refreshRateSlider.value = 0.0
+            //refreshRateSlider.value = 0.1
             refreshRateSlider.isEnabled = false
             //refreshRateTextField.text = "\(refreshRateSlider.value)"
             refreshRateTextField.isEnabled = false
@@ -106,7 +107,7 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func updateRefreshRate(rate: Double) {
-        StandardEngine.getEngine().refreshRate = TimeInterval(rate)
+        engine.refreshRate = rate
         //if refreshRateSlider.isEnabled {
             //refreshRateTextField.text = "\(rate)"
         //}

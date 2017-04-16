@@ -189,6 +189,8 @@ class StandardEngine: EngineProtocol {
     var refreshTimer: Timer?
     var refreshRate: TimeInterval = 0.0 {
         didSet {
+            refreshTimer?.invalidate()
+            refreshTimer = nil
             if refreshRate > 0.0 {
                 refreshTimer = Timer.scheduledTimer(
                     withTimeInterval: refreshRate,
@@ -197,10 +199,10 @@ class StandardEngine: EngineProtocol {
                     _ = self.step()
                 }
             }
-            else {
+            /*else {
                 refreshTimer?.invalidate()
                 refreshTimer = nil
-            }
+            }*/
         }
     }
     
