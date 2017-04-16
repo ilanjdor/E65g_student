@@ -23,6 +23,9 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.black], for:.normal)
+        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.blue], for:.selected)
+
         engine = StandardEngine.getEngine()
         sizeTextField.text = "\(engine.size)"
         sizeStepper.value = Double(engine.size)

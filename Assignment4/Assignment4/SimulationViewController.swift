@@ -21,6 +21,7 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
         engine = StandardEngine.getEngine()
         engine.delegate = self
         gridView.gridViewDataSource = self
+        
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         nc.addObserver(
