@@ -16,12 +16,9 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var refreshRateTextField: UITextField!
     @IBOutlet weak var refreshRateSlider: UISlider!
     @IBOutlet weak var refreshOnOffSwitch: UISwitch!
-    
-    /*func engineDidUpdate(withGrid: GridProtocol) {
-        
-    }*/
 
     var engine: StandardEngine!
+    //var refreshRatePreviousValue: Float = 0.1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +26,11 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         engine = StandardEngine.getEngine()
         sizeTextField.text = "\(engine.size)"
         sizeStepper.value = Double(engine.size)
+        refreshRateSlider.value = 9.0
+        refreshRateSlider.isEnabled = false
+        refreshRateTextField.text = "\(refreshRateSlider.value)"
+        refreshRateTextField.isEnabled = false
+        refreshOnOffSwitch.isOn = false
     }
 
     override func didReceiveMemoryWarning() {
@@ -51,15 +53,18 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func gridSizeEditingDidEndOnExit(_ sender: Any) {
     }
+    
     @IBAction func sizeStep(_ sender: Any) {
         updateGridSize(size: Int(sizeStepper.value))
     }
     
     private func updateGridSize(size: Int) {
         engine = StandardEngine.getEngine()
-        engine.refreshRate = 0.0
-        engine.setGridSize(size: size)
-        sizeTextField.text = "\(size)"
+        if engine.size != size {
+            engine.refreshRate = 0.0
+            engine.setGridSize(size: size)
+            sizeTextField.text = "\(size)"
+        }
     }
     
     @IBAction func refreshRateEditingDidEnd(_ sender: UITextField) {
@@ -70,8 +75,11 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
             }
             return
         }
-        updateRefreshRate(rate: val)
         refreshRateSlider.value = Float(val)
+        updateRefreshRate(rate: val)
+    }
+    
+    @IBAction func refreshRateEditingDidEndOnExit(_ sender: Any) {
     }
     
     @IBAction func refreshRate(_ sender: UISlider) {
@@ -80,15 +88,28 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction func refreshOnOff(_ sender: UISwitch) {
         if sender.isOn {
+            refreshRateTextField.isEnabled = true
+            //refreshRateTextField.text = "\(refreshRatePreviousValue)"
+            refreshRateSlider.isEnabled = true
+            //refreshRateSlider.value = refreshRatePreviousValue
             updateRefreshRate(rate: Double(refreshRateSlider.value))
         } else {
+            //refreshRatePreviousValue = refreshRateSlider.value
+            //refreshRateSlider.value = 0.0
+            refreshRateSlider.isEnabled = false
+            //refreshRateTextField.text = "\(refreshRateSlider.value)"
+            refreshRateTextField.isEnabled = false
             updateRefreshRate(rate: 0.0)
         }
+        //updateRefreshRate(rate: Double(refreshRateSlider.value))
+        //setNeedsDisplay
     }
     
     private func updateRefreshRate(rate: Double) {
         StandardEngine.getEngine().refreshRate = TimeInterval(rate)
-        refreshRateTextField.text = "\(rate)"
+        //if refreshRateSlider.isEnabled {
+            //refreshRateTextField.text = "\(rate)"
+        //}
     }
     
     //MARK: AlertController Handling

@@ -190,7 +190,7 @@ class StandardEngine: EngineProtocol {
     var refreshRate: TimeInterval = 0.0 {
         didSet {
             if refreshRate > 0.0 {
-                refreshTimer? = Timer.scheduledTimer(
+                refreshTimer = Timer.scheduledTimer(
                     withTimeInterval: refreshRate,
                     repeats: true
                 ) { (t: Timer) in

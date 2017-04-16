@@ -53,7 +53,7 @@
                                                         <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
                                                         <connections>
                                                             <action selector="gridSizeEditingDidEnd:" destination="9pv-A4-QxB" eventType="editingDidEnd" id="EaU-oW-4OU"/>
-                                                            <action selector="gridSizeEditingDidEndOnExit:" destination="9pv-A4-QxB" eventType="editingDidEndOnExit" id="znd-z0-2TO"/>
+                                                            <action selector="gridSizeEditingDidEndOnExit:" destination="9pv-A4-QxB" eventType="editingDidEndOnExit" id="2kT-bk-n7v"/>
                                                             <outlet property="delegate" destination="9pv-A4-QxB" id="jbU-Re-Q3L"/>
                                                         </connections>
                                                     </textField>
@@ -93,6 +93,8 @@
                                                         <textInputTraits key="textInputTraits"/>
                                                         <connections>
                                                             <action selector="refreshRateEditingDidEnd:" destination="9pv-A4-QxB" eventType="editingDidEnd" id="5cW-vO-Km7"/>
+                                                            <action selector="refreshRateEditingDidEndOnExit:" destination="9pv-A4-QxB" eventType="editingDidEndOnExit" id="umS-Wx-0z0"/>
+                                                            <outlet property="delegate" destination="9pv-A4-QxB" id="zAD-BB-Uiz"/>
                                                         </connections>
                                                     </textField>
                                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.10000000000000001" minValue="0.10000000000000001" maxValue="10" translatesAutoresizingMaskIntoConstraints="NO" id="IGF-NK-k48">
