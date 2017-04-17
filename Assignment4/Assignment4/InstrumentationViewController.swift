@@ -9,9 +9,9 @@
 import UIKit
 
 class InstrumentationViewController: UIViewController, UITextFieldDelegate {
-    @IBOutlet weak var sizeTextField: UITextField!
+    @IBOutlet weak var rowsTextField: UITextField!
+    @IBOutlet weak var colsTextField: UITextField!
     @IBOutlet weak var sizeStepper: UIStepper!
-    
     @IBOutlet weak var refreshRateTextField: UITextField!
     @IBOutlet weak var refreshRateSlider: UISlider!
     @IBOutlet weak var refreshOnOffSwitch: UISwitch!
@@ -25,7 +25,8 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.blue], for:.selected)
 
         engine = StandardEngine.getEngine()
-        sizeTextField.text = "\(engine.rows)"
+        rowsTextField.text = "\(engine.rows)"
+        colsTextField.text = "\(engine.cols)"
         sizeStepper.value = Double(engine.rows)
         refreshRateSlider.value = refreshRateSlider.maximumValue
         refreshRateSlider.isEnabled = false
@@ -39,7 +40,7 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func gridSizeEditingDidEnd(_ sender: UITextField) {
+    @IBAction func rowsEditingDidEnd(_ sender: UITextField) {
         guard let text = sender.text else { return }
         guard let val = Int(text) else {
             showErrorAlert(withMessage: "Invalid value: \(text), please try again.") {
@@ -56,8 +57,29 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         sizeStepper.value = Double(val)
         updateGridSize(rows: val, cols: val)
     }
+
+    @IBAction func rowsEditingDidEndOnExit(_ sender: UITextField) {
+    }
     
-    @IBAction func gridSizeEditingDidEndOnExit(_ sender: Any) {
+    @IBAction func colsEditingDidEnd(_ sender: UITextField) {
+        guard let text = sender.text else { return }
+        guard let val = Int(text) else {
+            showErrorAlert(withMessage: "Invalid value: \(text), please try again.") {
+                sender.text = "\(self.engine.cols)"
+            }
+            return
+        }
+        if Float(val) < Float(sizeStepper.minimumValue) || Float(val) > Float(sizeStepper.maximumValue) {
+            showErrorAlert(withMessage: "Invalid value: \(val), please try again.") {
+                sender.text = "\(self.engine.cols)"
+            }
+            return
+        }
+        sizeStepper.value = Double(val)
+        updateGridSize(rows: val, cols: val)
+    }
+    
+    @IBAction func colsEditingDidEndOnExit(_ sender: UITextField) {
     }
     
     @IBAction func sizeStep(_ sender: Any) {
@@ -69,7 +91,8 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         if engine.rows != rows {
             engine.refreshRate = 0.0
             engine.setGridSize(rows: rows, cols: cols)
-            sizeTextField.text = "\(rows)"
+            rowsTextField.text = "\(rows)"
+            colsTextField.text = "\(cols)"
         }
     }
     

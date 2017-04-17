@@ -11,12 +11,6 @@ import UIKit
 @IBDesignable class GridView: UIView, GridViewDataSource {
     @IBInspectable var rows: Int = 10
     @IBInspectable var cols: Int = 10
-    
-    /*@IBInspectable var size: Int = 10 {
-        didSet {
-            self.grid = Grid(self.size, self.size) as? GridViewDataSource
-        }
-    }*/
 
     @IBInspectable var livingColor: UIColor = UIColor.blue
     @IBInspectable var emptyColor: UIColor = UIColor.red

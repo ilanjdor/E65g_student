@@ -171,7 +171,6 @@ class StandardEngine: EngineProtocol {
     
     private static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
     
-    //required init(rows: Int, cols: Int) {
     required init(rows: Int, cols: Int) {
         self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty })
         self.rows = rows
