@@ -1,6 +1,6 @@
- //
+//
 //  GridView.swift
-//  Assignment3
+//  Assignment4
 //
 //  Created by Ilan on 3/15/17.
 //  Copyright © 2017 Harvard Division of Continuing Education. All rights reserved.
@@ -26,18 +26,12 @@ import UIKit
     @IBInspectable var gridWidth:CGFloat = CGFloat(2)
     
     var engine: StandardEngine!
-    //var grid = Grid(0, 0)
     var gridViewDataSource: GridViewDataSource?
     
     public subscript (row: Int, col: Int) -> CellState {
         get { return gridViewDataSource![row,col] }
         set { gridViewDataSource?[row,col] = newValue }
     }
-    
-    /*public subscript (row: Int, col: Int) -> CellState {
-        get { return engine.grid[row,col] }
-        set { engine.grid[row,col] = newValue }
-    }*/
     
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -120,11 +114,6 @@ import UIKit
         path.stroke()
     }
     
-    /*func next() {
-        grid = grid?.next()
-        setNeedsDisplay()
-    }*/
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         lastTouchedPosition = process(touches: touches)
     }
@@ -142,7 +131,6 @@ import UIKit
     
     func process(touches: Set<UITouch>) -> GridPosition? {
         guard touches.count == 1 else { return nil }
-        //added by me on 2017/04/10
         guard let pos = convert(touch: touches.first!) else { return nil }
         
         //************* IMPORTANT ****************
@@ -154,12 +142,6 @@ import UIKit
         if gridViewDataSource != nil {
             gridViewDataSource![pos.row, pos.col] = gridViewDataSource![pos.row, pos.col].isAlive ? .empty : .alive
             setNeedsDisplay()
-            let nc = NotificationCenter.default
-            let name = Notification.Name(rawValue: "ManualUpdate")
-            let n = Notification(name: name,
-                                 object: nil,
-                                 userInfo: ["manual" : self])
-            nc.post(n)
         }
         return pos
     }
@@ -173,7 +155,6 @@ import UIKit
         let gridHeight = frame.size.height
         let col = touchY / gridHeight * CGFloat(self.size) //(gridSize)
         
-        //added by me on 2017/04/10
         guard touchY > 0 && touchY < gridHeight
             && touchX > 0 && touchX < gridWidth
             else { return nil }

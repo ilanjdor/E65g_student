@@ -12,12 +12,14 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
     @IBOutlet weak var gridView: GridView!
     
     var engine: StandardEngine!
-    //var gridDataSource: GridViewDataSource?
+    
+    public subscript (row: Int, col: Int) -> CellState {
+        get { return engine.grid[row,col] }
+        set { engine.grid[row,col] = newValue }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //let size = gridView.size
-        //engine = StandardEngine(rows: size, cols: size)
         engine = StandardEngine.getEngine()
         engine.delegate = self
         gridView.gridViewDataSource = self
@@ -38,21 +40,10 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
         // Dispose of any resources that can be recreated.
     }
     
-    public subscript (row: Int, col: Int) -> CellState {
-        get { return engine.grid[row,col] }
-        set { engine.grid[row,col] = newValue }
-    }
-    
     @IBAction func next(_ sender: Any) {
         if self.gridView.gridViewDataSource != nil {
-            /*if engine.refreshRate > 0 {
-                
-            }*/
             engine.grid = self.engine.step()
         }
-        
-        
-        //updateRefreshRate(rate: Double(refreshRateSlider.value))
     }
     
     func engineDidUpdate(withGrid: GridProtocol) {

@@ -33,19 +33,11 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
         diedCountTextField.isEnabled = false
         self.clearStatistics()
         self.displayStatistics()
+        
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         nc.addObserver(
             forName: name,
-            object: nil,
-            queue: nil) { (n) in
-                self.clearStatistics()
-                self.calculateStatistics()
-                self.displayStatistics()
-        }
-        let name2 = Notification.Name(rawValue: "ManualUpdate")
-        nc.addObserver(
-            forName: name2,
             object: nil,
             queue: nil) { (n) in
                 self.clearStatistics()
@@ -64,7 +56,7 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
         set { engine.grid[row,col] = newValue }
     }
     
-    private func clearStatistics() {
+    func clearStatistics() {
         aliveCount = 0
         emptyCount = 0
         bornCount = 0
@@ -88,10 +80,6 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
                 }
             }
         }
-        //emptyCount = engine.size * engine.size
-            //- aliveCount
-            //- bornCount
-            //- diedCount
     }
     
     private func displayStatistics() {
