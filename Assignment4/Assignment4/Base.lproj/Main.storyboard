@@ -27,7 +27,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="431"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="upL-kl-yVA" userLabel="Controls">
-                                        <rect key="frame" x="30" y="120.5" width="260" height="230"/>
+                                        <rect key="frame" x="30" y="110.5" width="260" height="230"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="SN4-4f-qVz" userLabel="Rows, Cols">
                                                 <rect key="frame" x="0.0" y="0.0" width="260" height="30"/>
@@ -185,7 +185,7 @@
                                 <color key="backgroundColor" red="0.40000000600000002" green="1" blue="1" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="upL-kl-yVA" firstAttribute="centerX" secondItem="bFx-Bd-nWB" secondAttribute="centerX" id="ID6-Lj-DL4"/>
-                                    <constraint firstItem="upL-kl-yVA" firstAttribute="centerY" secondItem="bFx-Bd-nWB" secondAttribute="centerY" constant="20" id="hwr-gl-uNR"/>
+                                    <constraint firstItem="upL-kl-yVA" firstAttribute="centerY" secondItem="bFx-Bd-nWB" secondAttribute="centerY" constant="10" id="hwr-gl-uNR"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -227,7 +227,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="431"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2su-b8-bGq" customClass="GridView" customModule="Assignment4" customModuleProvider="target">
-                                        <rect key="frame" x="40" y="115.5" width="240" height="240"/>
+                                        <rect key="frame" x="40" y="105.5" width="240" height="240"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="2su-b8-bGq" secondAttribute="height" multiplier="1:1" id="Jsw-34-Uxd"/>
@@ -257,7 +257,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iPV-o8-3uZ">
-                                        <rect key="frame" x="40" y="91.5" width="50" height="20"/>
+                                        <rect key="frame" x="40" y="81.5" width="50" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="50" id="98m-hL-7G1"/>
                                             <constraint firstAttribute="height" constant="20" id="ktG-Jq-SF8"/>
@@ -285,7 +285,7 @@
                                     <constraint firstItem="2su-b8-bGq" firstAttribute="centerX" secondItem="c1m-Cp-OQo" secondAttribute="centerX" id="1TC-UY-HBJ"/>
                                     <constraint firstItem="2su-b8-bGq" firstAttribute="height" secondItem="c1m-Cp-OQo" secondAttribute="height" multiplier="0.75" priority="750" id="75a-nL-Iyc"/>
                                     <constraint firstItem="2su-b8-bGq" firstAttribute="top" secondItem="iPV-o8-3uZ" secondAttribute="bottom" constant="4" id="898-3Y-qzT"/>
-                                    <constraint firstItem="2su-b8-bGq" firstAttribute="centerY" secondItem="c1m-Cp-OQo" secondAttribute="centerY" constant="20" id="Qzi-La-dlF"/>
+                                    <constraint firstItem="2su-b8-bGq" firstAttribute="centerY" secondItem="c1m-Cp-OQo" secondAttribute="centerY" constant="10" id="Qzi-La-dlF"/>
                                     <constraint firstItem="2su-b8-bGq" firstAttribute="width" relation="lessThanOrEqual" secondItem="c1m-Cp-OQo" secondAttribute="width" multiplier="0.75" id="gXv-U0-uy5"/>
                                     <constraint firstItem="2su-b8-bGq" firstAttribute="height" relation="lessThanOrEqual" secondItem="c1m-Cp-OQo" secondAttribute="height" multiplier="0.75" id="hbq-Hf-zq2"/>
                                     <constraint firstItem="iPV-o8-3uZ" firstAttribute="leading" secondItem="2su-b8-bGq" secondAttribute="leading" id="mc5-NF-Jv0"/>
@@ -326,7 +326,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="431"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="k9i-hR-Rj9" userLabel="Counts">
-                                        <rect key="frame" x="85" y="138" width="150" height="195"/>
+                                        <rect key="frame" x="85" y="128" width="150" height="195"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="ipt-YU-b5b" userLabel="Alive">
                                                 <rect key="frame" x="0.0" y="0.0" width="150" height="30"/>
@@ -433,7 +433,7 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="1" blue="0.50196081400000003" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="k9i-hR-Rj9" firstAttribute="centerY" secondItem="AM9-qz-G3Q" secondAttribute="centerY" constant="20" id="0Vb-DZ-Kop"/>
+                                    <constraint firstItem="k9i-hR-Rj9" firstAttribute="centerY" secondItem="AM9-qz-G3Q" secondAttribute="centerY" constant="10" id="0Vb-DZ-Kop"/>
                                     <constraint firstItem="k9i-hR-Rj9" firstAttribute="centerX" secondItem="AM9-qz-G3Q" secondAttribute="centerX" id="phl-Nj-rOK"/>
                                 </constraints>
                             </view>
