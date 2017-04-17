@@ -154,6 +154,12 @@ import UIKit
         if gridViewDataSource != nil {
             gridViewDataSource![pos.row, pos.col] = gridViewDataSource![pos.row, pos.col].isAlive ? .empty : .alive
             setNeedsDisplay()
+            let nc = NotificationCenter.default
+            let name = Notification.Name(rawValue: "ManualUpdate")
+            let n = Notification(name: name,
+                                 object: nil,
+                                 userInfo: ["manual" : self])
+            nc.post(n)
         }
         return pos
     }

@@ -27,8 +27,10 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
         // Do any additional setup after loading the view, typically from a nib.
         engine = StandardEngine.getEngine()
         gridViewDataSource = self
-        //gridView.gridViewDataSource = self
         aliveCountTextField.isEnabled = false
+        emptyCountTextField.isEnabled = false
+        bornCountTextField.isEnabled = false
+        diedCountTextField.isEnabled = false
         self.clearStatistics()
         self.displayStatistics()
         let nc = NotificationCenter.default
@@ -41,7 +43,7 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
                 self.calculateStatistics()
                 self.displayStatistics()
         }
-        /*let name2 = Notification.Name(rawValue: "ManualUpdate")
+        let name2 = Notification.Name(rawValue: "ManualUpdate")
         nc.addObserver(
             forName: name2,
             object: nil,
@@ -49,7 +51,7 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
                 self.clearStatistics()
                 self.calculateStatistics()
                 self.displayStatistics()
-        }*/
+        }
     }
     
     override func didReceiveMemoryWarning() {
