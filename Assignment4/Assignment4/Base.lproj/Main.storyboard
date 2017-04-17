@@ -188,13 +188,13 @@
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="color" keyPath="livingColor">
-                                                <color key="value" red="0.0" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="value" red="0.0" green="1" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="color" keyPath="emptyColor">
                                                 <color key="value" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="color" keyPath="bornColor">
-                                                <color key="value" red="0.0" green="0.50196081400000003" blue="0.0" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
+                                                <color key="value" red="0.0" green="1" blue="0.50196081400000003" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="color" keyPath="diedColor">
                                                 <color key="value" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
@@ -411,7 +411,7 @@
                         <outlet property="aliveCountTextField" destination="Z9v-2k-QN5" id="6QF-by-muD"/>
                         <outlet property="bornCountTextField" destination="kaG-Xt-jNY" id="dQY-Bn-6q5"/>
                         <outlet property="diedCountTextField" destination="tYp-1t-c7C" id="a9H-D4-68T"/>
-                        <outlet property="emptyCountTextField" destination="kaG-Xt-jNY" id="OSc-3G-rnc"/>
+                        <outlet property="emptyCountTextField" destination="I5S-Xg-hPW" id="GMr-0w-OXO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0mg-Yg-pra" userLabel="First Responder" sceneMemberID="firstResponder"/>

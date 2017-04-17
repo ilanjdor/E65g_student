@@ -28,6 +28,9 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
         engine = StandardEngine.getEngine()
         gridViewDataSource = self
         //gridView.gridViewDataSource = self
+        aliveCountTextField.isEnabled = false
+        self.clearStatistics()
+        self.displayStatistics()
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         nc.addObserver(
@@ -38,7 +41,7 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
                 self.calculateStatistics()
                 self.displayStatistics()
         }
-        let name2 = Notification.Name(rawValue: "ManualUpdate")
+        /*let name2 = Notification.Name(rawValue: "ManualUpdate")
         nc.addObserver(
             forName: name2,
             object: nil,
@@ -46,7 +49,7 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
                 self.clearStatistics()
                 self.calculateStatistics()
                 self.displayStatistics()
-        }
+        }*/
     }
     
     override func didReceiveMemoryWarning() {
@@ -83,6 +86,10 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
                 }
             }
         }
+        //emptyCount = engine.size * engine.size
+            //- aliveCount
+            //- bornCount
+            //- diedCount
     }
     
     private func displayStatistics() {

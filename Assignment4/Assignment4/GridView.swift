@@ -139,42 +139,8 @@ import UIKit
     
     // Updated since class
     var lastTouchedPosition: GridPosition?
- 
-    func process(touches: Set<UITouch>) -> GridPosition? {
-        let touchY = touches.first!.location(in: self.superview).y
-        let touchX = touches.first!.location(in: self.superview).x
-        guard touchX > frame.origin.x && touchX < (frame.origin.x + frame.size.width) else { return nil }
-        guard touchY > frame.origin.y && touchY < (frame.origin.y + frame.size.height) else { return nil }
-        
-        guard touches.count == 1 else { return nil }
-        let pos = convert(touch: touches.first!)
-        
-        //************* IMPORTANT ****************
-        guard lastTouchedPosition?.row != pos.row
-            || lastTouchedPosition?.col != pos.col
-            else { return pos }
-        //****************************************
-        
-        if gridViewDataSource != nil {
-            gridViewDataSource![pos.row, pos.col] = gridViewDataSource![pos.row, pos.col].isAlive ? .empty : .alive
-            setNeedsDisplay()
-        }
-        return pos
-    }
     
-    func convert(touch: UITouch) -> GridPosition {
-        let touchY = touch.location(in: self).y
-        let gridHeight = frame.size.height
-        let row = touchY / gridHeight * CGFloat(self.size)
-        
-        let touchX = touch.location(in: self).x
-        let gridWidth = frame.size.width
-        let col = touchX / gridWidth * CGFloat(self.size)
-        
-        return GridPosition(row: Int(row), col: Int(col))
-    }
- }
-    /*func process(touches: Set<UITouch>) -> GridPosition? {
+    func process(touches: Set<UITouch>) -> GridPosition? {
         guard touches.count == 1 else { return nil }
         //added by me on 2017/04/10
         guard let pos = convert(touch: touches.first!) else { return nil }
@@ -207,5 +173,5 @@ import UIKit
             else { return nil }
         
         return GridPosition(row: Int(row), col: Int(col))
-    }*/
-  */*/
+    }
+ }
