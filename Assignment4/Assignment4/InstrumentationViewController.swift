@@ -25,8 +25,8 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.blue], for:.selected)
 
         engine = StandardEngine.getEngine()
-        sizeTextField.text = "\(engine.size)"
-        sizeStepper.value = Double(engine.size)
+        sizeTextField.text = "\(engine.rows)"
+        sizeStepper.value = Double(engine.rows)
         refreshRateSlider.value = refreshRateSlider.maximumValue
         refreshRateSlider.isEnabled = false
         refreshRateTextField.text = "\(refreshRateSlider.value)"
@@ -43,25 +43,25 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         guard let text = sender.text else { return }
         guard let val = Int(text) else {
             showErrorAlert(withMessage: "Invalid value: \(text), please try again.") {
-                sender.text = "\(self.engine.size)"
+                sender.text = "\(self.engine.rows)"
             }
             return
         }
         sizeStepper.value = Double(val)
-        updateGridSize(size: val)
+        updateGridSize(rows: val, cols: val)
     }
     
     @IBAction func gridSizeEditingDidEndOnExit(_ sender: Any) {
     }
     
     @IBAction func sizeStep(_ sender: Any) {
-        updateGridSize(size: Int(sizeStepper.value))
+        updateGridSize(rows: Int(sizeStepper.value), cols: Int(sizeStepper.value))
     }
     
-    private func updateGridSize(size: Int) {
-        if engine.size != size {
+    private func updateGridSize(rows: Int, cols: Int) {
+        if engine.rows != rows {
             engine.refreshRate = 0.0
-            engine.setGridSize(size: size)
+            engine.setGridSize(rows: rows, cols: cols)
             sizeTextField.text = "\(size)"
         }
     }
@@ -97,10 +97,6 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
             engine.refreshRate = 0.0
         }
     }
-    
-    //private func updateRefreshRate(rate: Double) {
-        //engine.refreshRate = rate
-    //}
     
     //MARK: AlertController Handling
     func showErrorAlert(withMessage msg:String, action: (() -> Void)? ) {

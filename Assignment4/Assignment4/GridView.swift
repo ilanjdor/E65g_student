@@ -9,7 +9,8 @@
 import UIKit
 
 @IBDesignable class GridView: UIView, GridViewDataSource {
-    @IBInspectable var size: Int = 10
+    @IBInspectable var rows: Int = 10
+    @IBInspectable var cols: Int = 10
     
     /*@IBInspectable var size: Int = 10 {
         didSet {
@@ -37,16 +38,17 @@ import UIKit
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
         engine = StandardEngine.getEngine()
-        self.size = engine.size
+        self.rows = engine.rows
+        self.cols = engine.cols
         
     // Drawing code
-         let size = CGSize(
-            width: rect.size.width / CGFloat(self.size),
-            height: rect.size.height / CGFloat(self.size)
-         )
-         let base = rect.origin
-         (0 ..< self.size).forEach { i in
-            (0 ..< self.size).forEach { j in
+        let size = CGSize(
+            width: rect.size.width / CGFloat(self.cols),
+            height: rect.size.height / CGFloat(self.rows)
+        )
+        let base = rect.origin
+        (0 ..< self.cols).forEach { i in
+            (0 ..< self.rows).forEach { j in
                 let origin = CGPoint(
                     x: base.x + (CGFloat(i) * size.width),
                     y: base.y + (CGFloat(j) * size.height)
@@ -72,7 +74,7 @@ import UIKit
             }
          }
 
-        (0 ... self.size).forEach {
+        (0 ... self.cols).forEach {
             drawLine(
                 start: CGPoint(
                     x: rect.origin.x + (CGFloat($0) * size.width),
@@ -83,6 +85,8 @@ import UIKit
                     y: rect.origin.y + rect.size.height
                 )
             )
+        }
+        (0 ... self.rows).forEach {
             drawLine(
                 start: CGPoint(
                     x: rect.origin.x,
@@ -149,11 +153,11 @@ import UIKit
     func convert(touch: UITouch) -> GridPosition? {
         let touchX = touch.location(in: self).x
         let gridWidth = frame.size.width
-        let row = touchX / gridWidth * CGFloat(self.size) //(gridSize)
+        let row = touchX / gridWidth * CGFloat(self.rows)
         
         let touchY = touch.location(in: self).y
         let gridHeight = frame.size.height
-        let col = touchY / gridHeight * CGFloat(self.size) //(gridSize)
+        let col = touchY / gridHeight * CGFloat(self.cols)
         
         guard touchY > 0 && touchY < gridHeight
             && touchX > 0 && touchX < gridWidth

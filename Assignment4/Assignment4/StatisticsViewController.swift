@@ -64,8 +64,8 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
     }
     
     private func calculateStatistics() {
-        (0 ..< engine.size).forEach { i in
-            (0 ..< engine.size).forEach { j in
+        (0 ..< engine.cols).forEach { i in
+            (0 ..< engine.rows).forEach { j in
                 if let grid = self.gridViewDataSource {
                     switch grid[(i, j)] {
                         case .alive:
