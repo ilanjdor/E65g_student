@@ -47,6 +47,12 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
             }
             return
         }
+        if Float(val) < Float(sizeStepper.minimumValue) || Float(val) > Float(sizeStepper.maximumValue) {
+            showErrorAlert(withMessage: "Invalid value: \(val), please try again.") {
+                sender.text = "\(self.engine.rows)"
+            }
+            return
+        }
         sizeStepper.value = Double(val)
         updateGridSize(rows: val, cols: val)
     }
@@ -55,14 +61,15 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func sizeStep(_ sender: Any) {
-        updateGridSize(rows: Int(sizeStepper.value), cols: Int(sizeStepper.value))
+        let val = Int(sizeStepper.value)
+        updateGridSize(rows: val, cols: val)
     }
     
     private func updateGridSize(rows: Int, cols: Int) {
         if engine.rows != rows {
             engine.refreshRate = 0.0
             engine.setGridSize(rows: rows, cols: cols)
-            sizeTextField.text = "\(size)"
+            sizeTextField.text = "\(rows)"
         }
     }
     
@@ -70,6 +77,12 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         guard let text = sender.text else { return }
         guard let val = Double(text) else {
             showErrorAlert(withMessage: "Invalid value: \(text), please try again.") {
+                sender.text = "\(self.engine.refreshRate)"
+            }
+            return
+        }
+        if Float(val) < refreshRateSlider.minimumValue || Float(val) > refreshRateSlider.maximumValue {
+            showErrorAlert(withMessage: "Invalid value: \(val), please try again.") {
                 sender.text = "\(self.engine.refreshRate)"
             }
             return
