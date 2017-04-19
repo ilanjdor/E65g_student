@@ -251,8 +251,11 @@
                                             <userDefinedRuntimeAttribute type="number" keyPath="gridWidth">
                                                 <real key="value" value="2"/>
                                             </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="size">
-                                                <integer key="value" value="20"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="rows">
+                                                <integer key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cols">
+                                                <integer key="value" value="10"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
