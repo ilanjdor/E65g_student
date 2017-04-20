@@ -11,23 +11,11 @@ import UIKit
 @IBDesignable class GridView: UIView, GridViewDataSource {
     @IBInspectable var rows: Int = 10
     @IBInspectable var cols: Int = 10
-
-    //@IBInspectable var livingColor: UIColor = UIColor.blue
-    //@IBInspectable var emptyColor: UIColor = UIColor.red
-    //@IBInspectable var bornColor: UIColor = UIColor.green
-    //@IBInspectable var diedColor: UIColor = UIColor.brown
-    //@IBInspectable var gridColor: UIColor = UIColor.black
-    @IBInspectable var livingColor: UIColor =
-        UIColor(red: (0/255.0), green: (255/255.0), blue: (128/255.0), alpha: 1.0)
-    @IBInspectable var emptyColor: UIColor =
-        UIColor(red: (76/255.0), green: (76/255.0), blue: (76/255.0), alpha: 1.0)
-    @IBInspectable var bornColor: UIColor =
-        UIColor(red: (0/255.0), green: (255/255.0), blue: (128/255.0), alpha: 0.6)
-    @IBInspectable var diedColor: UIColor =
-        UIColor(red: (76/255.0), green: (76/255.0), blue: (76/255.0), alpha: 0.6)
-    @IBInspectable var gridColor: UIColor =
-        UIColor(red: (0/255.0), green: (0/255.0), blue: (0/255.0), alpha: 1.0)
-    
+    @IBInspectable var livingColor: UIColor = UIColor(red: (0/255.0), green: (255/255.0), blue: (128/255.0), alpha: 1.0)
+    @IBInspectable var emptyColor: UIColor = UIColor(red: (76/255.0), green: (76/255.0), blue: (76/255.0), alpha: 1.0)
+    @IBInspectable var bornColor: UIColor = UIColor(red: (0/255.0), green: (255/255.0), blue: (128/255.0), alpha: 0.6)
+    @IBInspectable var diedColor: UIColor = UIColor(red: (76/255.0), green: (76/255.0), blue: (76/255.0), alpha: 0.6)
+    @IBInspectable var gridColor: UIColor = UIColor(red: (0/255.0), green: (0/255.0), blue: (0/255.0), alpha: 1.0)
     @IBInspectable var gridWidth:CGFloat = CGFloat(2)
     
     var engine: StandardEngine!
