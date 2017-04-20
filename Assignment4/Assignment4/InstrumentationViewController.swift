@@ -28,7 +28,7 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         rowsTextField.text = "\(engine.rows)"
         colsTextField.text = "\(engine.cols)"
         sizeStepper.value = Double(engine.rows)
-        refreshRateSlider.value = refreshRateSlider.maximumValue
+        refreshRateSlider.value = refreshRateSlider.minimumValue
         refreshRateSlider.isEnabled = false
         refreshRateTextField.text = "\(refreshRateSlider.value)"
         refreshRateTextField.isEnabled = false
@@ -48,7 +48,7 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
             }
             return
         }
-        if Float(val) < Float(sizeStepper.minimumValue) || Float(val) > Float(sizeStepper.maximumValue) {
+        if Float(val) < 1 || Float(val) > Float(sizeStepper.maximumValue) {
             showErrorAlert(withMessage: "Invalid value: \(val), please try again.") {
                 sender.text = "\(self.engine.rows)"
             }
@@ -69,7 +69,7 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
             }
             return
         }
-        if Float(val) < Float(sizeStepper.minimumValue) || Float(val) > Float(sizeStepper.maximumValue) {
+        if Float(val) < 1 || Float(val) > Float(sizeStepper.maximumValue) {
             showErrorAlert(withMessage: "Invalid value: \(val), please try again.") {
                 sender.text = "\(self.engine.cols)"
             }
