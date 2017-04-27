@@ -84,7 +84,7 @@ var data = [
     ]
 ]
 
-class InstrumentationViewController: UIViewController, UITextFieldDelegate {
+class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     @IBOutlet weak var tableView: UITableView!
 
     override func viewWillAppear(_ animated: Bool) {

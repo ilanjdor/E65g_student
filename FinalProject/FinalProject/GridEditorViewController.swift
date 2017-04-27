@@ -36,5 +36,11 @@ class GridEditorViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func save(_ sender: UIBarButtonItem) {
+        if let newValue = fruitValueTextField.text,
+            let saveClosure = saveClosure {
+            saveClosure(newValue)
+            _ = self.navigationController?.popViewController(animated: true)
+        }
+    }
 }
-

@@ -308,6 +308,10 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="hRw-nI-kcm" id="6iE-tk-X46"/>
+                                    <outlet property="delegate" destination="hRw-nI-kcm" id="EUV-Z0-bsO"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -533,9 +537,6 @@
                                                 <integer key="value" value="1"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="next:" destination="4Ai-lq-fqt" eventType="touchUpInside" id="1cM-6v-s96"/>
-                                        </connections>
                                     </button>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Eq8-nC-o8j">
                                         <rect key="frame" x="110" y="60" width="100" height="30"/>
@@ -573,7 +574,13 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Simulation" image="second" selectedImage="second" id="jd9-UA-Wdh"/>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Fruit Editor" id="k4W-hO-6Ga" userLabel="Fruit Editor"/>
+                    <navigationItem key="navigationItem" title="Fruit Editor" id="k4W-hO-6Ga" userLabel="Fruit Editor">
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="EZo-rR-h1y">
+                            <connections>
+                                <action selector="save:" destination="4Ai-lq-fqt" id="ElZ-9C-gqD"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="fruitValueTextField" destination="Eq8-nC-o8j" id="Uv0-1A-Pp5"/>
