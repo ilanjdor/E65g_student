@@ -19,8 +19,10 @@ import UIKit
 class GridEditorViewController: UIViewController {
     
     var fruitValue: String?
+    var textViewValue: String?
     var saveClosure: ((String) -> Void)?
-    
+   
+    @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var fruitValueTextField: UITextField!
     
     override func viewDidLoad() {
@@ -28,6 +30,9 @@ class GridEditorViewController: UIViewController {
         navigationController?.isNavigationBarHidden = false
         if let fruitValue = fruitValue {
             fruitValueTextField.text = fruitValue
+        }
+        if let textViewValue = textViewValue {
+            textView.text = textViewValue
         }
     }
     
@@ -38,6 +43,7 @@ class GridEditorViewController: UIViewController {
     
     @IBAction func save(_ sender: UIBarButtonItem) {
         if let newValue = fruitValueTextField.text,
+        //if let newValue = textView.text,
             let saveClosure = saveClosure {
             saveClosure(newValue)
             _ = self.navigationController?.popViewController(animated: true)

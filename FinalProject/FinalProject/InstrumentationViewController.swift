@@ -8,6 +8,8 @@
 
 import UIKit
 
+let finalProjectURL = "https://dl.dropboxusercontent.com/u/7544475/S65g.json"
+
 var sectionHeaders = [
     "One", "Two", "Three", "Four", "Five", "Six"
 ]
@@ -84,41 +86,63 @@ var data = [
     ]
 ]
 
+var dataKeys: [String]?
+var dataValues: [[Int]]?
+
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     @IBOutlet weak var tableView: UITableView!
+    
+    var jsonContents: String?
 
     override func viewWillAppear(_ animated: Bool) {
+        //1st
         navigationController?.isNavigationBarHidden = true
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return data.count
+        //2nd
+        //5th
+        //8th
+        return 1 //data.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data[section].count
+        //4th
+        //7th
+        //10th
+        guard let dataKeys = dataKeys else { return 0 }
+        return dataKeys.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "basic"
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
         let label = cell.contentView.subviews.first as! UILabel
-        label.text = data[indexPath.section][indexPath.item]
-        
+        //label.text = data[indexPath.section][indexPath.item]
+        label.text = dataKeys?[indexPath.item]
         return cell
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionHeaders[section]
+        //3rd
+        //6th
+        //9th
+        //11th
+        return "Grid Configurations" //sectionHeaders[section]
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            var newData = data[indexPath.section]
+            var newData = dataKeys!
+            newData.remove(at: indexPath.row)
+            dataKeys = newData as [String]?
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            tableView.reloadData()
+            /*var newData = data[indexPath.section]
             newData.remove(at: indexPath.row)
             data[indexPath.section] = newData
             tableView.deleteRows(at: [indexPath], with: .automatic)
-            tableView.reloadData()
+            tableView.reloadData()*/
         }
     }
     
@@ -126,12 +150,40 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         let indexPath = tableView.indexPathForSelectedRow
         if let indexPath = indexPath {
             let fruitValue = data[indexPath.section][indexPath.row]
+            //let textViewValue = jsonContents
             if let vc = segue.destination as? GridEditorViewController {
                 vc.fruitValue = fruitValue
+                vc.textViewValue = jsonContents
                 vc.saveClosure = { newValue in
                     data[indexPath.section][indexPath.row] = newValue
                     self.tableView.reloadData()
                 }
+            }
+        }
+    }
+    
+    @IBAction func fetch(_ sender: UIBarButtonItem) {
+        let fetcher = Fetcher()
+        fetcher.fetchJSON(url: URL(string:finalProjectURL)!) { (json: Any?, message: String?) in
+            guard message == nil else {
+                print(message ?? "nil")
+                return
+            }
+            guard let json = json else {
+                print("no json")
+                return
+            }
+            print(json)
+            //let resultString = (json as AnyObject).description
+            let jsonArray = json as! NSArray
+            
+                let jsonDictionary = jsonArray[0] as! NSDictionary
+                let jsonTitle = jsonDictionary["title"] as! String
+                let jsonContents = jsonDictionary["contents"] as! [[Int]]
+            
+            print (jsonTitle, jsonContents)
+            OperationQueue.main.addOperation {
+                //self.textView.text = resultString
             }
         }
     }
@@ -148,6 +200,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     var engine: StandardEngine!
     
     override func viewDidLoad() {
+        //0th
+        
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.black], for:.normal)
@@ -185,6 +239,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             return
         }
         rowSlider.value = Float(val)
+        colSlider.value = Float(val)
         updateGridSize(rows: val, cols: val)
     }
 
@@ -205,6 +260,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             }
             return
         }
+        rowSlider.value = Float(val)
         colSlider.value = Float(val)
         updateGridSize(rows: val, cols: val)
     }
@@ -260,7 +316,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         engine.refreshRate = val
     }
     
-    @IBAction func refreshRateEditingDidEndOnExit(_ sender: Any) {
+    @IBAction func refreshRateEditingDidEndOnExit(_ sender: UITextField) {
     }
     
     @IBAction func refreshRateSlideMove(_ sender: UISlider) {
