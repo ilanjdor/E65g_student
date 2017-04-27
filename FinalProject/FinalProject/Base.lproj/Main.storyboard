@@ -8,6 +8,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -291,11 +292,11 @@
                                         <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YrL-YX-pXC" id="Z5G-Xd-kFx">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Uxo-n6-dLv">
-                                                    <rect key="frame" x="15" y="0.0" width="270" height="43.5"/>
+                                                    <rect key="frame" x="15" y="0.0" width="270" height="43"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -508,43 +509,59 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Da-RH-dtc" userLabel="Shader">
-                                <rect key="frame" x="0.0" y="44" width="320" height="480"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h2n-GP-QIH" userLabel="Shader">
+                                <rect key="frame" x="0.0" y="64" width="320" height="460"/>
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Eq8-nC-o8j">
-                                        <rect key="frame" x="110" y="60" width="100" height="30"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bFK-xT-CwX" customClass="GridView" customModule="FinalProject" customModuleProvider="target">
+                                        <rect key="frame" x="40.5" y="110" width="240" height="240"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="UT5-5x-2PC"/>
-                                            <constraint firstAttribute="width" constant="100" id="cP0-nj-tpA"/>
+                                            <constraint firstAttribute="width" secondItem="bFK-xT-CwX" secondAttribute="height" multiplier="1:1" id="dZg-me-dki"/>
                                         </constraints>
-                                        <nil key="textColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="Eq8-nC-o8j" firstAttribute="top" secondItem="7Da-RH-dtc" secondAttribute="top" constant="60" id="rw9-fn-a3Z"/>
-                                    <constraint firstItem="Eq8-nC-o8j" firstAttribute="centerX" secondItem="7Da-RH-dtc" secondAttribute="centerX" id="weo-aI-pqo"/>
+                                    <constraint firstItem="bFK-xT-CwX" firstAttribute="centerY" secondItem="h2n-GP-QIH" secondAttribute="centerY" id="57O-7Z-4Wz"/>
+                                    <constraint firstItem="bFK-xT-CwX" firstAttribute="width" relation="lessThanOrEqual" secondItem="h2n-GP-QIH" secondAttribute="width" multiplier="0.75" id="AB2-5O-y3O"/>
+                                    <constraint firstItem="bFK-xT-CwX" firstAttribute="height" secondItem="h2n-GP-QIH" secondAttribute="height" multiplier="0.75" priority="750" id="MWa-4P-qJ1"/>
+                                    <constraint firstItem="bFK-xT-CwX" firstAttribute="height" relation="lessThanOrEqual" secondItem="h2n-GP-QIH" secondAttribute="height" multiplier="0.75" id="hqD-M1-3ep"/>
+                                    <constraint firstItem="bFK-xT-CwX" firstAttribute="centerX" secondItem="h2n-GP-QIH" secondAttribute="centerX" id="oj2-ej-mE4"/>
+                                    <constraint firstItem="bFK-xT-CwX" firstAttribute="width" secondItem="h2n-GP-QIH" secondAttribute="width" multiplier="0.75" priority="750" id="vhX-7d-Uvw"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="7Da-RH-dtc" firstAttribute="leading" secondItem="vWj-Vr-L9B" secondAttribute="leading" id="Ge8-HM-yvZ"/>
-                            <constraint firstAttribute="trailing" secondItem="7Da-RH-dtc" secondAttribute="trailing" id="PSP-99-aPt"/>
-                            <constraint firstItem="7Da-RH-dtc" firstAttribute="top" secondItem="pLa-1L-yBS" secondAttribute="bottom" constant="-20" id="Xic-FQ-LFX"/>
-                            <constraint firstItem="i3z-gH-AxV" firstAttribute="top" secondItem="7Da-RH-dtc" secondAttribute="bottom" id="vUK-dH-ecf"/>
+                            <constraint firstAttribute="trailing" secondItem="h2n-GP-QIH" secondAttribute="trailing" id="9Ka-Y3-AoA"/>
+                            <constraint firstItem="h2n-GP-QIH" firstAttribute="top" secondItem="pLa-1L-yBS" secondAttribute="bottom" id="CKF-JN-6CR"/>
+                            <constraint firstItem="h2n-GP-QIH" firstAttribute="leading" secondItem="vWj-Vr-L9B" secondAttribute="leading" id="v86-Eg-lmf"/>
+                            <constraint firstItem="i3z-gH-AxV" firstAttribute="top" secondItem="h2n-GP-QIH" secondAttribute="bottom" id="zM5-XT-RDt"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Simulation" image="second" selectedImage="second" id="jd9-UA-Wdh"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Fruit Editor" id="k4W-hO-6Ga" userLabel="Fruit Editor">
-                        <barButtonItem key="rightBarButtonItem" title="Save" id="EZo-rR-h1y">
-                            <connections>
-                                <action selector="save:" destination="4Ai-lq-fqt" id="ElZ-9C-gqD"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Save" id="EZo-rR-h1y">
+                                <connections>
+                                    <action selector="save:" destination="4Ai-lq-fqt" id="ElZ-9C-gqD"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem style="plain" id="IA2-BK-ESR">
+                                <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" id="Eq8-nC-o8j">
+                                    <rect key="frame" x="167" y="7" width="100" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="30" id="UT5-5x-2PC"/>
+                                        <constraint firstAttribute="width" constant="100" id="cP0-nj-tpA"/>
+                                    </constraints>
+                                    <nil key="textColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </textField>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -553,7 +570,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9kd-7O-aKB" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2117" y="-433"/>
+            <point key="canvasLocation" x="2116.875" y="-433.0985915492958"/>
         </scene>
     </scenes>
     <resources>
