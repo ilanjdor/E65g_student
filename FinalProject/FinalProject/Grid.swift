@@ -186,6 +186,7 @@ public protocol EngineDelegate {
 public protocol EngineProtocol {
     var delegate: EngineDelegate? { get set }
     var grid: GridProtocol { get }
+    var prevRefreshRate: Double { get set }
     var refreshRate: Double { get set } //how can you default this to zero?
     var refreshTimer: Timer? { get set }
     var rows: Int { get set }
@@ -212,6 +213,7 @@ class StandardEngine: EngineProtocol {
     }
     
     var refreshTimer: Timer?
+    var prevRefreshRate: TimeInterval = 0.0
     var refreshRate: TimeInterval = 0.0 {
         didSet {
             refreshTimer?.invalidate()

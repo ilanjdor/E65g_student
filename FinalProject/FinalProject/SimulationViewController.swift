@@ -11,6 +11,20 @@ import UIKit
 class SimulationViewController: UIViewController, GridViewDataSource, EngineDelegate {
     @IBOutlet weak var gridView: GridView!
     
+    @IBOutlet weak var refreshOnOffSwitch: UISwitch!
+    
+    @IBAction func refreshOnOff(_ sender: UISwitch) {
+        if sender.isOn {
+//            refreshRateTextField.isEnabled = true
+//            refreshRateSlider.isEnabled = true
+            engine.refreshRate = engine.prevRefreshRate
+        } else {
+//            refreshRateSlider.isEnabled = false
+//            refreshRateTextField.isEnabled = false
+            engine.refreshRate = 0.0
+        }
+    }
+    
     var engine: StandardEngine!
     
     public subscript (row: Int, col: Int) -> CellState {
@@ -23,6 +37,7 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
         engine = StandardEngine.getEngine()
         engine.delegate = self
         gridView.gridViewDataSource = self
+        refreshOnOffSwitch.isOn = false
         
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")

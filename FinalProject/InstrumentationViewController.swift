@@ -11,11 +11,11 @@ import UIKit
 class InstrumentationViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var rowsTextField: UITextField!
     @IBOutlet weak var colsTextField: UITextField!
-    @IBOutlet weak var sizeStepper: UIStepper!
+    @IBOutlet weak var rowSlider: UISlider!
+    @IBOutlet weak var colSlider: UISlider!
     @IBOutlet weak var refreshRateTextField: UITextField!
     @IBOutlet weak var refreshRateSlider: UISlider!
-    @IBOutlet weak var refreshOnOffSwitch: UISwitch!
-
+    
     var engine: StandardEngine!
     
     override func viewDidLoad() {
@@ -27,19 +27,20 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
         engine = StandardEngine.getEngine()
         rowsTextField.text = "\(engine.rows)"
         colsTextField.text = "\(engine.cols)"
-        sizeStepper.value = Double(engine.rows)
+        rowSlider.value = Float(engine.rows)
+        colSlider.value = Float(engine.cols)
         refreshRateSlider.value = refreshRateSlider.minimumValue
-        refreshRateSlider.isEnabled = false
+        refreshRateSlider.isEnabled = true
         refreshRateTextField.text = "\(refreshRateSlider.value)"
-        refreshRateTextField.isEnabled = false
-        refreshOnOffSwitch.isOn = false
+        refreshRateTextField.isEnabled = true
+        engine.prevRefreshRate = Double(refreshRateSlider.value)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
     @IBAction func rowsEditingDidEnd(_ sender: UITextField) {
         guard let text = sender.text else { return }
         guard let val = Int(text) else {
@@ -48,13 +49,13 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
             }
             return
         }
-        if Float(val) < 1 || Float(val) > Float(sizeStepper.maximumValue) {
+        if Float(val) < 1 || Float(val) > Float(rowSlider.maximumValue) {
             showErrorAlert(withMessage: "Invalid value: \(val), please try again.") {
                 sender.text = "\(self.engine.rows)"
             }
             return
         }
-        sizeStepper.value = Double(val)
+        rowSlider.value = Float(val)
         updateGridSize(rows: val, cols: val)
     }
 
@@ -69,33 +70,48 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
             }
             return
         }
-        if Float(val) < 1 || Float(val) > Float(sizeStepper.maximumValue) {
+        if Float(val) < 1 || Float(val) > Float(colSlider.maximumValue) {
             showErrorAlert(withMessage: "Invalid value: \(val), please try again.") {
                 sender.text = "\(self.engine.cols)"
             }
             return
         }
-        sizeStepper.value = Double(val)
+        colSlider.value = Float(val)
         updateGridSize(rows: val, cols: val)
     }
     
     @IBAction func colsEditingDidEndOnExit(_ sender: UITextField) {
     }
     
-    @IBAction func sizeStep(_ sender: Any) {
-        let val = Int(sizeStepper.value)
+    @IBAction func rowSlideMove(_ sender: UISlider) {
+        let val = Int(rowSlider.value)
+        colSlider.value = Float(val)
+        updateGridSize(rows: val, cols: val)
+    }
+    
+    @IBAction func colSlideMove(_ sender: Any) {
+        let val = Int(colSlider.value)
+        rowSlider.value = Float(val)
         updateGridSize(rows: val, cols: val)
     }
     
     private func updateGridSize(rows: Int, cols: Int) {
         if engine.rows != rows {
+            if engine.refreshRate > 0.0 {
+                engine.prevRefreshRate = engine.refreshRate
+            }
             engine.refreshRate = 0.0
+            // send notification to turn off switch in SimulationViewController
             engine.setGridSize(rows: rows, cols: cols)
             rowsTextField.text = "\(rows)"
             colsTextField.text = "\(cols)"
         }
     }
     
+    /*@IBAction func refreshRateEditingDidBegin(_ sender: Any) {
+        engine.prevRefreshRate = TimeInterval(refreshRateSlider.value)
+    }*/
+
     @IBAction func refreshRateEditingDidEnd(_ sender: UITextField) {
         guard let text = sender.text else { return }
         guard let val = Double(text) else {
@@ -111,18 +127,20 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
             return
         }
         refreshRateSlider.value = Float(val)
+        engine.prevRefreshRate = val
         engine.refreshRate = val
     }
     
     @IBAction func refreshRateEditingDidEndOnExit(_ sender: Any) {
     }
     
-    @IBAction func refreshRate(_ sender: UISlider) {
+    @IBAction func refreshRateSlideMove(_ sender: UISlider) {
         refreshRateTextField.text = "\(refreshRateSlider.value)"
+        engine.prevRefreshRate = Double(refreshRateSlider.value)
         engine.refreshRate = Double(refreshRateSlider.value)
     }
 
-    @IBAction func refreshOnOff(_ sender: UISwitch) {
+    /*@IBAction func refreshOnOff(_ sender: UISwitch) {
         if sender.isOn {
             refreshRateTextField.isEnabled = true
             refreshRateSlider.isEnabled = true
@@ -132,7 +150,7 @@ class InstrumentationViewController: UIViewController, UITextFieldDelegate {
             refreshRateTextField.isEnabled = false
             engine.refreshRate = 0.0
         }
-    }
+    }*/
     
     //MARK: AlertController Handling
     func showErrorAlert(withMessage msg:String, action: (() -> Void)? ) {
