@@ -87,8 +87,8 @@ var data = [
 ]
 
 var dataDictionaries: [NSDictionary]? = []
-var dataKeys: [String]? = []
-var dataValues: [[[Int]]]? = []
+var dataKeys: [String]? = ["key1", "key2"]
+var dataValues: [[[Int]]]? = [[[1,1],[2,2],[3,3]],[[4,4],[5,5],[6,7],[9,8]]]
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     @IBOutlet weak var tableView: UITableView!
@@ -104,13 +104,15 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         //2nd
         //5th
         //8th
-        return 1 //data.count
+        //return data.count
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //4th
         //7th
         //10th
+        //return data[section].count
         guard let dataKeys = dataKeys else { return 0 }
         return dataKeys.count
     }
@@ -129,7 +131,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         //6th
         //9th
         //11th
-        return "Grid Configurations" //sectionHeaders[section]
+        //return sectionHeaders[section]
+        return nil //"Grid Configurations" //sectionHeaders[section]
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -239,7 +242,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     override func viewDidLoad() {
         //0th
-        fetch()
+        //fetch()
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.black], for:.normal)
