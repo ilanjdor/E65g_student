@@ -86,8 +86,9 @@ var data = [
     ]
 ]
 
-var dataKeys: [String]?
-var dataValues: [[Int]]?
+var dataDictionaries: [NSDictionary]? = []
+var dataKeys: [String]? = []
+var dataValues: [[[Int]]]? = []
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     @IBOutlet weak var tableView: UITableView!
@@ -162,7 +163,23 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-    @IBAction func fetch(_ sender: UIBarButtonItem) {
+    /*func getImageFromServerById(imageId: String, completion: ((image: UIImage?) -> Void)) {
+        let url:String = "https://dummyUrl.com/\(imageId).jpg"
+        
+        let task = NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: url)!) {(data, response, error) in
+            completion(image: UIImage(data: data))
+        }
+        
+        task.resume()
+    }
+    
+    getImageFromServerById("some string") { image in
+    dispatch_async(dispatch_get_main_queue()) {
+    // go to something on the main thread with the image like setting to UIImageView
+    }
+    }*/
+    
+    func fetch() {
         let fetcher = Fetcher()
         fetcher.fetchJSON(url: URL(string:finalProjectURL)!) { (json: Any?, message: String?) in
             guard message == nil else {
@@ -175,16 +192,37 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             }
             print(json)
             //let resultString = (json as AnyObject).description
-            let jsonArray = json as! NSArray
+            let jsonArray = json as! NSArray //[NSDictionary]
+            //let array = [1, 2, 3]
+            //let arrayIterator = jsonArray.makeIterator()
+            for item in jsonArray {
+                let nextItem = item as! NSDictionary
+                let jsonTitle = nextItem["title"] as! String
+                dataKeys?.append(jsonTitle)
+                let jsonContents = nextItem["contents"] as! [[Int]]
+                dataValues?.append(jsonContents)
+            }
             
-                let jsonDictionary = jsonArray[0] as! NSDictionary
+            
+            
+                /*let jsonDictionary = jsonArray[0] //as! NSDictionary
                 let jsonTitle = jsonDictionary["title"] as! String
                 let jsonContents = jsonDictionary["contents"] as! [[Int]]
             
             print (jsonTitle, jsonContents)
             OperationQueue.main.addOperation {
                 //self.textView.text = resultString
-            }
+            }*/
+            
+            /*let dataKeys = jsonArray.map {_ in
+                let jsonDictionary = jsonArray[0]
+                jsonDictionary["title"] as! String
+                /*var dataDictionary: NSDictionary
+                dataDictionary
+                jsonArray[$0]*/
+            }*/
+            print(dataKeys!)
+            print(dataValues!)
         }
     }
     
@@ -201,7 +239,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     override func viewDidLoad() {
         //0th
-        
+        fetch()
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.black], for:.normal)
