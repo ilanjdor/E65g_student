@@ -511,33 +511,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Da-RH-dtc" userLabel="Shader">
                                 <rect key="frame" x="0.0" y="44" width="320" height="480"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GOD-xj-TTD" customClass="GridView" customModule="FinalProject" customModuleProvider="target">
-                                        <rect key="frame" x="40.5" y="130" width="240" height="240"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="GOD-xj-TTD" secondAttribute="height" multiplier="1:1" id="Dqc-Ep-qlL"/>
-                                        </constraints>
-                                    </view>
-                                    <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pJy-zX-O1x">
-                                        <rect key="frame" x="40.5" y="106" width="50" height="20"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="20" id="1LI-0V-Pfs"/>
-                                            <constraint firstAttribute="width" constant="50" id="9Ro-MS-thZ"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <state key="normal" title="Step">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="5"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBorder" value="YES"/>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                                <integer key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </button>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Eq8-nC-o8j">
                                         <rect key="frame" x="110" y="60" width="100" height="30"/>
                                         <constraints>
@@ -551,14 +524,6 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="GOD-xj-TTD" firstAttribute="width" secondItem="7Da-RH-dtc" secondAttribute="width" multiplier="0.75" priority="750" id="8QD-je-tKs"/>
-                                    <constraint firstItem="GOD-xj-TTD" firstAttribute="height" secondItem="7Da-RH-dtc" secondAttribute="height" multiplier="0.75" priority="750" id="9gm-8C-57I"/>
-                                    <constraint firstItem="GOD-xj-TTD" firstAttribute="height" relation="lessThanOrEqual" secondItem="7Da-RH-dtc" secondAttribute="height" multiplier="0.75" id="Aoa-1k-Wd6"/>
-                                    <constraint firstItem="GOD-xj-TTD" firstAttribute="centerX" secondItem="7Da-RH-dtc" secondAttribute="centerX" id="HeJ-av-z2a"/>
-                                    <constraint firstItem="GOD-xj-TTD" firstAttribute="centerY" secondItem="7Da-RH-dtc" secondAttribute="centerY" constant="10" id="IZF-Ro-b3G"/>
-                                    <constraint firstItem="GOD-xj-TTD" firstAttribute="width" relation="lessThanOrEqual" secondItem="7Da-RH-dtc" secondAttribute="width" multiplier="0.75" id="Vz0-qJ-eVn"/>
-                                    <constraint firstItem="GOD-xj-TTD" firstAttribute="top" secondItem="pJy-zX-O1x" secondAttribute="bottom" constant="4" id="Z6p-8f-x5v"/>
-                                    <constraint firstItem="pJy-zX-O1x" firstAttribute="leading" secondItem="GOD-xj-TTD" secondAttribute="leading" id="iXG-6v-qYN"/>
                                     <constraint firstItem="Eq8-nC-o8j" firstAttribute="top" secondItem="7Da-RH-dtc" secondAttribute="top" constant="60" id="rw9-fn-a3Z"/>
                                     <constraint firstItem="Eq8-nC-o8j" firstAttribute="centerX" secondItem="7Da-RH-dtc" secondAttribute="centerX" id="weo-aI-pqo"/>
                                 </constraints>
@@ -584,7 +549,6 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="fruitValueTextField" destination="Eq8-nC-o8j" id="Uv0-1A-Pp5"/>
-                        <outlet property="gridView" destination="GOD-xj-TTD" id="xGr-Fc-t0d"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9kd-7O-aKB" sceneMemberID="firstResponder"/>
