@@ -16,23 +16,47 @@
 
 import UIKit
 
-class GridEditorViewController: UIViewController {
+class GridEditorViewController: UIViewController, GridViewDataSource, EditorDelegate {
+    
+    @IBOutlet weak var gridView: GridView!
     
     var fruitValue: String?
     var textViewValue: String?
+    var intPairs: [[Int]]?
     var saveClosure: ((String) -> Void)?
-   
+    //var saveClosure: (([[Int]]) -> Void)?
+    
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var fruitValueTextField: UITextField!
     
+    var editor: StandardEditor!
+    
+    public subscript (row: Int, col: Int) -> CellState {
+        get { return editor.grid[row,col] }
+        set { editor.grid[row,col] = newValue }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        editor = StandardEditor.getEditor()
+        editor.delegate = self
+        gridView.gridViewDataSource = self
+        
         navigationController?.isNavigationBarHidden = false
-        if let fruitValue = fruitValue {
+        /*if let fruitValue = fruitValue {
             fruitValueTextField.text = fruitValue
         }
         if let textViewValue = textViewValue {
             textView.text = textViewValue
+        }*/
+        
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "EditorUpdate")
+        nc.addObserver(
+            forName: name,
+            object: nil,
+            queue: nil) { (n) in
+                self.gridView.setNeedsDisplay()
         }
     }
     
@@ -42,11 +66,25 @@ class GridEditorViewController: UIViewController {
     }
     
     @IBAction func save(_ sender: UIBarButtonItem) {
-        if let newValue = fruitValueTextField.text,
+        /*if let newValue = fruitValueTextField.text,
         //if let newValue = textView.text,
             let saveClosure = saveClosure {
             saveClosure(newValue)
             _ = self.navigationController?.popViewController(animated: true)
+        }*/
+        if let newValue = textView.text,
+            let saveClosure = saveClosure {
+            saveClosure(newValue)
+            _ = self.navigationController?.popViewController(animated: true)
         }
+    }
+    
+    func editorDidUpdate(withGrid: GridProtocol) {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "EditorUpdate")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["editor" : self])
+        nc.post(n)
     }
 }

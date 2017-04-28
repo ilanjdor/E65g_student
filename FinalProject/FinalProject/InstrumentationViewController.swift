@@ -86,9 +86,9 @@ var data = [
     ]
 ]
 
-var dataDictionaries: [NSDictionary]? = []
-var dataKeys: [String] = ["key1", "key2"]
-var dataValues: [[[Int]]] = [[[1,1],[2,2],[3,3]],[[4,4],[5,5],[6,7],[9,8]]]
+//var dataDictionaries: [NSDictionary]? = []
+var dataKeys: [String] = [] //["key1", "key2"]
+var dataValues: [[[Int]]] = [] //[[[1,1],[2,2],[3,3]],[[4,4],[5,5],[6,7],[9,8]]]
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     @IBOutlet weak var tableView: UITableView!
@@ -153,13 +153,17 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let indexPath = tableView.indexPathForSelectedRow
         if let indexPath = indexPath {
-            let fruitValue = data[indexPath.section][indexPath.row]
+            //let fruitValue = data[indexPath.section][indexPath.row]
             //let textViewValue = jsonContents
+            let intPairs = dataValues[indexPath.row]
             if let vc = segue.destination as? GridEditorViewController {
-                vc.fruitValue = fruitValue
-                vc.textViewValue = jsonContents
+                //vc.fruitValue = fruitValue
+                vc.intPairs = intPairs
+                //vc.textViewValue = jsonContents
+                /*vc.saveClosure = { newValue in
+                    data[indexPath.section][indexPath.row] = newValue*/
                 vc.saveClosure = { newValue in
-                    data[indexPath.section][indexPath.row] = newValue
+                    dataKeys[indexPath.row] = newValue
                     self.tableView.reloadData()
                 }
             }
@@ -239,6 +243,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     @IBOutlet weak var refreshRateTextField: UITextField!
     @IBOutlet weak var refreshRateSlider: UISlider!
     
+    var editor: StandardEditor!
     var engine: StandardEngine!
     
     override func viewDidLoad() {
@@ -249,6 +254,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.black], for:.normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.blue], for:.selected)
 
+        editor = StandardEditor.getEditor()
         engine = StandardEngine.getEngine()
         rowsTextField.text = "\(engine.rows)"
         colsTextField.text = "\(engine.cols)"

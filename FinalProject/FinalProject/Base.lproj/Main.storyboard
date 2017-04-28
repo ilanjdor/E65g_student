@@ -584,6 +584,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="fruitValueTextField" destination="Eq8-nC-o8j" id="Uv0-1A-Pp5"/>
+                        <outlet property="gridView" destination="bFK-xT-CwX" id="Kxs-2H-XE4"/>
                         <outlet property="textView" destination="E95-ra-X77" id="4XX-G2-tB7"/>
                     </connections>
                 </viewController>

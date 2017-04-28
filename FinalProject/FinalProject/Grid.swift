@@ -208,7 +208,49 @@ public protocol EngineDelegate {
     func engineDidUpdate(withGrid: GridProtocol)
 }
 
+public protocol EditorDelegate {
+    func editorDidUpdate(withGrid: GridProtocol)
+}
 // modified for Final Project
+
+public protocol EditorProtocol {
+    var delegate: EditorDelegate? { get set }
+    var grid: GridProtocol { get }
+    var rows: Int { get set }
+    var cols: Int { get set }
+    var cellInitializer: (GridPosition) -> CellState { get set }
+    //var gridConfig: [GridPosition]? { get set }
+    init(rows: Int, cols: Int, intPairs: [[Int]])
+}
+
+class StandardEditor: EditorProtocol {
+    var grid: GridProtocol
+    var delegate: EditorDelegate?
+    var cellInitializer: (GridPosition) -> CellState
+    var rows: Int
+    var cols: Int
+    
+    private static var editor: StandardEditor = StandardEditor(rows: 20, cols: 20)
+    
+    required init(rows: Int, cols: Int, intPairs: [[Int]] = []) {
+        self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
+        self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+        self.rows = rows
+        self.cols = cols
+        delegate?.editorDidUpdate(withGrid: self.grid)
+    }
+    
+    func setGridSize(rows: Int, cols: Int) {
+        self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty})
+        self.rows = rows
+        self.cols = cols
+        delegate?.editorDidUpdate(withGrid: self.grid)
+    }
+    
+    static func getEditor() -> StandardEditor {
+        return StandardEditor.editor
+    }
+}
 
 public protocol EngineProtocol {
     var delegate: EngineDelegate? { get set }
