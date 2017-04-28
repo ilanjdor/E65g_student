@@ -24,7 +24,7 @@ public protocol GridViewDataSource {
 }
 
 public protocol GridProtocol {
-    init(_ rows: Int, _ cols: Int, cellInitializer: (GridPosition) -> CellState)
+    init(_ rows: Int, _ cols: Int, cellInitializer: @escaping (GridPosition) -> CellState)
     var description: String { get }
     var size: GridSize { get }
     subscript (row: Int, col: Int) -> CellState { get set }
@@ -83,7 +83,7 @@ public struct Grid: GridProtocol {
         set { _cells[norm(row, to: size.rows)][norm(col, to: size.cols)] = newValue }
     }
     
-    public init(_ rows: Int, _ cols: Int, cellInitializer: (GridPosition) -> CellState = { _, _ in .empty }) {
+    public init(_ rows: Int, _ cols: Int, cellInitializer: @escaping (GridPosition) -> CellState = { _, _ in .empty }) {
         _cells = [[CellState]](repeatElement( [CellState](repeatElement(.empty, count: rows)), count: cols))
         size = GridSize(rows, cols)
         lazyPositions(self.size).forEach { self[$0.row, $0.col] = cellInitializer($0) }
@@ -152,10 +152,10 @@ public extension Grid {
 
 // begin added for Final Project
 
-var intPairs: [[Int]] = [[0,1],[1,2],[2,0],[2,1],[2,2]]
-var gridConfig: [GridPosition] = IntPairsToGridConfig(intPairs: intPairs)
+//var intPairs: [[Int]] = [[0,1],[1,2],[2,0],[2,1],[2,2]]
+//var gridConfig: [GridPosition] = Grid.IntPairsToGridConfig(intPairs: intPairs)
 
-public func IntPairsToGridConfig(intPairs: [[Int]]) -> [GridPosition] {
+/*public func IntPairsToGridConfig(intPairs: [[Int]]) -> [GridPosition] {
     return intPairs.map { IntPairToGridPosition(intPair: $0) }
 }
 
@@ -164,15 +164,15 @@ public func IntPairToGridPosition(intPair: [Int]) -> GridPosition {
     pos.row = intPair[0]
     pos.col = intPair[1]
     return pos
-}
+}*/
 
-public extension Grid {
+/*public extension Grid {
     public static func IntPairsToGridConfig(intPairs: [[Int]]) -> [GridPosition] {
         return intPairs.map { GridPosition($0[0], $0[1]) }
     }
-}
+}*/
 
-public extension Grid {
+/*public extension Grid {
     public static func intPairsInitializer(pos: GridPosition) -> CellState {
         for position in gridConfig {
             if pos.row == position.row && pos.col == position.col {
@@ -180,6 +180,25 @@ public extension Grid {
             }
         }
         return .empty
+    }
+}*/
+
+public extension Grid {
+    public static func makeCellInitializer(intPairs: [[Int]]) -> (GridPosition) -> CellState {
+        if intPairs.count == 0 {
+            return {_,_ in .empty}
+        }
+        //var gc = Grid.IntPairsToGridConfig(intPairs: intPairs)
+        var gc = intPairs.map { GridPosition($0[0], $0[1]) }
+        func newCellInitializer(pos: GridPosition) -> CellState {
+            for position in gc {
+                if pos.row == position.row && pos.col == position.col {
+                    return .alive
+                }
+            }
+            return .empty
+        }
+        return newCellInitializer
     }
 }
 
@@ -199,22 +218,25 @@ public protocol EngineProtocol {
     var refreshTimer: Timer? { get set }
     var rows: Int { get set }
     var cols: Int { get set }
-    var gridConfig: [GridPosition]? { get set }
-    init(rows: Int, cols: Int, cellInitializer: (GridPosition) -> CellState)
+    var cellInitializer: (GridPosition) -> CellState { get set }
+    //var gridConfig: [GridPosition]? { get set }
+    init(rows: Int, cols: Int, intPairs: [[Int]])
     func step() -> GridProtocol
 }
 
 class StandardEngine: EngineProtocol {
     var grid: GridProtocol
     var delegate: EngineDelegate?
-    var gridConfig: [GridPosition]?
+    var cellInitializer: (GridPosition) -> CellState
+    //var gridConfig: [GridPosition]?
     var rows: Int
     var cols: Int
     
     private static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
     
-    required init(rows: Int, cols: Int, cellInitializer: (GridPosition) -> CellState = { _,_ in .empty }) {
-        self.grid = Grid(rows, cols, cellInitializer: cellInitializer)
+    required init(rows: Int, cols: Int, intPairs: [[Int]] = []) {
+        self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
+        self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
         delegate?.engineDidUpdate(withGrid: self.grid)
