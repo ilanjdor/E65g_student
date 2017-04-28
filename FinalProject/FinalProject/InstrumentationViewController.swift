@@ -87,8 +87,8 @@ var data = [
 ]
 
 var dataDictionaries: [NSDictionary]? = []
-var dataKeys: [String]? = ["key1", "key2"]
-var dataValues: [[[Int]]]? = [[[1,1],[2,2],[3,3]],[[4,4],[5,5],[6,7],[9,8]]]
+var dataKeys: [String] = ["key1", "key2"]
+var dataValues: [[[Int]]] = [[[1,1],[2,2],[3,3]],[[4,4],[5,5],[6,7],[9,8]]]
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     @IBOutlet weak var tableView: UITableView!
@@ -113,7 +113,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         //7th
         //10th
         //return data[section].count
-        guard let dataKeys = dataKeys else { return 0 }
+        //guard let dataKeys = dataKeys else { return 0 }
         return dataKeys.count
     }
     
@@ -122,7 +122,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
         let label = cell.contentView.subviews.first as! UILabel
         //label.text = data[indexPath.section][indexPath.item]
-        label.text = dataKeys?[indexPath.item]
+        label.text = dataKeys[indexPath.item]
         return cell
     }
     
@@ -137,9 +137,9 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            var newData = dataKeys!
+            var newData = dataKeys
             newData.remove(at: indexPath.row)
-            dataKeys = newData as [String]?
+            dataKeys = newData as [String]
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.reloadData()
             /*var newData = data[indexPath.section]
@@ -201,9 +201,9 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             for item in jsonArray {
                 let nextItem = item as! NSDictionary
                 let jsonTitle = nextItem["title"] as! String
-                dataKeys?.append(jsonTitle)
+                dataKeys.append(jsonTitle)
                 let jsonContents = nextItem["contents"] as! [[Int]]
-                dataValues?.append(jsonContents)
+                dataValues.append(jsonContents)
             }
             
             
@@ -212,10 +212,11 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 let jsonTitle = jsonDictionary["title"] as! String
                 let jsonContents = jsonDictionary["contents"] as! [[Int]]
             
-            print (jsonTitle, jsonContents)
+            print (jsonTitle, jsonContents)*/
             OperationQueue.main.addOperation {
                 //self.textView.text = resultString
-            }*/
+                self.tableView.reloadData()
+            }
             
             /*let dataKeys = jsonArray.map {_ in
                 let jsonDictionary = jsonArray[0]
@@ -224,8 +225,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 dataDictionary
                 jsonArray[$0]*/
             }*/
-            print(dataKeys!)
-            print(dataValues!)
+            print(dataKeys)
+            print(dataValues)
         }
     }
     
@@ -242,7 +243,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     override func viewDidLoad() {
         //0th
-        //fetch()
+        fetch()
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.black], for:.normal)

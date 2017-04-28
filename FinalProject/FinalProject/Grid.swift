@@ -148,6 +148,8 @@ public extension Grid {
     }
 }
 
+
+
 // begin added for Final Project
 
 var intPairs: [[Int]] = [[0,1],[1,2],[2,0],[2,1],[2,2]]
@@ -162,6 +164,12 @@ public func IntPairToGridPosition(intPair: [Int]) -> GridPosition {
     pos.row = intPair[0]
     pos.col = intPair[1]
     return pos
+}
+
+public extension Grid {
+    public static func IntPairsToGridConfig(intPairs: [[Int]]) -> [GridPosition] {
+        return intPairs.map { GridPosition($0[0], $0[1]) }
+    }
 }
 
 public extension Grid {
