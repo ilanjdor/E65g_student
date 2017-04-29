@@ -29,9 +29,9 @@ import UIKit
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
-        engine = StandardEngine.getEngine()
+        /*engine = StandardEngine.getEngine()
         self.rows = engine.rows
-        self.cols = engine.cols
+        self.cols = engine.cols*/
         
     // Drawing code
         let size = CGSize(

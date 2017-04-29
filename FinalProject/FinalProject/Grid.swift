@@ -271,8 +271,18 @@ class StandardEngine: EngineProtocol {
     var delegate: EngineDelegate?
     var cellInitializer: (GridPosition) -> CellState
     //var gridConfig: [GridPosition]?
-    var rows: Int
-    var cols: Int
+    var rows: Int {
+        didSet {
+            self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+            delegate?.engineDidUpdate(withGrid: self.grid)
+        }
+    }
+    var cols: Int {
+        didSet {
+            self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+            delegate?.engineDidUpdate(withGrid: self.grid)
+        }
+    }
     
     private static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
     

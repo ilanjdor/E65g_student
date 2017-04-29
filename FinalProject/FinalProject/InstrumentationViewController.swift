@@ -89,8 +89,15 @@ var data = [
 //var dataDictionaries: [NSDictionary]? = []
 var dataKeys: [String] = [] //["key1", "key2"]
 var dataValues: [[[Int]]] = [] //[[[1,1],[2,2],[3,3]],[[4,4],[5,5],[6,7],[9,8]]]
+var dataGrids: [GridProtocol] = []
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+    
+    /*
+     1) Fetch dataValues
+     2) 
+    */
+    
     @IBOutlet weak var tableView: UITableView!
     
     var jsonContents: String?
@@ -155,17 +162,18 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         if let indexPath = indexPath {
             //let fruitValue = data[indexPath.section][indexPath.row]
             //let textViewValue = jsonContents
-            let intPairs = dataValues[indexPath.row]
+            //let intPairs = dataValues[indexPath.row]
             if let vc = segue.destination as? GridEditorViewController {
                 //vc.fruitValue = fruitValue
-                vc.intPairs = intPairs
+                //vc.intPairs = intPairs
                 //vc.textViewValue = jsonContents
                 /*vc.saveClosure = { newValue in
                     data[indexPath.section][indexPath.row] = newValue*/
-                vc.saveClosure = { newValue in
+                /*vc.saveClosure = { newValue in
                     dataKeys[indexPath.row] = newValue
                     self.tableView.reloadData()
-                }
+                }*/
+                vc.grid = dataGrids[indexPath.row]
             }
         }
     }
@@ -208,6 +216,9 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 dataKeys.append(jsonTitle)
                 let jsonContents = nextItem["contents"] as! [[Int]]
                 dataValues.append(jsonContents)
+                let nextCellInitializer = Grid.makeCellInitializer(intPairs: jsonContents)
+                let nextGrid = Grid(60, 60, cellInitializer: nextCellInitializer) as GridProtocol
+                dataGrids.append(nextGrid)
             }
             
             
@@ -217,8 +228,13 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 let jsonContents = jsonDictionary["contents"] as! [[Int]]
             
             print (jsonTitle, jsonContents)*/
+            
+            //create Grids here!
+            //Grid.makeCellInitializer(intPairs: <#T##[[Int]]#>)
+            
             OperationQueue.main.addOperation {
                 //self.textView.text = resultString
+                
                 self.tableView.reloadData()
             }
             

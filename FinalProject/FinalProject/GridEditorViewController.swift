@@ -16,10 +16,11 @@
 
 import UIKit
 
-class GridEditorViewController: UIViewController, GridViewDataSource, EditorDelegate {
+class GridEditorViewController: UIViewController, GridViewDataSource { //, EditorDelegate {
     
     @IBOutlet weak var gridView: GridView!
     
+    var grid: GridProtocol?
     var fruitValue: String?
     var textViewValue: String?
     var intPairs: [[Int]]?
@@ -32,15 +33,17 @@ class GridEditorViewController: UIViewController, GridViewDataSource, EditorDele
     var editor: StandardEditor!
     
     public subscript (row: Int, col: Int) -> CellState {
-        get { return editor.grid[row,col] }
-        set { editor.grid[row,col] = newValue }
+        get { return grid![row,col] }
+        set { grid![row,col] = newValue }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        editor = StandardEditor.getEditor()
-        editor.delegate = self
+        //editor = StandardEditor.getEditor()
+        //editor.delegate = self
         gridView.gridViewDataSource = self
+        gridView.rows = (grid?.size.rows)!
+        gridView.cols = (grid?.size.cols)!
         
         navigationController?.isNavigationBarHidden = false
         /*if let fruitValue = fruitValue {
@@ -49,15 +52,16 @@ class GridEditorViewController: UIViewController, GridViewDataSource, EditorDele
         if let textViewValue = textViewValue {
             textView.text = textViewValue
         }*/
+        self.gridView.setNeedsDisplay()
         
-        let nc = NotificationCenter.default
+        /*let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EditorUpdate")
         nc.addObserver(
             forName: name,
             object: nil,
             queue: nil) { (n) in
                 self.gridView.setNeedsDisplay()
-        }
+        }*/
     }
     
     override func didReceiveMemoryWarning() {
