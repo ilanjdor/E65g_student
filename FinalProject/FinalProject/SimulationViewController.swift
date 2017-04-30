@@ -71,6 +71,12 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
         }
     }
     
+    @IBAction func reset(_ sender: Any) {
+    }
+    
+    @IBAction func save(_ sender: Any) {
+    }
+    
     func engineDidUpdate(withGrid: GridProtocol) {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")

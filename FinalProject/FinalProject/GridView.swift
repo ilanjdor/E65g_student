@@ -16,7 +16,7 @@ import UIKit
     @IBInspectable var bornColor: UIColor = UIColor(red: (0/255.0), green: (255/255.0), blue: (128/255.0), alpha: 0.6)
     @IBInspectable var diedColor: UIColor = UIColor(red: (76/255.0), green: (76/255.0), blue: (76/255.0), alpha: 0.6)
     @IBInspectable var gridColor: UIColor = UIColor(red: (0/255.0), green: (0/255.0), blue: (0/255.0), alpha: 1.0)
-    @IBInspectable var gridWidth:CGFloat = CGFloat(2)
+    @IBInspectable var gridWidth:CGFloat = CGFloat(0.5)
     
     var engine: StandardEngine!
     var gridViewDataSource: GridViewDataSource?
@@ -96,7 +96,7 @@ import UIKit
         let path = UIBezierPath()
         
         //set the path's line width to the height of the stroke
-        path.lineWidth = 2.0
+        path.lineWidth = gridWidth
         
         //move the initial point of the path
         //to the start of the horizontal stroke

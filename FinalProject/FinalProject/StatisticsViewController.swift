@@ -32,6 +32,7 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
         bornCountTextField.isEnabled = false
         diedCountTextField.isEnabled = false
         self.clearStatistics()
+        self.calculateStatistics()
         self.displayStatistics()
         
         let nc = NotificationCenter.default
