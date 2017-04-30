@@ -221,7 +221,7 @@
                                                             <constraint firstAttribute="height" constant="30" id="sT3-eG-gxI"/>
                                                         </constraints>
                                                         <connections>
-                                                            <action selector="rowSlideMove:" destination="hRw-nI-kcm" eventType="valueChanged" id="iDA-TA-NF6"/>
+                                                            <action selector="rowSlideMove:" destination="hRw-nI-kcm" eventType="touchUpInside" id="N8R-X5-iTt"/>
                                                         </connections>
                                                     </slider>
                                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="10" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="YDl-RT-kYw">
@@ -231,7 +231,7 @@
                                                             <constraint firstAttribute="height" constant="30" id="bZb-br-MHY"/>
                                                         </constraints>
                                                         <connections>
-                                                            <action selector="colSlideMove:" destination="hRw-nI-kcm" eventType="valueChanged" id="XgP-qL-lyT"/>
+                                                            <action selector="colSlideMove:" destination="hRw-nI-kcm" eventType="touchUpInside" id="qMq-BN-T6g"/>
                                                         </connections>
                                                     </slider>
                                                 </subviews>
@@ -272,7 +272,7 @@
                                                             <constraint firstAttribute="height" constant="30" id="vVP-aO-yMP"/>
                                                         </constraints>
                                                         <connections>
-                                                            <action selector="refreshRateSlideMove:" destination="hRw-nI-kcm" eventType="valueChanged" id="rl9-py-XbV"/>
+                                                            <action selector="refreshRateSlideMove:" destination="hRw-nI-kcm" eventType="touchUpInside" id="A5m-Gu-pG3"/>
                                                         </connections>
                                                     </slider>
                                                 </subviews>

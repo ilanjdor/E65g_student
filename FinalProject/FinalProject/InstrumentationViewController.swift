@@ -353,12 +353,11 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         updateGridSize(rows: val, cols: val)
     }
     
-    @IBAction func colSlideMove(_ sender: Any) {
+    @IBAction func colSlideMove(_ sender: UISlider) {
         let val = Int(colSlider.value)
         rowSlider.value = Float(val)
         updateGridSize(rows: val, cols: val)
     }
-    
     private func updateGridSize(rows: Int, cols: Int) {
         if engine.rows != rows {
             if engine.refreshRate > 0.0 {
@@ -397,13 +396,12 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     @IBAction func refreshRateEditingDidEndOnExit(_ sender: UITextField) {
     }
-    
+
     @IBAction func refreshRateSlideMove(_ sender: UISlider) {
         refreshRateTextField.text = "\(refreshRateSlider.value)"
         engine.prevRefreshRate = Double(refreshRateSlider.value)
         engine.refreshRate = Double(refreshRateSlider.value)
     }
-
     /*@IBAction func refreshOnOff(_ sender: UISwitch) {
         if sender.isOn {
             refreshRateTextField.isEnabled = true
