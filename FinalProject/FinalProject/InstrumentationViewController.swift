@@ -262,8 +262,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 dataDictionary
                 jsonArray[$0]*/
             }*/
-            //print(dataKeys)
-            //print(dataValues)
+            print(dataKeys)
+            print(dataValues)
         }
     }
     

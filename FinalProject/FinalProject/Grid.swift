@@ -310,6 +310,7 @@ class StandardEngine: EngineProtocol {
     
     private static var engine: StandardEngine = {
         let theEngine = StandardEngine(rows: baseRows, cols: baseCols, intPairs: baseIntPairs)
+        //delegate?.engineDidUpdate(withGrid: self.grid)
         return theEngine
     }()
     
