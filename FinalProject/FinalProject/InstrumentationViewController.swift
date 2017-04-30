@@ -174,6 +174,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     dataKeys[indexPath.row] = newValue
                     self.tableView.reloadData()
                 }*/
+                vc.gridSize = dataSizes[indexPath.row]
                 vc.grid = dataGrids[indexPath.row]
             }
         }
@@ -231,6 +232,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     nextSize = nextSize + 1
                 }
                 nextSize = nextSize * 3 / 2
+                dataSizes.append(nextSize)
                 let nextCellInitializer = Grid.makeCellInitializer(intPairs: jsonContents)
                 let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
                 dataGrids.append(nextGrid)

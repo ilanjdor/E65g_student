@@ -252,7 +252,7 @@ class StandardEditor: EditorProtocol {
         return StandardEditor.editor
     }
 }
-
+//var intPairs: [[Int]] = []
 public protocol EngineProtocol {
     var delegate: EngineDelegate? { get set }
     var grid: GridProtocol { get set }
@@ -263,11 +263,18 @@ public protocol EngineProtocol {
     var cols: Int { get set }
     var cellInitializer: (GridPosition) -> CellState { get set }
     //var gridConfig: [GridPosition]? { get set }
-    init(rows: Int, cols: Int, intPairs: [[Int]])
+    //init(rows: Int, cols: Int, intPairs: [[Int]])
     func step() -> GridProtocol
+    //func setGridSize(rows: Int, cols: Int)
+    //func setCellInitializer(intPairs: [[Int]])
+    //func setGrid(rows: Int, cols: Int, intPairs: [[Int]])
 }
 
 class StandardEngine: EngineProtocol {
+    private static var baseRows: Int = 10
+    private static var baseCols: Int = 10
+    private static var baseIntPairs: [[Int]] = []
+    
     var grid: GridProtocol {
         didSet {
             self.rows = grid.size.rows
@@ -291,7 +298,7 @@ class StandardEngine: EngineProtocol {
         }
     }*/
     
-    private static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
+    /*private static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
     
     required init(rows: Int, cols: Int, intPairs: [[Int]] = []) {
         self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
@@ -299,8 +306,21 @@ class StandardEngine: EngineProtocol {
         self.rows = rows
         self.cols = cols
         delegate?.engineDidUpdate(withGrid: self.grid)
-    }
+    }*/
     
+    private static var engine: StandardEngine = {
+        let theEngine = StandardEngine(rows: baseRows, cols: baseCols, intPairs: baseIntPairs)
+        return theEngine
+    }()
+    
+    private init(rows: Int, cols: Int, intPairs: [[Int]]) {
+        self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
+        self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+        self.rows = rows
+        self.cols = cols
+        delegate?.engineDidUpdate(withGrid: self.grid)
+    }
+
     var refreshTimer: Timer?
     var prevRefreshRate: TimeInterval = 0.0
     var refreshRate: TimeInterval = 0.0 {
@@ -329,6 +349,19 @@ class StandardEngine: EngineProtocol {
         self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty})
         self.rows = rows
         self.cols = cols
+        delegate?.engineDidUpdate(withGrid: self.grid)
+    }
+    
+    func setGrid(rows: Int, cols: Int, intPairs: [[Int]] = []) {
+        self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
+        self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+        self.rows = rows
+        self.cols = cols
+        delegate?.engineDidUpdate(withGrid: self.grid)
+    }
+    
+    func setCellInitializer(intPairs: [[Int]]) {
+        self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
         delegate?.engineDidUpdate(withGrid: self.grid)
     }
     

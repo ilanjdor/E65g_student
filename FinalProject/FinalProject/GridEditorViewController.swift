@@ -42,7 +42,7 @@ class GridEditorViewController: UIViewController, GridViewDataSource { //, Edito
         super.viewDidLoad()
         //editor = StandardEditor.getEditor()
         //editor.delegate = self
-        engine = StandardEngine.getEngine()
+        //engine = StandardEngine.getEngine()
         gridView.gridViewDataSource = self
         gridView.rows = (grid?.size.rows)!
         gridView.cols = (grid?.size.cols)!
@@ -80,6 +80,7 @@ class GridEditorViewController: UIViewController, GridViewDataSource { //, Edito
         }*/
         //if let newValue = textView.text,
         //    let saveClosure = saveClosure {
+            engine = StandardEngine.getEngine()
             engine.grid = grid!
         //    saveClosure(newValue)
            _ = self.navigationController?.popViewController(animated: true)
