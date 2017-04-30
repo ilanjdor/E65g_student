@@ -84,7 +84,8 @@ public struct Grid: GridProtocol {
     }
     
     public init(_ rows: Int, _ cols: Int, cellInitializer: @escaping (GridPosition) -> CellState = { _, _ in .empty }) {
-        _cells = [[CellState]](repeatElement( [CellState](repeatElement(.empty, count: rows)), count: cols))
+        //_cells = [[CellState]](repeatElement( [CellState](repeatElement(.empty, count: rows)), count: cols))
+        _cells = [[CellState]](repeatElement( [CellState](repeatElement(.empty, count: cols)), count: rows))
         size = GridSize(rows, cols)
         lazyPositions(self.size).forEach { self[$0.row, $0.col] = cellInitializer($0) }
     }
@@ -254,7 +255,7 @@ class StandardEditor: EditorProtocol {
 
 public protocol EngineProtocol {
     var delegate: EngineDelegate? { get set }
-    var grid: GridProtocol { get }
+    var grid: GridProtocol { get set }
     var prevRefreshRate: Double { get set }
     var refreshRate: Double { get set } //how can you default this to zero?
     var refreshTimer: Timer? { get set }
@@ -267,22 +268,28 @@ public protocol EngineProtocol {
 }
 
 class StandardEngine: EngineProtocol {
-    var grid: GridProtocol
+    var grid: GridProtocol {
+        didSet {
+            self.rows = grid.size.rows
+            self.cols = grid.size.cols
+            delegate?.engineDidUpdate(withGrid: self.grid)
+        }
+    }
     var delegate: EngineDelegate?
     var cellInitializer: (GridPosition) -> CellState
     //var gridConfig: [GridPosition]?
-    var rows: Int {
+    var rows: Int /*{
         didSet {
             self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
             delegate?.engineDidUpdate(withGrid: self.grid)
         }
-    }
-    var cols: Int {
+    }*/
+    var cols: Int /*{
         didSet {
             self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
             delegate?.engineDidUpdate(withGrid: self.grid)
         }
-    }
+    }*/
     
     private static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
     

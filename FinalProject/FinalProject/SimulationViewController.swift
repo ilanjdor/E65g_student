@@ -50,6 +50,16 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
         // Do any additional setup after loading the view, typically from a nib.
     }
     
+    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+        if(item.tag == 1) {
+            //your code for tab item 1
+        }
+        else if(item.tag == 2) {
+            //your code for tab item 2
+            self.gridView.setNeedsDisplay()
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

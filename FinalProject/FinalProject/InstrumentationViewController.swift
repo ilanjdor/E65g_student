@@ -89,6 +89,7 @@ var data = [
 //var dataDictionaries: [NSDictionary]? = []
 var dataKeys: [String] = [] //["key1", "key2"]
 var dataValues: [[[Int]]] = [] //[[[1,1],[2,2],[3,3]],[[4,4],[5,5],[6,7],[9,8]]]
+var dataSizes: [Int] = []
 var dataGrids: [GridProtocol] = []
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
@@ -211,13 +212,27 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             //let array = [1, 2, 3]
             //let arrayIterator = jsonArray.makeIterator()
             for item in jsonArray {
+                var nextSize: Int
                 let nextItem = item as! NSDictionary
                 let jsonTitle = nextItem["title"] as! String
                 dataKeys.append(jsonTitle)
                 let jsonContents = nextItem["contents"] as! [[Int]]
                 dataValues.append(jsonContents)
+                nextSize = 1
+                for intPair in jsonContents {
+                    if intPair[0] > nextSize {
+                        nextSize = intPair[0]
+                    }
+                    if intPair[1] > nextSize {
+                        nextSize = intPair[1]
+                    }
+                }
+                if nextSize % 2 == 1 {
+                    nextSize = nextSize + 1
+                }
+                nextSize = nextSize * 3 / 2
                 let nextCellInitializer = Grid.makeCellInitializer(intPairs: jsonContents)
-                let nextGrid = Grid(60, 60, cellInitializer: nextCellInitializer) as GridProtocol
+                let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
                 dataGrids.append(nextGrid)
             }
             
@@ -245,8 +260,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 dataDictionary
                 jsonArray[$0]*/
             }*/
-            print(dataKeys)
-            print(dataValues)
+            //print(dataKeys)
+            //print(dataValues)
         }
     }
     

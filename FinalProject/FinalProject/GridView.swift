@@ -18,7 +18,7 @@ import UIKit
     @IBInspectable var gridColor: UIColor = UIColor(red: (0/255.0), green: (0/255.0), blue: (0/255.0), alpha: 1.0)
     @IBInspectable var gridWidth:CGFloat = CGFloat(2)
     
-    var engine: StandardEngine!
+    //var engine: StandardEngine!
     var gridViewDataSource: GridViewDataSource?
     
     public subscript (row: Int, col: Int) -> CellState {

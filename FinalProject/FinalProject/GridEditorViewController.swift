@@ -17,9 +17,9 @@
 import UIKit
 
 class GridEditorViewController: UIViewController, GridViewDataSource { //, EditorDelegate {
-    
     @IBOutlet weak var gridView: GridView!
     
+    var gridSize: Int = 15
     var grid: GridProtocol?
     var fruitValue: String?
     var textViewValue: String?
@@ -30,6 +30,7 @@ class GridEditorViewController: UIViewController, GridViewDataSource { //, Edito
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var fruitValueTextField: UITextField!
     
+    var engine: StandardEngine!
     var editor: StandardEditor!
     
     public subscript (row: Int, col: Int) -> CellState {
@@ -41,6 +42,7 @@ class GridEditorViewController: UIViewController, GridViewDataSource { //, Edito
         super.viewDidLoad()
         //editor = StandardEditor.getEditor()
         //editor.delegate = self
+        engine = StandardEngine.getEngine()
         gridView.gridViewDataSource = self
         gridView.rows = (grid?.size.rows)!
         gridView.cols = (grid?.size.cols)!
@@ -76,11 +78,12 @@ class GridEditorViewController: UIViewController, GridViewDataSource { //, Edito
             saveClosure(newValue)
             _ = self.navigationController?.popViewController(animated: true)
         }*/
-        if let newValue = textView.text,
-            let saveClosure = saveClosure {
-            saveClosure(newValue)
-            _ = self.navigationController?.popViewController(animated: true)
-        }
+        //if let newValue = textView.text,
+        //    let saveClosure = saveClosure {
+            engine.grid = grid!
+        //    saveClosure(newValue)
+           _ = self.navigationController?.popViewController(animated: true)
+        //}
     }
     
     func editorDidUpdate(withGrid: GridProtocol) {
@@ -89,6 +92,15 @@ class GridEditorViewController: UIViewController, GridViewDataSource { //, Edito
         let n = Notification(name: name,
                              object: nil,
                              userInfo: ["editor" : self])
+        nc.post(n)
+    }
+    
+    func gridEditorDidUpdate(withGrid: GridProtocol) {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "EngineUpdate")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["engine" : self])
         nc.post(n)
     }
 }
