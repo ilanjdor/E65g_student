@@ -6,6 +6,9 @@
 //  Copyright © 2017 Harvard Division of Continuing Education. All rights reserved.
 //
 
+//Tab icons from: https://icons8.com
+//App icon from http://www.directindustry.com/prod/teledyne-dalsa/product-25439-1174957.html
+
 import UIKit
 
 let finalProjectURL = "https://dl.dropboxusercontent.com/u/7544475/S65g.json"
