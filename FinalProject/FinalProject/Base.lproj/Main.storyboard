@@ -437,19 +437,14 @@
                             <constraint firstItem="UVG-db-hk0" firstAttribute="top" secondItem="HX4-b9-ttI" secondAttribute="bottom" id="qMG-mB-2fC"/>
                             <constraint firstItem="Aka-YU-Kdc" firstAttribute="top" secondItem="UVG-db-hk0" secondAttribute="bottom" id="x4r-tS-b9z"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="1KM-kW-Lak"/>
-                            </mask>
-                        </variation>
-                        <variation key="heightClass=regular">
-                            <mask key="constraints">
-                                <include reference="1KM-kW-Lak"/>
-                            </mask>
-                        </variation>
                     </view>
-                    <navigationItem key="navigationItem" id="48n-dG-dHp">
-                        <nil key="title"/>
+                    <navigationItem key="navigationItem" title="Instrumentation" id="48n-dG-dHp">
+                        <barButtonItem key="rightBarButtonItem" title="+" id="9A7-tM-AKX">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="addRow:" destination="hRw-nI-kcm" id="M4j-61-Udy"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="colSlider" destination="YDl-RT-kYw" id="aMN-b1-UGu"/>
@@ -677,6 +672,7 @@
                     <tabBarItem key="tabBarItem" title="Simulation" image="second" selectedImage="second" id="jd9-UA-Wdh"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Fruit Editor" id="k4W-hO-6Ga" userLabel="Fruit Editor">
+                        <barButtonItem key="backBarButtonItem" title="Cancel" id="V2u-3T-c5G"/>
                         <rightBarButtonItems>
                             <barButtonItem title="Save" id="EZo-rR-h1y">
                                 <connections>
@@ -685,7 +681,7 @@
                             </barButtonItem>
                             <barButtonItem id="IA2-BK-ESR">
                                 <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" id="Eq8-nC-o8j">
-                                    <rect key="frame" x="403" y="7" width="100" height="30"/>
+                                    <rect key="frame" x="167" y="7" width="100" height="30"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="UT5-5x-2PC"/>

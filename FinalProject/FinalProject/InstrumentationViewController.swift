@@ -270,6 +270,15 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
+    @IBAction func addRow(_ sender: UIBarButtonItem) {
+        dataKeys.append("it's a new row!")
+        OperationQueue.main.addOperation {
+            //self.textView.text = resultString
+            
+            self.tableView.reloadData()
+        }
+    }
+    
 // Ilan's code below
     
     @IBOutlet weak var rowsTextField: UITextField!
