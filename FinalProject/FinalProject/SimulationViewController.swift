@@ -86,8 +86,8 @@ class SimulationViewController: UIViewController, GridViewDataSource {//, Engine
     
     @IBAction func next(_ sender: Any) {
         if self.gridView.gridViewDataSource != nil {
-            engine.grid = self.engine.step()
-            //_ = engine.step()
+            //engine.grid = self.engine.step()
+            _ = self.engine.step()
         }
     }
     
@@ -99,6 +99,11 @@ class SimulationViewController: UIViewController, GridViewDataSource {//, Engine
         let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
         dataGrids.append(nextGrid)*/
         
+        //engine = StandardEngine.getEngine()
+        //engine.grid = StandardEngine(rows: engine.rows, cols: engine.cols) as! GridProtocol
+        engine.setGrid(rows: engine.rows, cols: engine.cols)
+        //GridEditorViewController.isGridEditorGrid = false
+        //SimulationViewController.isEngineGrid = true
         StatisticsViewController.clearStatistics()
     }
     
