@@ -9,6 +9,8 @@
 import UIKit
 
 class SimulationViewController: UIViewController, GridViewDataSource {//, EngineDelegate {
+    static var isEngineGrid: Bool = true
+    
     @IBOutlet weak var gridView: GridView!
     
     @IBOutlet weak var refreshOnOffSwitch: UISwitch!
@@ -35,9 +37,9 @@ class SimulationViewController: UIViewController, GridViewDataSource {//, Engine
         get { return engine.grid[row,col] }
         set { engine.grid[row,col] = newValue }
     }
-    override func viewWillAppear(_ animated: Bool) {
+    /*override func viewWillAppear(_ animated: Bool) {
         // this runs when user clicks on Simulation tab!
-    }
+    }*/
     override func viewDidLoad() {
         super.viewDidLoad()
         engine = StandardEngine.getEngine()

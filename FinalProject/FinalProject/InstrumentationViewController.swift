@@ -1,9 +1,5 @@
 //
 //  InstrumentationViewController.swift
-//  Assignment4
-//
-//  Created by Van Simmons on 1/15/17.
-//  Copyright © 2017 Harvard Division of Continuing Education. All rights reserved.
 //
 
 //Tab icons from: https://icons8.com
@@ -13,130 +9,26 @@ import UIKit
 
 let finalProjectURL = "https://dl.dropboxusercontent.com/u/7544475/S65g.json"
 
-var sectionHeaders = [
-    "One", "Two", "Three", "Four", "Five", "Six"
-]
-
-var data = [
-    [
-        "Apple",
-        "Banana",
-        "Cherry",
-        "Date",
-        "Kiwi",
-        "Apple",
-        "Banana",
-        "Cherry",
-        "Date"
-    ],
-    [
-        "Kiwi",
-        "Apple",
-        "Banana",
-        "Cherry",
-        "Date",
-        "Kiwi",
-        "Apple",
-        "Banana",
-        "Cherry",
-        "Date",
-        "Kiwi",
-        "Apple",
-        "Banana"
-    ],
-    [
-        "Cherry",
-        "Date",
-        "Kiwi",
-        "Apple",
-        "Banana",
-        "Cherry",
-        "Date",
-        "Kiwi",
-        "Apple",
-        "Banana",
-        "Cherry",
-        "Date",
-        "Kiwi",
-        "Apple",
-        "Banana",
-        "Cherry",
-        "Date",
-        "Kiwi",
-        "Apple",
-        "Banana",
-        "Cherry"
-    ],
-    [
-        "Date",
-        "Kiwi",
-        "Apple",
-        "Banana",
-        "Cherry",
-        "Date",
-        "Kiwi",
-        "Apple",
-        "Banana",
-        "Cherry",
-        "Date",
-        "Kiwi",
-        "Apple",
-        "Banana",
-        "Cherry",
-        "Date",
-        "Kiwi",
-        "Blueberry"
-    ]
-]
-
-//var dataDictionaries: [NSDictionary]? = []
-var dataKeys: [String] = [] //["key1", "key2"]
-var dataValues: [[[Int]]] = [] //[[[1,1],[2,2],[3,3]],[[4,4],[5,5],[6,7],[9,8]]]
-var dataSizes: [Int] = []
+var dataKeys: [String] = []
+//var dataValues: [[[Int]]] = []
+//var dataSizes: [Int] = []
 var dataGrids: [GridProtocol] = []
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
-    
-    /*
-     1) Fetch dataValues
-     2) 
-    */
-    
     @IBOutlet weak var tableView: UITableView!
     
     var jsonContents: String?
 
     override func viewWillAppear(_ animated: Bool) {
-        //1st
-        //navigationController?.isNavigationBarHidden = true
-        //self.navigationItem.title = "Test View";
-        //self.navigationItem.backBarButtonItem?.title = "Your customized back title"
-        //self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.bordered, target: nil, action: nil)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
 
     }
     
-    /*var b = UIBarButtonItem(
-    title: "Continue",
-    style: .plain,
-    target: self,
-    action: #selector(sayHello(sender:))
-    )*/
-    
     func numberOfSections(in tableView: UITableView) -> Int {
-        //2nd
-        //5th
-        //8th
-        //return data.count
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //4th
-        //7th
-        //10th
-        //return data[section].count
-        //guard let dataKeys = dataKeys else { return 0 }
         return dataKeys.count
     }
     
@@ -144,18 +36,12 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         let identifier = "basic"
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
         let label = cell.contentView.subviews.first as! UILabel
-        //label.text = data[indexPath.section][indexPath.item]
         label.text = dataKeys[indexPath.item]
         return cell
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        //3rd
-        //6th
-        //9th
-        //11th
-        //return sectionHeaders[section]
-        return nil //"Grid Configurations" //sectionHeaders[section]
+        return nil
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -165,11 +51,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             dataKeys = newData as [String]
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.reloadData()
-            /*var newData = data[indexPath.section]
-            newData.remove(at: indexPath.row)
-            data[indexPath.section] = newData
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            tableView.reloadData()*/
         }
     }
     
@@ -179,6 +60,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             //let fruitValue = data[indexPath.section][indexPath.row]
             //let textViewValue = jsonContents
             //let intPairs = dataValues[indexPath.row]
+            let gridNameValue = dataKeys[indexPath.row]
             if let vc = segue.destination as? GridEditorViewController {
                 //vc.fruitValue = fruitValue
                 //vc.intPairs = intPairs
@@ -190,27 +72,40 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     self.tableView.reloadData()
                 }*/
                 //vc.gridSize = dataSizes[indexPath.row]
+                
+                vc.gridNameValue = gridNameValue
                 vc.grid = dataGrids[indexPath.row]
-                //vc.engine = StandardEngine(
+                vc.saveClosure = { newValue in
+                    if newValue == gridNameValue {
+                        dataKeys[indexPath.row] = newValue
+                        dataGrids[indexPath.row] = vc.grid!
+                    } else {
+                        dataKeys.append(newValue)
+                        dataGrids.append(vc.grid!)
+                        
+                        /*public let lazyPositions = { (size: GridSize) in
+                            return (0 ..< size.rows)
+                                .lazy
+                                .map { zip( [Int](repeating: $0, count: size.cols) , 0 ..< size.cols ) }
+                                .flatMap { $0 }
+                                .map { GridPosition($0) }
+                        }*/
+                        
+                        /*let positions = { (vc.grid.count: Int, vc.grid.living: [GridPosition]) in
+                            return (0 ..< vc.grid.count)
+                                .map { (row: ($1).row, col: ($1).col) }
+                            }*/
+                        
+                        //dataValues.append(vc.grid!.living as! [[Int]])
+                        /*var dataValues: [[[Int]]] = []
+                         var dataSizes: [Int] = []
+                         var dataGrids: [GridProtocol] = []*/
+                    }
+                    self.tableView.reloadData()
+                }
             }
         }
     }
-    
-    /*func getImageFromServerById(imageId: String, completion: ((image: UIImage?) -> Void)) {
-        let url:String = "https://dummyUrl.com/\(imageId).jpg"
-        
-        let task = NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: url)!) {(data, response, error) in
-            completion(image: UIImage(data: data))
-        }
-        
-        task.resume()
-    }
-    
-    getImageFromServerById("some string") { image in
-    dispatch_async(dispatch_get_main_queue()) {
-    // go to something on the main thread with the image like setting to UIImageView
-    }
-    }*/
     
     func fetch() {
         let fetcher = Fetcher()
@@ -234,7 +129,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 let jsonTitle = nextItem["title"] as! String
                 dataKeys.append(jsonTitle)
                 let jsonContents = nextItem["contents"] as! [[Int]]
-                dataValues.append(jsonContents)
+                //dataValues.append(jsonContents)
                 nextSize = 1
                 for intPair in jsonContents {
                     if intPair[0] > nextSize {
@@ -249,7 +144,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 }
                 nextSize = nextSize * 3 / 2*/
                 nextSize = nextSize * 2
-                dataSizes.append(nextSize)
+                //dataSizes.append(nextSize)
                 let nextCellInitializer = Grid.makeCellInitializer(intPairs: jsonContents)
                 let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
                 dataGrids.append(nextGrid)
@@ -280,7 +175,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 jsonArray[$0]*/
             }*/
             print(dataKeys)
-            print(dataValues)
+            //print(dataValues)
         }
     }
     
@@ -302,7 +197,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     @IBOutlet weak var refreshRateTextField: UITextField!
     @IBOutlet weak var refreshRateSlider: UISlider!
     
-    var editor: StandardEditor!
+    //var editor: StandardEditor!
     var engine: StandardEngine!
     
     override func viewDidLoad() {
@@ -313,7 +208,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.black], for:.normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.blue], for:.selected)
 
-        editor = StandardEditor.getEditor()
+        //editor = StandardEditor.getEditor()
         engine = StandardEngine.getEngine()
         rowsTextField.text = "\(engine.rows)"
         colsTextField.text = "\(engine.cols)"
@@ -393,7 +288,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             }
             engine.refreshRate = 0.0
             // send notification to turn off switch in SimulationViewController
-            engine.setGridSize(rows: rows, cols: cols)
+            engine.setGrid(rows: rows, cols: cols)
             rowsTextField.text = "\(rows)"
             colsTextField.text = "\(cols)"
         }

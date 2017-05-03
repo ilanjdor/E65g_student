@@ -1,9 +1,5 @@
 //
 //  GridView.swift
-//  Assignment4
-//
-//  Created by Ilan on 3/15/17.
-//  Copyright © 2017 Harvard Division of Continuing Education. All rights reserved.
 //
 
 import UIKit
@@ -18,6 +14,7 @@ import UIKit
     @IBInspectable var gridColor: UIColor = UIColor(red: (0/255.0), green: (0/255.0), blue: (0/255.0), alpha: 1.0)
     @IBInspectable var gridWidth:CGFloat = CGFloat(0.5)
     
+    static var useEngineGrid: Bool = true
     var engine: StandardEngine!
     var gridViewDataSource: GridViewDataSource?
     
@@ -29,15 +26,11 @@ import UIKit
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
-        if GridEditorViewController.isGridEditorGrid {
-            GridEditorViewController.isGridEditorGrid = false
-            //engine = StandardEngine.getEditor()
-        } else {
+        if GridView.useEngineGrid {
             engine = StandardEngine.getEngine()
             self.rows = engine.rows
             self.cols = engine.cols
         }
-        
     // Drawing code
         let size = CGSize(
             width: rect.size.width / CGFloat(self.cols),
@@ -131,6 +124,7 @@ import UIKit
     var lastTouchedPosition: GridPosition?
     
     func process(touches: Set<UITouch>) -> GridPosition? {
+        StatisticsViewController.wasManualTouch = true
         guard touches.count == 1 else { return nil }
         guard let pos = convert(touch: touches.first!) else { return nil }
         

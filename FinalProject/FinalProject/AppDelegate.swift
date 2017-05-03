@@ -1,9 +1,5 @@
 //
 //  AppDelegate.swift
-//  Lecture11
-//
-//  Created by Van Simmons on 4/17/17.
-//  Copyright © 2017 Harvard University. All rights reserved.
 //
 
 import UIKit

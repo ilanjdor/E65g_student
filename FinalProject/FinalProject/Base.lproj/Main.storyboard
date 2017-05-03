@@ -636,17 +636,6 @@
                                             <constraint firstAttribute="width" secondItem="bFK-xT-CwX" secondAttribute="height" multiplier="1:1" id="dZg-me-dki"/>
                                         </constraints>
                                     </view>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="E95-ra-X77">
-                                        <rect key="frame" x="40" y="92" width="240" height="30"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="DCL-c0-hPV"/>
-                                            <constraint firstAttribute="width" constant="240" id="FRV-CN-1bG"/>
-                                        </constraints>
-                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -654,10 +643,8 @@
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="width" relation="lessThanOrEqual" secondItem="h2n-GP-QIH" secondAttribute="width" multiplier="0.65" id="AB2-5O-y3O"/>
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="height" secondItem="h2n-GP-QIH" secondAttribute="height" multiplier="0.65" priority="750" id="MWa-4P-qJ1"/>
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="height" relation="lessThanOrEqual" secondItem="h2n-GP-QIH" secondAttribute="height" multiplier="0.65" id="hqD-M1-3ep"/>
-                                    <constraint firstItem="E95-ra-X77" firstAttribute="centerX" secondItem="h2n-GP-QIH" secondAttribute="centerX" id="jWg-ef-jCU"/>
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="centerX" secondItem="h2n-GP-QIH" secondAttribute="centerX" id="oj2-ej-mE4"/>
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="width" secondItem="h2n-GP-QIH" secondAttribute="width" multiplier="0.65" priority="750" id="vhX-7d-Uvw"/>
-                                    <constraint firstItem="bFK-xT-CwX" firstAttribute="top" secondItem="E95-ra-X77" secondAttribute="bottom" constant="4" id="ygl-fy-KVH"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -679,7 +666,7 @@
                                 </connections>
                             </barButtonItem>
                             <barButtonItem id="IA2-BK-ESR">
-                                <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" id="Eq8-nC-o8j">
+                                <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" id="Eq8-nC-o8j" userLabel="Grid Name">
                                     <rect key="frame" x="167" y="7" width="100" height="30"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <constraints>
@@ -695,9 +682,8 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="fruitValueTextField" destination="Eq8-nC-o8j" id="Uv0-1A-Pp5"/>
+                        <outlet property="gridNameTextField" destination="Eq8-nC-o8j" id="EIX-i3-peh"/>
                         <outlet property="gridView" destination="bFK-xT-CwX" id="Kxs-2H-XE4"/>
-                        <outlet property="textView" destination="E95-ra-X77" id="4XX-G2-tB7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9kd-7O-aKB" sceneMemberID="firstResponder"/>

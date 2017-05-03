@@ -27,6 +27,7 @@ public protocol GridProtocol {
     init(_ rows: Int, _ cols: Int, cellInitializer: @escaping (GridPosition) -> CellState)
     var description: String { get }
     var size: GridSize { get }
+    var living: [GridPosition] { get }
     subscript (row: Int, col: Int) -> CellState { get set }
     func next() -> Self //@discardableResult
 }
@@ -77,6 +78,7 @@ extension GridProtocol {
 public struct Grid: GridProtocol {
     private var _cells: [[CellState]]
     public let size: GridSize
+    public var configuration: [String:[[Int]]] = [:]
     
     public subscript (row: Int, col: Int) -> CellState {
         get { return _cells[norm(row, to: size.rows)][norm(col, to: size.cols)] }
@@ -92,7 +94,7 @@ public struct Grid: GridProtocol {
 }
 
 extension Grid: Sequence {
-    fileprivate var living: [GridPosition] {
+    public var living: [GridPosition] {
         return lazyPositions(self.size).filter { return  self[$0.row, $0.col].isAlive   }
     }
     
@@ -149,49 +151,37 @@ public extension Grid {
     }
 }
 
+//var configuration: [String:[[Int]]] = [:]
 
-
-// begin added for Final Project
-
-//var intPairs: [[Int]] = [[0,1],[1,2],[2,0],[2,1],[2,2]]
-//var gridConfig: [GridPosition] = Grid.IntPairsToGridConfig(intPairs: intPairs)
-
-/*public func IntPairsToGridConfig(intPairs: [[Int]]) -> [GridPosition] {
-    return intPairs.map { IntPairToGridPosition(intPair: $0) }
-}
-
-public func IntPairToGridPosition(intPair: [Int]) -> GridPosition {
-    var pos: GridPosition
-    pos.row = intPair[0]
-    pos.col = intPair[1]
-    return pos
-}*/
-
-/*public extension Grid {
-    public static func IntPairsToGridConfig(intPairs: [[Int]]) -> [GridPosition] {
-        return intPairs.map { GridPosition($0[0], $0[1]) }
-    }
-}*/
-
-/*public extension Grid {
-    public static func intPairsInitializer(pos: GridPosition) -> CellState {
-        for position in gridConfig {
-            if pos.row == position.row && pos.col == position.col {
-                return .alive
+public extension Grid {
+    mutating func setConfiguration() {
+        lazyPositions(self.size).forEach {
+            switch self[$0.row, $0.col] {
+            case .born:
+                configuration["born"] = (configuration["born"] ?? []) + [[$0.row, $0.col]]
+            case .died:
+                configuration["died"] = (configuration["died"] ?? []) + [[$0.row, $0.col]]
+            case .alive:
+                configuration["alive"] = (configuration["alive"] ?? []) + [[$0.row, $0.col]]
+            case .empty:
+                ()
             }
         }
-        return .empty
     }
-}*/
-
+    /*func configureGrid() {
+        lazyPositions(self.size).forEach {
+            
+        }
+    }*/
+}
+    
 public extension Grid {
     public static func makeCellInitializer(intPairs: [[Int]]) -> (GridPosition) -> CellState {
         if intPairs.count == 0 {
             return {_,_ in .empty}
         }
-        //var gc = Grid.IntPairsToGridConfig(intPairs: intPairs)
         var gc = intPairs.map { GridPosition($0[0], $0[1]) }
-        func newCellInitializer(pos: GridPosition) -> CellState {
+        func cellInitializer(pos: GridPosition) -> CellState {
             for position in gc {
                 if pos.row == position.row && pos.col == position.col {
                     return .alive
@@ -199,93 +189,31 @@ public extension Grid {
             }
             return .empty
         }
-        return newCellInitializer
+        return cellInitializer
     }
 }
 
-// end added for Final Project
-
-public protocol EngineDelegate {
-    func engineDidUpdate(withGrid: GridProtocol)
-}
-
-public protocol EditorDelegate {
-    func editorDidUpdate(withGrid: GridProtocol)
-}
-// modified for Final Project
-
-public protocol EditorProtocol {
-    var delegate: EditorDelegate? { get set }
-    var grid: GridProtocol { get }
-    var rows: Int { get set }
-    var cols: Int { get set }
-    var cellInitializer: (GridPosition) -> CellState { get set }
-    //var gridConfig: [GridPosition]? { get set }
-    init(rows: Int, cols: Int, intPairs: [[Int]])
-}
-
-class StandardEditor: EditorProtocol {
-    var grid: GridProtocol
-    var delegate: EditorDelegate?
-    var cellInitializer: (GridPosition) -> CellState
-    var rows: Int
-    var cols: Int
-    
-    private static var editor: StandardEditor = StandardEditor(rows: 20, cols: 20)
-    
-    required init(rows: Int, cols: Int, intPairs: [[Int]] = []) {
-        self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
-        self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
-        self.rows = rows
-        self.cols = cols
-        delegate?.editorDidUpdate(withGrid: self.grid)
-    }
-    
-    func setGridSize(rows: Int, cols: Int) {
-        self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty})
-        self.rows = rows
-        self.cols = cols
-        delegate?.editorDidUpdate(withGrid: self.grid)
-    }
-    
-    static func getEditor() -> StandardEditor {
-        return StandardEditor.editor
-    }
-}
-//var intPairs: [[Int]] = []
 public protocol EngineProtocol {
-    //var delegate: EngineDelegate? { get set }
     var grid: GridProtocol { get set }
     var prevRefreshRate: Double { get set }
-    var refreshRate: Double { get set } //how can you default this to zero?
+    var refreshRate: Double { get set }
     var refreshTimer: Timer? { get set }
     var rows: Int { get set }
     var cols: Int { get set }
     var cellInitializer: (GridPosition) -> CellState { get set }
-    //var gridConfig: [GridPosition]? { get set }
     init(rows: Int, cols: Int, intPairs: [[Int]])
     func step() -> GridProtocol
-    //func setGridSize(rows: Int, cols: Int)
-    //func setCellInitializer(intPairs: [[Int]])
-    //func setGrid(rows: Int, cols: Int, intPairs: [[Int]])
 }
 
 class StandardEngine: EngineProtocol {
-    //private static var baseRows: Int = 10
-    //private static var baseCols: Int = 10
-    //private static var baseIntPairs: [[Int]] = []
-    
     var grid: GridProtocol {
         didSet {
             self.rows = grid.size.rows
             self.cols = grid.size.cols
-            //delegate?.engineDidUpdate(withGrid: self.grid)
-            sendNotification()
+            notify()
         }
     }
-    var delegate: EngineDelegate?
     var cellInitializer: (GridPosition) -> CellState
-    //var gridConfig: [GridPosition]?
     var rows: Int /*{
         didSet {
             self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
@@ -299,7 +227,6 @@ class StandardEngine: EngineProtocol {
         }
     }*/
     
-    private static var editor: StandardEngine = StandardEngine(rows: 10, cols: 10)
     private static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
     
     required init(rows: Int, cols: Int, intPairs: [[Int]] = []) {
@@ -307,23 +234,8 @@ class StandardEngine: EngineProtocol {
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
-        //delegate?.engineDidUpdate(withGrid: self.grid)
-        sendNotification()
+        notify()
     }
-    
-    /*private static var engine: StandardEngine = {
-        let theEngine = StandardEngine(rows: baseRows, cols: baseCols, intPairs: baseIntPairs)
-        //delegate?.engineDidUpdate(withGrid: self.grid)
-        return theEngine
-    }()
-    
-    private init(rows: Int, cols: Int, intPairs: [[Int]]) {
-        self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
-        self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
-        self.rows = rows
-        self.cols = cols
-        delegate?.engineDidUpdate(withGrid: self.grid)
-    }*/
 
     var refreshTimer: Timer?
     var prevRefreshRate: TimeInterval = 0.0
@@ -342,23 +254,15 @@ class StandardEngine: EngineProtocol {
         }
     }
     
-    //var updateClosure: ((GridProtocol) -> Void)?
-    
     func step() -> GridProtocol {
         let newGrid = grid.next()
         self.grid = newGrid
-        //updateClosure?(self.grid)
-        //delegate?.engineDidUpdate(withGrid: self.grid)
-        sendNotification()
+        notify()
         return grid
     }
     
-    func setGridSize(rows: Int, cols: Int) {
-        self.grid = Grid(rows, cols, cellInitializer: { _,_ in .empty})
-        self.rows = rows
-        self.cols = cols
-        //delegate?.engineDidUpdate(withGrid: self.grid)
-        sendNotification()
+    func setCellInitializer(intPairs: [[Int]]) {
+        self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
     }
     
     func setGrid(rows: Int, cols: Int, intPairs: [[Int]] = []) {
@@ -366,16 +270,11 @@ class StandardEngine: EngineProtocol {
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
-        //delegate?.engineDidUpdate(withGrid: self.grid)
-        sendNotification()
+        notify()
     }
     
-    func setCellInitializer(intPairs: [[Int]]) {
-        self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
-        //delegate?.engineDidUpdate(withGrid: self.grid)
-    }
-    
-    func sendNotification() {
+    func notify() {
+        //self.grid.setConfiguration()
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         let n = Notification(name: name,
@@ -386,9 +285,5 @@ class StandardEngine: EngineProtocol {
     
     static func getEngine() -> StandardEngine {
         return StandardEngine.engine
-    }
-    
-    static func getEditor() -> StandardEngine {
-        return StandardEngine.editor
     }
 }

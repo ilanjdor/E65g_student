@@ -1,9 +1,5 @@
 //
 //  StatisticsViewController.swift
-//  Assignment4
-//
-//  Created by Ilan on 4/12/17.
-//  Copyright © 2017 Harvard Division of Continuing Education. All rights reserved.
 //
 
 import UIKit
@@ -14,26 +10,28 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
     @IBOutlet weak var bornCountTextField: UITextField!
     @IBOutlet weak var diedCountTextField: UITextField!
     
-    var aliveCount: Int = 0
-    var emptyCount: Int = 0
-    var bornCount: Int = 0
-    var diedCount: Int = 0
+    static var wasManualTouch: Bool = false
     
-    var engine: StandardEngine!
-    var gridViewDataSource: GridViewDataSource?
+    static var aliveCount: Int = 0
+    static var emptyCount: Int = 0
+    static var bornCount: Int = 0
+    static var diedCount: Int = 0
+    
+    static var engine: StandardEngine!
+    static var gridViewDataSource: GridViewDataSource?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        engine = StandardEngine.getEngine()
-        gridViewDataSource = self
+        StatisticsViewController.engine = StandardEngine.getEngine()
+        StatisticsViewController.gridViewDataSource = self
         aliveCountTextField.isEnabled = false
         emptyCountTextField.isEnabled = false
         bornCountTextField.isEnabled = false
         diedCountTextField.isEnabled = false
-        self.clearStatistics()
-        self.calculateStatistics()
-        self.displayStatistics()
+        StatisticsViewController.clearStatistics()
+        StatisticsViewController.calculateStatistics()
+        displayStatistics()
         
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
@@ -41,9 +39,12 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
             forName: name,
             object: nil,
             queue: nil) { (n) in
-                self.clearStatistics()
-                self.calculateStatistics()
-                self.displayStatistics()
+                //self.clearStatistics()
+                if !StatisticsViewController.wasManualTouch {
+                    StatisticsViewController.calculateStatistics()
+                    self.displayStatistics()
+                }
+                StatisticsViewController.wasManualTouch = false
         }
     }
     
@@ -53,30 +54,30 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
     }
     
     public subscript (row: Int, col: Int) -> CellState {
-        get { return engine.grid[row,col] }
-        set { engine.grid[row,col] = newValue }
+        get { return StatisticsViewController.engine.grid[row,col] }
+        set { StatisticsViewController.engine.grid[row,col] = newValue }
     }
     
-    func clearStatistics() {
-        aliveCount = 0
-        emptyCount = 0
-        bornCount = 0
-        diedCount = 0
+    static func clearStatistics() {
+        StatisticsViewController.aliveCount = 0
+        StatisticsViewController.emptyCount = 0
+        StatisticsViewController.bornCount = 0
+        StatisticsViewController.diedCount = 0
     }
     
-    private func calculateStatistics() {
-        (0 ..< engine.cols).forEach { i in
-            (0 ..< engine.rows).forEach { j in
-                if let grid = self.gridViewDataSource {
+    static private func calculateStatistics() {
+        (0 ..< StatisticsViewController.engine.cols).forEach { i in
+            (0 ..< StatisticsViewController.engine.rows).forEach { j in
+                if let grid = StatisticsViewController.gridViewDataSource {
                     switch grid[(i, j)] {
                         case .alive:
-                            aliveCount += 1
+                            StatisticsViewController.aliveCount += 1
                         case .empty:
-                            emptyCount += 1
+                            StatisticsViewController.emptyCount += 1
                         case .born:
-                            bornCount += 1
+                            StatisticsViewController.bornCount += 1
                         case .died:
-                            diedCount += 1
+                            StatisticsViewController.diedCount += 1
                     }
                 }
             }
@@ -84,9 +85,9 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
     }
     
     private func displayStatistics() {
-        aliveCountTextField.text = "\(aliveCount)"
-        emptyCountTextField.text = "\(emptyCount)"
-        bornCountTextField.text = "\(bornCount)"
-        diedCountTextField.text = "\(diedCount)"
+        aliveCountTextField.text = "\(StatisticsViewController.aliveCount)"
+        emptyCountTextField.text = "\(StatisticsViewController.emptyCount)"
+        bornCountTextField.text = "\(StatisticsViewController.bornCount)"
+        diedCountTextField.text = "\(StatisticsViewController.diedCount)"
     }
 }
