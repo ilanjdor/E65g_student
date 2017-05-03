@@ -15,7 +15,7 @@ var dataKeys: [String] = []
 var dataGrids: [GridProtocol] = []
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
-    @IBOutlet weak var tableView: UITableView!
+
     
     var jsonContents: String?
 
@@ -150,8 +150,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 dataGrids.append(nextGrid)
             }
             
-            
-            
                 /*let jsonDictionary = jsonArray[0] //as! NSDictionary
                 let jsonTitle = jsonDictionary["title"] as! String
                 let jsonContents = jsonDictionary["contents"] as! [[Int]]
@@ -189,11 +187,9 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     }
     
 // Ilan's code below
-    
-    @IBOutlet weak var rowsTextField: UITextField!
-    @IBOutlet weak var colsTextField: UITextField!
-    @IBOutlet weak var rowSlider: UISlider!
-    @IBOutlet weak var colSlider: UISlider!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var sizeTextField: UITextField!
+    @IBOutlet weak var sizeStepper: UIStepper!
     @IBOutlet weak var refreshRateTextField: UITextField!
     @IBOutlet weak var refreshRateSlider: UISlider!
     
@@ -210,10 +206,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
 
         //editor = StandardEditor.getEditor()
         engine = StandardEngine.getEngine()
-        rowsTextField.text = "\(engine.rows)"
-        colsTextField.text = "\(engine.cols)"
-        rowSlider.value = Float(engine.rows)
-        colSlider.value = Float(engine.cols)
+        sizeTextField.text = "\(engine.rows)"
+        sizeStepper.value = Double(engine.rows)
         refreshRateSlider.value = refreshRateSlider.minimumValue
         refreshRateSlider.isEnabled = true
         refreshRateTextField.text = "\(refreshRateSlider.value)"
@@ -225,8 +219,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    @IBAction func rowsEditingDidEnd(_ sender: UITextField) {
+    
+    @IBAction func sizeEditingDidEnd(_ sender: UITextField) {
         guard let text = sender.text else { return }
         guard let val = Int(text) else {
             showErrorAlert(withMessage: "Invalid value: \(text), please try again.") {
@@ -234,64 +228,34 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             }
             return
         }
-        if Float(val) < 1 || Float(val) > Float(rowSlider.maximumValue) {
+        if Float(val) < 1 || Float(val) > Float(sizeStepper.maximumValue) {
             showErrorAlert(withMessage: "Invalid value: \(val), please try again.") {
                 sender.text = "\(self.engine.rows)"
             }
             return
         }
-        rowSlider.value = Float(val)
-        colSlider.value = Float(val)
-        updateGridSize(rows: val, cols: val)
-    }
-
-    @IBAction func rowsEditingDidEndOnExit(_ sender: UITextField) {
+        sizeStepper.value = Double(val)
+        updateGridSize(size: val)
     }
     
-    @IBAction func colsEditingDidEnd(_ sender: UITextField) {
-        guard let text = sender.text else { return }
-        guard let val = Int(text) else {
-            showErrorAlert(withMessage: "Invalid value: \(text), please try again.") {
-                sender.text = "\(self.engine.cols)"
-            }
-            return
-        }
-        if Float(val) < 1 || Float(val) > Float(colSlider.maximumValue) {
-            showErrorAlert(withMessage: "Invalid value: \(val), please try again.") {
-                sender.text = "\(self.engine.cols)"
-            }
-            return
-        }
-        rowSlider.value = Float(val)
-        colSlider.value = Float(val)
-        updateGridSize(rows: val, cols: val)
+    @IBAction func sizeEditingDidEndOnExit(_ sender: UITextField) {
     }
     
-    @IBAction func colsEditingDidEndOnExit(_ sender: UITextField) {
+    @IBAction func sizeStep(_ sender: UIStepper) {
+        let val = Int(sizeStepper.value)
+        updateGridSize(size: val)
     }
     
-    @IBAction func rowSlideMove(_ sender: UISlider) {
-        let val = Int(rowSlider.value)
-        colSlider.value = Float(val)
-        updateGridSize(rows: val, cols: val)
-    }
-    
-    @IBAction func colSlideMove(_ sender: UISlider) {
-        let val = Int(colSlider.value)
-        rowSlider.value = Float(val)
-        updateGridSize(rows: val, cols: val)
-    }
-    private func updateGridSize(rows: Int, cols: Int) {
+    private func updateGridSize(size: Int) {
         StatisticsViewController.clearStatistics()
-        if engine.rows != rows {
+        if engine.rows != size {
             if engine.refreshRate > 0.0 {
                 engine.prevRefreshRate = engine.refreshRate
             }
             engine.refreshRate = 0.0
             // send notification to turn off switch in SimulationViewController
-            engine.setGrid(rows: rows, cols: cols)
-            rowsTextField.text = "\(rows)"
-            colsTextField.text = "\(cols)"
+            engine.setGrid(rows: size, cols: size)
+            sizeTextField.text = "\(size)"
         }
     }
     
