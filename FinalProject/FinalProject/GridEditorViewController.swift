@@ -30,6 +30,15 @@ class GridEditorViewController: UIViewController, GridViewDataSource {//, Editor
         set { grid![row,col] = newValue }
     }
     
+    override func viewWillDisappear(_ animated : Bool) {
+        super.viewWillDisappear(animated)
+        
+        if (self.isMovingFromParentViewController){
+            // Your code...
+            GridView.useEngineGrid = true
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Grid Editor";
@@ -83,7 +92,6 @@ class GridEditorViewController: UIViewController, GridViewDataSource {//, Editor
         engine.grid = grid!
         //GridEditorViewController.isGridEditorGrid = false
         //SimulationViewController.isEngineGrid = true
-        GridView.useEngineGrid = true
         StatisticsViewController.clearStatistics()
         //    saveClosure(newValue)
            _ = self.navigationController?.popViewController(animated: true)

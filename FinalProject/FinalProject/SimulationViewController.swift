@@ -98,12 +98,14 @@ class SimulationViewController: UIViewController, GridViewDataSource {//, Engine
         /*let nextCellInitializer = Grid.makeCellInitializer(intPairs: jsonContents)
         let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
         dataGrids.append(nextGrid)*/
+        
+        StatisticsViewController.clearStatistics()
     }
     
     @IBAction func save(_ sender: Any) {
     }
     
-    func engineDidUpdate(withGrid: GridProtocol) {
+    /*func engineDidUpdate(withGrid: GridProtocol) {
         //self.gridView.gridViewDataSource = withGrid as? GridViewDataSource
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
@@ -111,5 +113,5 @@ class SimulationViewController: UIViewController, GridViewDataSource {//, Engine
                              object: nil,
                              userInfo: ["engine" : self])
         nc.post(n)
-    }
+    }*/
 }

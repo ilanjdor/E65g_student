@@ -30,6 +30,8 @@ import UIKit
             engine = StandardEngine.getEngine()
             self.rows = engine.rows
             self.cols = engine.cols
+        } else {
+            //GridView.useEngineGrid = true
         }
     // Drawing code
         let size = CGSize(
