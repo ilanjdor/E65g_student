@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SimulationViewController: UIViewController, GridViewDataSource, EngineDelegate {
+class SimulationViewController: UIViewController, GridViewDataSource {//, EngineDelegate {
     @IBOutlet weak var gridView: GridView!
     
     @IBOutlet weak var refreshOnOffSwitch: UISwitch!
@@ -25,17 +25,26 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
         }
     }
     
+    //var gridSize: Int = 15
+    //var grid: GridProtocol?
+    //var intPairs: [[Int]]?
+    
     var engine: StandardEngine!
     
     public subscript (row: Int, col: Int) -> CellState {
         get { return engine.grid[row,col] }
         set { engine.grid[row,col] = newValue }
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        // this runs when user clicks on Simulation tab!
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         engine = StandardEngine.getEngine()
-        engine.delegate = self
+        //engine.delegate = self
+        /*engine.updateClosure = { (grid) in
+            self.gridView.setNeedsDisplay()
+        }*/
         gridView.gridViewDataSource = self
         refreshOnOffSwitch.isOn = false
         
@@ -45,7 +54,15 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
             forName: name,
             object: nil,
             queue: nil) { (n) in
+                self.engine = StandardEngine.getEngine()
+                self.gridView.gridViewDataSource = self
                 self.gridView.setNeedsDisplay()
+                /*if GridEditorViewController.isGridEditorGrid {
+                    GridEditorViewController.isGridEditorGrid = false
+                    self.gridView.setNeedsDisplay()
+                } else {
+                    self.gridView.setNeedsDisplay()
+                }*/
         }
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -68,16 +85,24 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
     @IBAction func next(_ sender: Any) {
         if self.gridView.gridViewDataSource != nil {
             engine.grid = self.engine.step()
+            //_ = engine.step()
         }
     }
     
     @IBAction func reset(_ sender: Any) {
+        //engine = StandardEngine.getEngine()
+        
+        
+        /*let nextCellInitializer = Grid.makeCellInitializer(intPairs: jsonContents)
+        let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
+        dataGrids.append(nextGrid)*/
     }
     
     @IBAction func save(_ sender: Any) {
     }
     
     func engineDidUpdate(withGrid: GridProtocol) {
+        //self.gridView.gridViewDataSource = withGrid as? GridViewDataSource
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         let n = Notification(name: name,

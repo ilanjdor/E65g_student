@@ -16,10 +16,15 @@
 
 import UIKit
 
-class GridEditorViewController: UIViewController, GridViewDataSource { //, EditorDelegate {
+class GridEditorViewController: UIViewController, GridViewDataSource {//, EditorDelegate {
+    static var rows: Int = 0
+    static var cols: Int = 0
+    static var intPairs: [[Int]] = []
+    
     @IBOutlet weak var gridView: GridView!
     
-    var gridSize: Int = 15
+    static var isGridEditorGrid: Bool = false
+    //var gridSize: Int = 15
     var grid: GridProtocol?
     var fruitValue: String?
     var textViewValue: String?
@@ -30,8 +35,8 @@ class GridEditorViewController: UIViewController, GridViewDataSource { //, Edito
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var fruitValueTextField: UITextField!
     
-    var engine: StandardEngine!
-    var editor: StandardEditor!
+    var engine: StandardEngine! //= StandardEngine(rows: 2, cols: 2, intPairs: [])
+    var editor: StandardEngine! //= StandardEngine(rows: 2, cols: 2, intPairs: [])
     
     public subscript (row: Int, col: Int) -> CellState {
         get { return grid![row,col] }
@@ -40,9 +45,10 @@ class GridEditorViewController: UIViewController, GridViewDataSource { //, Edito
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //editor = StandardEditor.getEditor()
+        editor = StandardEngine.getEditor()
         //editor.delegate = self
         //engine = StandardEngine.getEngine()
+        self.navigationItem.title = "Grid Editor";
         gridView.gridViewDataSource = self
         gridView.rows = (grid?.size.rows)!
         gridView.cols = (grid?.size.cols)!
@@ -54,16 +60,17 @@ class GridEditorViewController: UIViewController, GridViewDataSource { //, Edito
         if let textViewValue = textViewValue {
             textView.text = textViewValue
         }*/
+        GridEditorViewController.isGridEditorGrid = true
         self.gridView.setNeedsDisplay()
         
-        /*let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EditorUpdate")
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "EngineUpdate")
         nc.addObserver(
             forName: name,
             object: nil,
             queue: nil) { (n) in
                 self.gridView.setNeedsDisplay()
-        }*/
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -82,28 +89,31 @@ class GridEditorViewController: UIViewController, GridViewDataSource { //, Edito
         }*/
         //if let newValue = textView.text,
         //    let saveClosure = saveClosure {
-            engine = StandardEngine.getEngine()
-            engine.grid = grid!
+            //editor = StandardEngine.getEditor()
+            //editor.grid = grid!
+        engine = StandardEngine.getEngine()
+        engine.grid = grid!
+        GridEditorViewController.isGridEditorGrid = false
         //    saveClosure(newValue)
            _ = self.navigationController?.popViewController(animated: true)
         //}
     }
     
-    func editorDidUpdate(withGrid: GridProtocol) {
+    /*func editorDidUpdate(withGrid: GridProtocol) {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EditorUpdate")
         let n = Notification(name: name,
                              object: nil,
                              userInfo: ["editor" : self])
         nc.post(n)
-    }
+    }*/
     
-    func gridEditorDidUpdate(withGrid: GridProtocol) {
+    /*func gridEditorDidUpdate(withGrid: GridProtocol) {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         let n = Notification(name: name,
                              object: nil,
                              userInfo: ["engine" : self])
         nc.post(n)
-    }
+    }*/
 }

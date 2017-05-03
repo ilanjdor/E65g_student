@@ -352,11 +352,11 @@
                                                         <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YrL-YX-pXC" id="Z5G-Xd-kFx">
-                                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43.5"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Uxo-n6-dLv">
-                                                                    <rect key="frame" x="15" y="0.0" width="270" height="43"/>
+                                                                    <rect key="frame" x="15" y="0.0" width="270" height="43.5"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
@@ -671,8 +671,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Simulation" image="second" selectedImage="second" id="jd9-UA-Wdh"/>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Fruit Editor" id="k4W-hO-6Ga" userLabel="Fruit Editor">
-                        <barButtonItem key="backBarButtonItem" title="Cancel" id="V2u-3T-c5G"/>
+                    <navigationItem key="navigationItem" id="k4W-hO-6Ga" userLabel="Fruit Editor">
                         <rightBarButtonItems>
                             <barButtonItem title="Save" id="EZo-rR-h1y">
                                 <connections>

@@ -108,8 +108,20 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
 
     override func viewWillAppear(_ animated: Bool) {
         //1st
-        navigationController?.isNavigationBarHidden = true
+        //navigationController?.isNavigationBarHidden = true
+        //self.navigationItem.title = "Test View";
+        //self.navigationItem.backBarButtonItem?.title = "Your customized back title"
+        //self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.bordered, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
+
     }
+    
+    /*var b = UIBarButtonItem(
+    title: "Continue",
+    style: .plain,
+    target: self,
+    action: #selector(sayHello(sender:))
+    )*/
     
     func numberOfSections(in tableView: UITableView) -> Int {
         //2nd
@@ -177,8 +189,9 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     dataKeys[indexPath.row] = newValue
                     self.tableView.reloadData()
                 }*/
-                vc.gridSize = dataSizes[indexPath.row]
+                //vc.gridSize = dataSizes[indexPath.row]
                 vc.grid = dataGrids[indexPath.row]
+                //vc.engine = StandardEngine(
             }
         }
     }
@@ -231,10 +244,11 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                         nextSize = intPair[1]
                     }
                 }
-                if nextSize % 2 == 1 {
+                /*if nextSize % 2 == 1 {
                     nextSize = nextSize + 1
                 }
-                nextSize = nextSize * 3 / 2
+                nextSize = nextSize * 3 / 2*/
+                nextSize = nextSize * 2
                 dataSizes.append(nextSize)
                 let nextCellInitializer = Grid.makeCellInitializer(intPairs: jsonContents)
                 let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
