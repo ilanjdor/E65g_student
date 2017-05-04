@@ -114,6 +114,10 @@ class SimulationViewController: UIViewController, GridViewDataSource {//, Engine
         let defaults = UserDefaults.standard
         defaults.set(configuration, forKey: "configuration")
         defaults.set(size, forKey: "size")
+        //let recoveredConfiguration = defaults.object(forKey: "configuration")
+        //let recoveredSize = defaults.object(forKey: "size")
+        //print(recoveredConfiguration ?? [])
+        //print(recoveredSize ?? 0)
     }
     
     /*func engineDidUpdate(withGrid: GridProtocol) {

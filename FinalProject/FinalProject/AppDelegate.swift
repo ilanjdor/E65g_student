@@ -13,12 +13,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         "alive": [[1,0], [1,1]],
         "died": [[2,0], [2,1]]
     ]
+    var engine: StandardEngine!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let defaults = UserDefaults.standard
-        defaults.set(strings, forKey: "strings")
-        let recoveredStrings = defaults.object(forKey: "strings")
-        print(recoveredStrings ?? [])
+        let recoveredConfiguration = defaults.object(forKey: "configuration")
+        let recoveredSize = defaults.object(forKey: "size")
+        engine = StandardEngine.getEngine()
+        engine.setFancierGrid(rows: recoveredSize as! Int, cols: recoveredSize as! Int, intPairsDict: recoveredConfiguration as! [String : [[Int]]])
         return true
     }
     

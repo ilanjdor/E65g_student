@@ -32,7 +32,6 @@ public protocol GridProtocol {
     func next() -> Self //@discardableResult
     mutating func setConfiguration()
     func getConfiguration() -> [String:[[Int]]]
-    
 }
 
 public let lazyPositions = { (size: GridSize) in
@@ -202,11 +201,50 @@ public extension Grid {
         if intPairs.count == 0 {
             return {_,_ in .empty}
         }
-        var gc = intPairs.map { GridPosition($0[0], $0[1]) }
+        var alivePositions = intPairs.map { GridPosition($0[0], $0[1]) }
         func cellInitializer(pos: GridPosition) -> CellState {
-            for position in gc {
+            for position in alivePositions {
                 if pos.row == position.row && pos.col == position.col {
                     return .alive
+                }
+            }
+            return .empty
+        }
+        return cellInitializer
+    }
+}
+
+public extension Grid {
+    public static func makeFancierCellInitializer(intPairsDict: [String:[[Int]]]) -> (GridPosition) -> CellState {
+        if intPairsDict.count == 0 {
+            return {_,_ in .empty}
+        }
+        var alivePositions: [GridPosition] = []
+        var bornPositions: [GridPosition] = []
+        var diedPositions: [GridPosition] = []
+        if let aliveIntPairs = intPairsDict["alive"] {
+            alivePositions = aliveIntPairs.map { GridPosition($0[0], $0[1]) }
+        }
+        if let bornIntPairs = intPairsDict["born"] {
+            bornPositions = bornIntPairs.map { GridPosition($0[0], $0[1]) }
+        }
+        if let diedIntPairs = intPairsDict["died"] {
+            diedPositions = diedIntPairs.map { GridPosition($0[0], $0[1]) }
+        }
+        func cellInitializer(pos: GridPosition) -> CellState {
+            for position in alivePositions {
+                if pos.row == position.row && pos.col == position.col {
+                    return .alive
+                }
+            }
+            for position in bornPositions {
+                if pos.row == position.row && pos.col == position.col {
+                    return .born
+                }
+            }
+            for position in diedPositions {
+                if pos.row == position.row && pos.col == position.col {
+                    return .died
                 }
             }
             return .empty
@@ -291,6 +329,14 @@ class StandardEngine: EngineProtocol {
     
     func setGrid(rows: Int, cols: Int, intPairs: [[Int]] = []) {
         self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
+        self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+        self.rows = rows
+        self.cols = cols
+        notify()
+    }
+    
+    func setFancierGrid(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
+        self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols

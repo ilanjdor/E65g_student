@@ -213,6 +213,17 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         refreshRateTextField.text = "\(refreshRateSlider.value)"
         refreshRateTextField.isEnabled = true
         engine.prevRefreshRate = Double(refreshRateSlider.value)
+        
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "EngineUpdate")
+        nc.addObserver(
+            forName: name,
+            object: nil,
+            queue: nil) { (n) in
+                self.engine = StandardEngine.getEngine()
+                self.sizeTextField.text = "\(self.engine.rows)"
+                self.sizeStepper.value = Double(self.engine.rows)
+        }
     }
 
     override func didReceiveMemoryWarning() {
