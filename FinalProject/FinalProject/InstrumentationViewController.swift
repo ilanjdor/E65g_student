@@ -212,7 +212,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     private func updateGridSize(size: Int) {
-        StatisticsViewController.clearStatistics()
+        //StatisticsViewController.clearStatistics()
         if engine.rows != size {
             if engine.refreshRate > 0.0 {
                 engine.prevRefreshRate = engine.refreshRate

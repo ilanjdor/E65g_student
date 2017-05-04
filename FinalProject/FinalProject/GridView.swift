@@ -34,6 +34,7 @@ import UIKit
         alpha: 1.0)
     @IBInspectable var gridWidth:CGFloat = CGFloat(0.5)
     
+    static var wasManualTouch: Bool = false
     static var useEngineGrid: Bool = true
     var engine: StandardEngine!
     var gridViewDataSource: GridViewDataSource?
@@ -50,8 +51,6 @@ import UIKit
             engine = StandardEngine.getEngine()
             self.rows = engine.rows
             self.cols = engine.cols
-        } else {
-            //GridView.useEngineGrid = true
         }
     // Drawing code
         let size = CGSize(
@@ -146,7 +145,7 @@ import UIKit
     var lastTouchedPosition: GridPosition?
     
     func process(touches: Set<UITouch>) -> GridPosition? {
-        StatisticsViewController.wasManualTouch = true
+        GridView.wasManualTouch = true
         guard touches.count == 1 else { return nil }
         guard let pos = convert(touch: touches.first!) else { return nil }
         

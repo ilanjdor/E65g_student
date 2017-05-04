@@ -21,7 +21,6 @@ class GridEditorViewController: UIViewController, GridViewDataSource {//, Editor
     var gridNameValue: String?
     var intPairs: [[Int]]?
     var saveClosure: ((String) -> Void)?
-    //var saveClosure: (([[Int]]) -> Void)?
     
     var engine: StandardEngine!
     
@@ -34,7 +33,6 @@ class GridEditorViewController: UIViewController, GridViewDataSource {//, Editor
         super.viewWillDisappear(animated)
         
         if (self.isMovingFromParentViewController){
-            // Your code...
             GridView.useEngineGrid = true
         }
     }
@@ -45,11 +43,7 @@ class GridEditorViewController: UIViewController, GridViewDataSource {//, Editor
         gridView.gridViewDataSource = self
         gridView.rows = (grid?.size.rows)!
         gridView.cols = (grid?.size.cols)!
-        
         navigationController?.isNavigationBarHidden = false
-        /*if let fruitValue = fruitValue {
-            fruitValueTextField.text = fruitValue
-        }*/
         if let gridNameValue = gridNameValue {
             gridNameTextField.text = gridNameValue
         }
@@ -72,47 +66,13 @@ class GridEditorViewController: UIViewController, GridViewDataSource {//, Editor
     }
     
     @IBAction func save(_ sender: UIBarButtonItem) {
-        
-        /*if let newValue = gridNameTextField.text,
-            let saveClosure = saveClosure {
-            saveClosure(newValue)
-            _ = self.navigationController?.popViewController(animated: true)
-        }*/
-        
-        //if let newValue = fruitValueTextField.text,
         if let newValue = gridNameTextField.text,
             let saveClosure = saveClosure {
                 saveClosure(newValue)
-            //}
-        //if let newValue = textView.text,
-        //    let saveClosure = saveClosure {
-            //editor = StandardEngine.getEditor()
-            //editor.grid = grid!
-        engine = StandardEngine.getEngine()
-        engine.grid = grid!
-        //GridEditorViewController.isGridEditorGrid = false
-        //SimulationViewController.isEngineGrid = true
-        StatisticsViewController.clearStatistics()
-        //    saveClosure(newValue)
-           _ = self.navigationController?.popViewController(animated: true)
+                engine = StandardEngine.getEngine()
+                engine.grid = grid!
+                //StatisticsViewController.clearStatistics()
+                _ = self.navigationController?.popViewController(animated: true)
         }
     }
-    
-    /*func editorDidUpdate(withGrid: GridProtocol) {
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EditorUpdate")
-        let n = Notification(name: name,
-                             object: nil,
-                             userInfo: ["editor" : self])
-        nc.post(n)
-    }*/
-    
-    /*func gridEditorDidUpdate(withGrid: GridProtocol) {
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EngineUpdate")
-        let n = Notification(name: name,
-                             object: nil,
-                             userInfo: ["engine" : self])
-        nc.post(n)
-    }*/
 }

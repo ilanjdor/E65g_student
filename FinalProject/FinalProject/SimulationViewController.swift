@@ -92,19 +92,8 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
     }
     
     @IBAction func reset(_ sender: Any) {
-        //engine = StandardEngine.getEngine()
-        
-        
-        /*let nextCellInitializer = Grid.makeCellInitializer(intPairs: jsonContents)
-        let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
-        dataGrids.append(nextGrid)*/
-        
-        //engine = StandardEngine.getEngine()
-        //engine.grid = StandardEngine(rows: engine.rows, cols: engine.cols) as! GridProtocol
         engine.setGrid(rows: engine.rows, cols: engine.cols)
-        //GridEditorViewController.isGridEditorGrid = false
-        //SimulationViewController.isEngineGrid = true
-        StatisticsViewController.clearStatistics()
+        //StatisticsViewController.clearStatistics()
     }
     
     @IBAction func save(_ sender: Any) {
