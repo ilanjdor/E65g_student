@@ -108,6 +108,12 @@ class SimulationViewController: UIViewController, GridViewDataSource {//, Engine
     }
     
     @IBAction func save(_ sender: Any) {
+        engine.grid.setConfiguration()
+        let configuration = engine.grid.getConfiguration()
+        let size = engine.grid.size.rows
+        let defaults = UserDefaults.standard
+        defaults.set(configuration, forKey: "configuration")
+        defaults.set(size, forKey: "size")
     }
     
     /*func engineDidUpdate(withGrid: GridProtocol) {

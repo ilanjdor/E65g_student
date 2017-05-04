@@ -30,6 +30,9 @@ public protocol GridProtocol {
     var living: [GridPosition] { get }
     subscript (row: Int, col: Int) -> CellState { get set }
     func next() -> Self //@discardableResult
+    mutating func setConfiguration()
+    func getConfiguration() -> [String:[[Int]]]
+    
 }
 
 public let lazyPositions = { (size: GridSize) in
@@ -76,6 +79,24 @@ extension GridProtocol {
 }
 
 public struct Grid: GridProtocol {
+    mutating public func setConfiguration() {
+        lazyPositions(self.size).forEach {
+            switch self[$0.row, $0.col] {
+            case .born:
+                configuration["born"] = (configuration["born"] ?? []) + [[$0.row, $0.col]]
+            case .died:
+                configuration["died"] = (configuration["died"] ?? []) + [[$0.row, $0.col]]
+            case .alive:
+                configuration["alive"] = (configuration["alive"] ?? []) + [[$0.row, $0.col]]
+            case .empty:
+                ()
+            }
+        }
+    }
+    public func getConfiguration() -> [String:[[Int]]] {
+        return configuration
+    }
+
     private var _cells: [[CellState]]
     public let size: GridSize
     public var configuration: [String:[[Int]]] = [:]
@@ -151,12 +172,11 @@ public extension Grid {
     }
 }
 
-//var configuration: [String:[[Int]]] = [:]
-
-public extension Grid {
-    mutating func setConfiguration() {
-        lazyPositions(self.size).forEach {
-            switch self[$0.row, $0.col] {
+/*public extension Grid {
+    public static func getGridConfiguration(grid: GridProtocol) -> [String:[[Int]]] {
+        var configuration: [String:[[Int]]] = [:]
+        lazyPositions(grid.size).forEach {
+            switch grid[$0.row, $0.col] {
             case .born:
                 configuration["born"] = (configuration["born"] ?? []) + [[$0.row, $0.col]]
             case .died:
@@ -167,13 +187,15 @@ public extension Grid {
                 ()
             }
         }
+        return configuration
     }
-    /*func configureGrid() {
+    /*public static func setGridConfiguration([String:[[Int]]]) -> GridProtocol {
+        var grid: GridProtocol = Grid(
         lazyPositions(self.size).forEach {
             
         }
     }*/
-}
+}*/
     
 public extension Grid {
     public static func makeCellInitializer(intPairs: [[Int]]) -> (GridPosition) -> CellState {
@@ -234,6 +256,8 @@ class StandardEngine: EngineProtocol {
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
+        //self.grid.configuration = [:]
+        self.grid.setConfiguration()
         notify()
     }
 
