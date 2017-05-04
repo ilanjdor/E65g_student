@@ -144,8 +144,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         self.performSegue(withIdentifier: "gridEditor", sender: nil)
     }
 
-    
-// Ilan's code below
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var sizeTextField: UITextField!
     @IBOutlet weak var sizeStepper: UIStepper!
@@ -230,19 +228,19 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         guard let text = sender.text else { return }
         guard let val = Double(text) else {
             showErrorAlert(withMessage: "Invalid value: \(text), please try again.") {
-                sender.text = "\(self.engine.refreshRate)"
+                sender.text = "\(1 / self.engine.refreshRate)"
             }
             return
         }
         if Float(val) < refreshRateSlider.minimumValue || Float(val) > refreshRateSlider.maximumValue {
             showErrorAlert(withMessage: "Invalid value: \(val), please try again.") {
-                sender.text = "\(self.engine.refreshRate)"
+                sender.text = "\(1 / self.engine.refreshRate)"
             }
             return
         }
         refreshRateSlider.value = Float(val)
-        engine.prevRefreshRate = val
-        engine.refreshRate = val
+        engine.prevRefreshRate = 1 / val
+        engine.refreshRate = 1 / val
     }
     
     @IBAction func refreshRateEditingDidEndOnExit(_ sender: UITextField) {
@@ -250,8 +248,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
 
     @IBAction func refreshRateSlideMove(_ sender: UISlider) {
         refreshRateTextField.text = "\(refreshRateSlider.value)"
-        engine.prevRefreshRate = Double(refreshRateSlider.value)
-        engine.refreshRate = Double(refreshRateSlider.value)
+        engine.prevRefreshRate = Double(1 / refreshRateSlider.value)
+        engine.refreshRate = Double(1 / refreshRateSlider.value)
     }
     /*@IBAction func refreshOnOff(_ sender: UISwitch) {
         if sender.isOn {
