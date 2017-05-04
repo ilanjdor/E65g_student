@@ -13,6 +13,9 @@ var dataKeys: [String] = []
 //var dataValues: [[[Int]]] = []
 //var dataSizes: [Int] = []
 var dataGrids: [GridProtocol] = []
+var gridEditorVC: GridEditorViewController?
+var isNewTableViewRow: Bool = false
+var rowsAddedCount: Int = 0
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
@@ -55,54 +58,30 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let indexPath = tableView.indexPathForSelectedRow
-        if let indexPath = indexPath {
-            //let fruitValue = data[indexPath.section][indexPath.row]
-            //let textViewValue = jsonContents
-            //let intPairs = dataValues[indexPath.row]
-            let gridNameValue = dataKeys[indexPath.row]
-            if let vc = segue.destination as? GridEditorViewController {
-                //vc.fruitValue = fruitValue
-                //vc.intPairs = intPairs
-                //vc.textViewValue = jsonContents
-                /*vc.saveClosure = { newValue in
-                    data[indexPath.section][indexPath.row] = newValue*/
-                /*vc.saveClosure = { newValue in
-                    dataKeys[indexPath.row] = newValue
-                    self.tableView.reloadData()
-                }*/
-                //vc.gridSize = dataSizes[indexPath.row]
-                
-                vc.gridNameValue = gridNameValue
-                vc.grid = dataGrids[indexPath.row]
-                vc.saveClosure = { newValue in
-                    if newValue == gridNameValue {
-                        dataKeys[indexPath.row] = newValue
-                        dataGrids[indexPath.row] = vc.grid!
-                    } else {
-                        dataKeys.append(newValue)
-                        dataGrids.append(vc.grid!)
-                        
-                        /*public let lazyPositions = { (size: GridSize) in
-                            return (0 ..< size.rows)
-                                .lazy
-                                .map { zip( [Int](repeating: $0, count: size.cols) , 0 ..< size.cols ) }
-                                .flatMap { $0 }
-                                .map { GridPosition($0) }
-                        }*/
-                        
-                        /*let positions = { (vc.grid.count: Int, vc.grid.living: [GridPosition]) in
-                            return (0 ..< vc.grid.count)
-                                .map { (row: ($1).row, col: ($1).col) }
-                            }*/
-                        
-                        //dataValues.append(vc.grid!.living as! [[Int]])
-                        /*var dataValues: [[[Int]]] = []
-                         var dataSizes: [Int] = []
-                         var dataGrids: [GridProtocol] = []*/
-                    }
-                    self.tableView.reloadData()
+        var index: Int = 0
+        var gridNameValue: String = ""
+        
+        if isNewTableViewRow {
+            index = dataKeys.count - 1
+            isNewTableViewRow = false
+        } else {
+            let indexPath = tableView.indexPathForSelectedRow
+            index = (indexPath?.row)!
+        }
+        gridNameValue = dataKeys[index]
+        
+        if let vc = segue.destination as? GridEditorViewController {
+            vc.gridNameValue = gridNameValue
+            vc.grid = dataGrids[index]
+            vc.saveClosure = { newValue in
+                if newValue == gridNameValue {
+                    dataKeys[index] = newValue
+                    dataGrids[index] = vc.grid!
+                } else {
+                    dataKeys.append(newValue)
+                    dataGrids.append(vc.grid!)
                 }
+                self.tableView.reloadData()
             }
         }
     }
@@ -119,17 +98,13 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 return
             }
             print(json)
-            //let resultString = (json as AnyObject).description
-            let jsonArray = json as! NSArray //[NSDictionary]
-            //let array = [1, 2, 3]
-            //let arrayIterator = jsonArray.makeIterator()
+            let jsonArray = json as! NSArray
             for item in jsonArray {
                 var nextSize: Int
                 let nextItem = item as! NSDictionary
                 let jsonTitle = nextItem["title"] as! String
                 dataKeys.append(jsonTitle)
                 let jsonContents = nextItem["contents"] as! [[Int]]
-                //dataValues.append(jsonContents)
                 nextSize = 1
                 for intPair in jsonContents {
                     if intPair[0] > nextSize {
@@ -150,41 +125,25 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 dataGrids.append(nextGrid)
             }
             
-                /*let jsonDictionary = jsonArray[0] //as! NSDictionary
-                let jsonTitle = jsonDictionary["title"] as! String
-                let jsonContents = jsonDictionary["contents"] as! [[Int]]
-            
-            print (jsonTitle, jsonContents)*/
-            
-            //create Grids here!
-            //Grid.makeCellInitializer(intPairs: <#T##[[Int]]#>)
-            
             OperationQueue.main.addOperation {
-                //self.textView.text = resultString
-                
                 self.tableView.reloadData()
             }
-            
-            /*let dataKeys = jsonArray.map {_ in
-                let jsonDictionary = jsonArray[0]
-                jsonDictionary["title"] as! String
-                /*var dataDictionary: NSDictionary
-                dataDictionary
-                jsonArray[$0]*/
-            }*/
-            print(dataKeys)
+            //print(dataKeys)
             //print(dataValues)
         }
     }
     
     @IBAction func addRow(_ sender: UIBarButtonItem) {
-        dataKeys.append("it's a new row!")
-        OperationQueue.main.addOperation {
-            //self.textView.text = resultString
-            
-            self.tableView.reloadData()
-        }
+        isNewTableViewRow = true
+        rowsAddedCount += 1
+        dataKeys.append("New GridEditor Grid " + "\(rowsAddedCount)")
+        let nextSize = engine.rows
+        let nextGrid = Grid(nextSize, nextSize) as GridProtocol
+        dataGrids.append(nextGrid)
+        self.tableView.reloadData()
+        self.performSegue(withIdentifier: "gridEditor", sender: nil)
     }
+
     
 // Ilan's code below
     @IBOutlet weak var tableView: UITableView!
@@ -193,18 +152,15 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     @IBOutlet weak var refreshRateTextField: UITextField!
     @IBOutlet weak var refreshRateSlider: UISlider!
     
-    //var editor: StandardEditor!
     var engine: StandardEngine!
     
     override func viewDidLoad() {
-        //0th
         fetch()
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.black], for:.normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.blue], for:.selected)
 
-        //editor = StandardEditor.getEditor()
         engine = StandardEngine.getEngine()
         sizeTextField.text = "\(engine.rows)"
         sizeStepper.value = Double(engine.rows)
@@ -269,10 +225,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             sizeTextField.text = "\(size)"
         }
     }
-    
-    /*@IBAction func refreshRateEditingDidBegin(_ sender: Any) {
-        engine.prevRefreshRate = TimeInterval(refreshRateSlider.value)
-    }*/
 
     @IBAction func refreshRateEditingDidEnd(_ sender: UITextField) {
         guard let text = sender.text else { return }

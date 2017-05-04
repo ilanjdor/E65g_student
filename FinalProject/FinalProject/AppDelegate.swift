@@ -17,10 +17,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let defaults = UserDefaults.standard
-        let recoveredConfiguration = defaults.object(forKey: "configuration")
-        let recoveredSize = defaults.object(forKey: "size")
+        let recoveredConfiguration = defaults.object(forKey: "configuration") ?? [:]
+        let recoveredSize = defaults.object(forKey: "size") ?? StandardEngine.defaultGridSize
         engine = StandardEngine.getEngine()
         engine.setFancierGrid(rows: recoveredSize as! Int, cols: recoveredSize as! Int, intPairsDict: recoveredConfiguration as! [String : [[Int]]])
+        defaults.set([:], forKey: "configuration")
+        defaults.set(StandardEngine.defaultGridSize, forKey: "size")
         return true
     }
     

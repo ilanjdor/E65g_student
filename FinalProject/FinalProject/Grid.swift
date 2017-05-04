@@ -266,6 +266,7 @@ public protocol EngineProtocol {
 }
 
 class StandardEngine: EngineProtocol {
+    static var defaultGridSize: Int = 10
     var grid: GridProtocol {
         didSet {
             self.rows = grid.size.rows
@@ -287,7 +288,7 @@ class StandardEngine: EngineProtocol {
         }
     }*/
     
-    private static var engine: StandardEngine = StandardEngine(rows: 10, cols: 10)
+    private static var engine: StandardEngine = StandardEngine(rows: defaultGridSize, cols: defaultGridSize)
     
     required init(rows: Int, cols: Int, intPairs: [[Int]] = []) {
         self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
