@@ -253,7 +253,12 @@ public extension Grid {
     }
 }
 
+public protocol EngineDelegate {
+    func engineDidUpdate(withGrid: GridProtocol)
+}
+
 public protocol EngineProtocol {
+    var delegate: EngineDelegate? { get set }
     var grid: GridProtocol { get set }
     var prevRefreshRate: Double { get set }
     var refreshRate: Double { get set }
@@ -267,6 +272,7 @@ public protocol EngineProtocol {
 
 class StandardEngine: EngineProtocol {
     static var defaultGridSize: Int = 10
+    var delegate: EngineDelegate?
     var grid: GridProtocol {
         didSet {
             self.rows = grid.size.rows
@@ -277,14 +283,12 @@ class StandardEngine: EngineProtocol {
     var cellInitializer: (GridPosition) -> CellState
     var rows: Int /*{
         didSet {
-            self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
-            delegate?.engineDidUpdate(withGrid: self.grid)
+            self.grid = Grid(rows, rows, cellInitializer: self.cellInitializer)
         }
     }*/
     var cols: Int /*{
         didSet {
-            self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
-            delegate?.engineDidUpdate(withGrid: self.grid)
+            self.grid = Grid(cols, cols, cellInitializer: self.cellInitializer)
         }
     }*/
     
@@ -295,7 +299,6 @@ class StandardEngine: EngineProtocol {
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
-        //self.grid.configuration = [:]
         self.grid.setConfiguration()
         notify()
     }
@@ -320,7 +323,6 @@ class StandardEngine: EngineProtocol {
     func step() -> GridProtocol {
         let newGrid = grid.next()
         self.grid = newGrid
-        //notify()
         return grid
     }
     
@@ -333,7 +335,7 @@ class StandardEngine: EngineProtocol {
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
-        notify()
+        //notify()
     }
     
     func setFancierGrid(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
@@ -341,11 +343,11 @@ class StandardEngine: EngineProtocol {
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
-        notify()
+        //notify()
     }
     
     func notify() {
-        //self.grid.setConfiguration()
+        delegate?.engineDidUpdate(withGrid: self.grid)
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         let n = Notification(name: name,

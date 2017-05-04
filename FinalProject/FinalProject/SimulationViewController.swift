@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SimulationViewController: UIViewController, GridViewDataSource {//, EngineDelegate {
+class SimulationViewController: UIViewController, GridViewDataSource, EngineDelegate {
     static var isEngineGrid: Bool = true
     
     @IBOutlet weak var gridView: GridView!
@@ -43,7 +43,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {//, Engine
     override func viewDidLoad() {
         super.viewDidLoad()
         engine = StandardEngine.getEngine()
-        //engine.delegate = self
+        engine.delegate = self
         /*engine.updateClosure = { (grid) in
             self.gridView.setNeedsDisplay()
         }*/
@@ -120,7 +120,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {//, Engine
         //print(recoveredSize ?? 0)
     }
     
-    /*func engineDidUpdate(withGrid: GridProtocol) {
+    func engineDidUpdate(withGrid: GridProtocol) {
         //self.gridView.gridViewDataSource = withGrid as? GridViewDataSource
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
@@ -128,5 +128,5 @@ class SimulationViewController: UIViewController, GridViewDataSource {//, Engine
                              object: nil,
                              userInfo: ["engine" : self])
         nc.post(n)
-    }*/
+    }
 }
