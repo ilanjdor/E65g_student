@@ -10,12 +10,11 @@ import UIKit
 let finalProjectURL = "https://dl.dropboxusercontent.com/u/7544475/S65g.json"
 
 var dataKeys: [String] = []
-//var dataValues: [[[Int]]] = []
-//var dataSizes: [Int] = []
 var dataGrids: [GridProtocol] = []
 var gridEditorVC: GridEditorViewController?
 var isNewTableViewRow: Bool = false
-var rowsAddedCount: Int = 0
+var newRowName: String = "New GridEditor Grid"
+var newRowTitleSuffix: Int = 0
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
@@ -58,32 +57,47 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         var index: Int = 0
         var gridNameValue: String = ""
+        var grid: GridProtocol?
         
         if isNewTableViewRow {
-            index = dataKeys.count - 1
+            let nextSize = engine.rows
+            // all of the following rigamarole for gridNameValue is used
+            // to provide user-friendly default titles when new rows are added:
+            // 1) it only shows a suffix if the suffix is at least '2'
+            // 2) if a user saves a grid as, say "New GridEditor Grid 6"
+            //    that particular default title, should its turn come, will be skipped over
+            //    and the title "New GridEditor Grid 7" will be returned instead
+            if newRowTitleSuffix == 0 {
+                gridNameValue = newRowName
+            } else {
+                gridNameValue = newRowName + " \(newRowTitleSuffix)"
+            }
+            if dataKeys.contains(gridNameValue) {
+                while dataKeys.contains(gridNameValue) || newRowTitleSuffix < 2 {
+                    newRowTitleSuffix += 1
+                    gridNameValue = newRowName + " \(newRowTitleSuffix)"
+                }
+            }
+            grid = Grid(nextSize, nextSize) as GridProtocol
         } else {
             let indexPath = tableView.indexPathForSelectedRow
             index = (indexPath?.row)!
+            gridNameValue = dataKeys[index]
+            grid = dataGrids[index]
         }
-        gridNameValue = dataKeys[index]
         
         if let vc = segue.destination as? GridEditorViewController {
             vc.gridNameValue = gridNameValue
-            vc.grid = dataGrids[index]
+            vc.grid = grid
             vc.saveClosure = { newValue in
-                if isNewTableViewRow {
-                    dataKeys.remove(at: index)
-                    dataGrids.remove(at: index)
+                // for user-friendliness, existing keys are saved over
+                // to prevent duplicate keys
+                if dataKeys.contains(newValue) {
+                    index = dataKeys.index(of: newValue)!
+                    dataGrids[index] = vc.grid!
+                } else {
                     dataKeys.append(newValue)
                     dataGrids.append(vc.grid!)
-                } else {
-                    if newValue == gridNameValue {
-                        dataKeys[index] = newValue
-                        dataGrids[index] = vc.grid!
-                    } else {
-                        dataKeys.append(newValue)
-                        dataGrids.append(vc.grid!)
-                    }
                 }
                 self.tableView.reloadData()
             }
@@ -102,7 +116,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 print("no json")
                 return
             }
-            print(json)
+            //print(json)
             let jsonArray = json as! NSArray
             for item in jsonArray {
                 var nextSize: Int
@@ -119,12 +133,12 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                         nextSize = intPair[1]
                     }
                 }
+                // if you wanted to make the grid only 1.5x nextSize instead of 2x
                 /*if nextSize % 2 == 1 {
                     nextSize = nextSize + 1
                 }
                 nextSize = nextSize * 3 / 2*/
                 nextSize = nextSize * 2
-                //dataSizes.append(nextSize)
                 let nextCellInitializer = Grid.makeCellInitializer(intPairs: jsonContents)
                 let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
                 dataGrids.append(nextGrid)
@@ -140,13 +154,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     @IBAction func addRow(_ sender: UIBarButtonItem) {
         isNewTableViewRow = true
-        //rowsAddedCount += 1
-        //dataKeys.append("New GridEditor Grid " + "\(rowsAddedCount)")
-        dataKeys.append("New GridEditor Grid")
-        let nextSize = engine.rows
-        let nextGrid = Grid(nextSize, nextSize) as GridProtocol
-        dataGrids.append(nextGrid)
-        //self.tableView.reloadData()
         self.performSegue(withIdentifier: "gridEditor", sender: nil)
     }
 

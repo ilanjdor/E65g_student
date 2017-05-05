@@ -29,7 +29,7 @@ public protocol GridProtocol {
     var size: GridSize { get }
     var living: [GridPosition] { get }
     subscript (row: Int, col: Int) -> CellState { get set }
-    func next() -> Self //@discardableResult
+    func next() -> Self
     mutating func setConfiguration()
     func getConfiguration() -> [String:[[Int]]]
 }
@@ -106,7 +106,6 @@ public struct Grid: GridProtocol {
     }
     
     public init(_ rows: Int, _ cols: Int, cellInitializer: @escaping (GridPosition) -> CellState = { _, _ in .empty }) {
-        //_cells = [[CellState]](repeatElement( [CellState](repeatElement(.empty, count: rows)), count: cols))
         _cells = [[CellState]](repeatElement( [CellState](repeatElement(.empty, count: cols)), count: rows))
         size = GridSize(rows, cols)
         lazyPositions(self.size).forEach { self[$0.row, $0.col] = cellInitializer($0) }
@@ -170,31 +169,6 @@ public extension Grid {
         }
     }
 }
-
-/*public extension Grid {
-    public static func getGridConfiguration(grid: GridProtocol) -> [String:[[Int]]] {
-        var configuration: [String:[[Int]]] = [:]
-        lazyPositions(grid.size).forEach {
-            switch grid[$0.row, $0.col] {
-            case .born:
-                configuration["born"] = (configuration["born"] ?? []) + [[$0.row, $0.col]]
-            case .died:
-                configuration["died"] = (configuration["died"] ?? []) + [[$0.row, $0.col]]
-            case .alive:
-                configuration["alive"] = (configuration["alive"] ?? []) + [[$0.row, $0.col]]
-            case .empty:
-                ()
-            }
-        }
-        return configuration
-    }
-    /*public static func setGridConfiguration([String:[[Int]]]) -> GridProtocol {
-        var grid: GridProtocol = Grid(
-        lazyPositions(self.size).forEach {
-            
-        }
-    }*/
-}*/
     
 public extension Grid {
     public static func makeCellInitializer(intPairs: [[Int]]) -> (GridPosition) -> CellState {
@@ -220,50 +194,17 @@ public extension Grid {
             return {_,_ in .empty}
         }
         
-        /*var alivePositions: [GridPosition] = []
-        var bornPositions: [GridPosition] = []
-        var diedPositions: [GridPosition] = []*/
-        
-        
         let aliveIntPairs = intPairsDict["alive"] ?? []
         let bornIntPairs = intPairsDict["born"] ?? []
         let diedIntPairs = intPairsDict["died"] ?? []
-        //if let aliveIntPairs = intPairsDict["alive"] {
-            //alivePositions = aliveIntPairs.map { (pos) -> GridPosition in return GridPosition(row: pos[0],col: pos[1]) }
-        //}
-        /*if let bornIntPairs = intPairsDict["born"] {
-            bornPositions = bornIntPairs.map { GridPosition($0[0], $0[1]) }
-        }
-        if let diedIntPairs = intPairsDict["died"] {
-            diedPositions = diedIntPairs.map { GridPosition($0[0], $0[1]) }
-        }*/
         
         func cellInitializer(pos: GridPosition) -> CellState {
             let intPair = [pos.row, pos.col]
             if aliveIntPairs.contains(where: {$0 == intPair}) { return .alive }
             if bornIntPairs.contains(where: {$0 == intPair}) { return .born }
             if diedIntPairs.contains(where: {$0 == intPair}) { return .died }
-            
-            /*if alivePositions.contains(where: {$0 == pos}) { return .alive }
-            
-            for position in alivePositions {
-                if pos.row == position.row && pos.col == position.col {
-                    return .alive
-                }
-            }
-            for position in bornPositions {
-                if pos.row == position.row && pos.col == position.col {
-                    return .born
-                }
-            }
-            for position in diedPositions {
-                if pos.row == position.row && pos.col == position.col {
-                    return .died
-                }
-            }*/
             return .empty
         }
-        
         return cellInitializer
     }
 }
@@ -298,12 +239,12 @@ class StandardEngine: EngineProtocol {
     var cellInitializer: (GridPosition) -> CellState
     var rows: Int /*{
         didSet {
-            self.grid = Grid(rows, rows, cellInitializer: self.cellInitializer)
+            self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         }
     }*/
     var cols: Int /*{
         didSet {
-            self.grid = Grid(cols, cols, cellInitializer: self.cellInitializer)
+            self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         }
     }*/
     
@@ -314,7 +255,6 @@ class StandardEngine: EngineProtocol {
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
-        self.grid.setConfiguration()
         notify()
     }
 
