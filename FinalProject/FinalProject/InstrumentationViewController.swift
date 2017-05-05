@@ -131,6 +131,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             //print(json)
             let jsonArray = json as! NSArray
             for item in jsonArray {
+                var nextIntPairsDict: [String:[[Int]]] = [:]
                 var nextSize: Int
                 let nextItem = item as! NSDictionary
                 let jsonTitle = nextItem["title"] as! String
@@ -151,7 +152,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 }
                 nextSize = nextSize * 3 / 2*/
                 nextSize = nextSize * 2
-                let nextCellInitializer = Grid.makeCellInitializer(intPairs: jsonContents)
+                nextIntPairsDict["alive"] = jsonContents
+                let nextCellInitializer = Grid.makeFancierCellInitializer(intPairsDict: nextIntPairsDict)
                 let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
                 dataGrids.append(nextGrid)
             }
@@ -244,7 +246,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             }
             engine.refreshRate = 0.0
             // send notification to turn off switch in SimulationViewController
-            engine.setGrid(rows: size, cols: size)
+            engine.setFancierGrid(rows: size, cols: size)
             sizeTextField.text = "\(size)"
         }
     }

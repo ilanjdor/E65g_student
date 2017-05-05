@@ -170,7 +170,7 @@ public extension Grid {
     }
 }
     
-public extension Grid {
+/*public extension Grid {
     public static func makeCellInitializer(intPairs: [[Int]]) -> (GridPosition) -> CellState {
         if intPairs.count == 0 {
             return {_,_ in .empty}
@@ -186,7 +186,7 @@ public extension Grid {
         }
         return cellInitializer
     }
-}
+}*/
 
 public extension Grid {
     public static func makeFancierCellInitializer(intPairsDict: [String:[[Int]]]) -> (GridPosition) -> CellState {
@@ -222,7 +222,7 @@ public protocol EngineProtocol {
     var rows: Int { get set }
     var cols: Int { get set }
     var cellInitializer: (GridPosition) -> CellState { get set }
-    init(rows: Int, cols: Int, intPairs: [[Int]])
+    init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]])
     func step() -> GridProtocol
 }
 
@@ -250,8 +250,8 @@ class StandardEngine: EngineProtocol {
     
     private static var engine: StandardEngine = StandardEngine(rows: defaultGridSize, cols: defaultGridSize)
     
-    required init(rows: Int, cols: Int, intPairs: [[Int]] = []) {
-        self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
+    required init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
+        self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
@@ -281,11 +281,11 @@ class StandardEngine: EngineProtocol {
         return grid
     }
     
-    func setCellInitializer(intPairs: [[Int]]) {
+    /*func setCellInitializer(intPairs: [[Int]]) {
         self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
-    }
+    }*/
     
-    func setGrid2(rows: Int, cols: Int, grid: GridProtocol) {
+    /*func setGrid2(rows: Int, cols: Int, grid: GridProtocol) {
         self.grid = grid
         self.grid.setConfiguration()
         let intPairsDict = self.grid.getConfiguration()
@@ -293,15 +293,15 @@ class StandardEngine: EngineProtocol {
         self.rows = rows
         self.cols = cols
         //notify()
-    }
+    }*/
     
-    func setGrid(rows: Int, cols: Int, intPairs: [[Int]] = []) {
-        self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
+    /*func setGrid(rows: Int, cols: Int) {//, intPairs: [[Int]] = []) {
+        //self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
         //notify()
-    }
+    }*/
     
     func setFancierGrid(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
         self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
@@ -318,6 +318,33 @@ class StandardEngine: EngineProtocol {
         let n = Notification(name: name,
                              object: nil,
                              userInfo: ["engine" : self])
+        nc.post(n)
+    }
+    
+    func stepNotify() {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "GridStep")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["intPairsDict" : self.grid.getConfiguration()])
+        nc.post(n)
+    }
+    
+    func loadNotify() {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "GridLoad")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["intPairsDict" : self.grid.getConfiguration()])
+        nc.post(n)
+    }
+    
+    func resetNotify() {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "GridReset")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["intPairsDict" : self.grid.getConfiguration()])
         nc.post(n)
     }
     

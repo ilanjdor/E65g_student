@@ -310,11 +310,11 @@
                                                         <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YrL-YX-pXC" id="Z5G-Xd-kFx" userLabel="Configurations View">
-                                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43.5"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Uxo-n6-dLv" userLabel="Configurations Label">
-                                                                    <rect key="frame" x="15" y="0.0" width="270" height="43"/>
+                                                                    <rect key="frame" x="15" y="0.0" width="270" height="43.5"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>

@@ -17,6 +17,7 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
     
     var engine: StandardEngine!
     var gridViewDataSource: GridViewDataSource?
+    var intPairsDict: [String:[[Int]]]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +45,20 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
                 }
                 GridView.wasManualTouch = false
         }
+        
+        let name2 = Notification.Name(rawValue: "GridStep")
+        nc.addObserver(
+            forName: name2,
+            object: nil,
+            queue: nil) { (n) in
+                self.intPairsDict = n.userInfo?["intPairsDict"] as? [String:[[Int]]]
+                
+                if !GridView.wasManualTouch {
+                    self.calculateStatistics()
+                    self.displayStatistics()
+                }
+                GridView.wasManualTouch = false
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -64,7 +79,23 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
     }
     
     private func calculateStatistics() {
-        (0 ..< engine.cols).forEach { i in
+        var empty = engine.rows * engine.cols
+        
+        if let alive = intPairsDict?["alive"]?.count {
+            aliveCount += alive
+            empty -= alive
+        }
+        if let born = intPairsDict?["born"]?.count {
+            bornCount += born
+            empty -= born
+        }
+        if let died = intPairsDict?["died"]?.count {
+            diedCount += died
+            empty -= died
+        }
+        emptyCount += empty
+
+        /*(0 ..< engine.cols).forEach { i in
             (0 ..< engine.rows).forEach { j in
                 if let grid = gridViewDataSource {
                     switch grid[(i, j)] {
@@ -79,7 +110,7 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
                     }
                 }
             }
-        }
+        }*/
     }
     
     private func displayStatistics() {

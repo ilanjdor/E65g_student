@@ -92,7 +92,7 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
     }
     
     @IBAction func reset(_ sender: Any) {
-        engine.setGrid(rows: engine.rows, cols: engine.cols)
+        engine.setFancierGrid(rows: engine.rows, cols: engine.cols)
         //StatisticsViewController.clearStatistics()
     }
     
