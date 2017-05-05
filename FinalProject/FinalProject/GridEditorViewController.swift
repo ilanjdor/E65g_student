@@ -65,6 +65,12 @@ class GridEditorViewController: UIViewController, GridViewDataSource {//, Editor
     }
     
     @IBAction func save(_ sender: UIBarButtonItem) {
+        grid!.setConfiguration()
+        let configuration = grid!.getConfiguration()
+        let size = grid!.size.rows
+        let defaults = UserDefaults.standard
+        defaults.set(configuration, forKey: "configuration")
+        defaults.set(size, forKey: "size")
         if let newValue = gridNameTextField.text,
             let saveClosure = saveClosure {
                 saveClosure(newValue)

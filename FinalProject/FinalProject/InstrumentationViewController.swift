@@ -91,15 +91,23 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             vc.gridNameValue = gridNameValue
             vc.grid = grid
             vc.saveClosure = { newValue in
-                // for user-friendliness, existing keys are saved over
-                // to prevent duplicate keys
-                if dataKeys.contains(newValue) {
+                if isNewTableViewRow {
+                    dataKeys.append(newValue)
+                    dataGrids.append(vc.grid!)
+                } else {
+                    dataKeys[index] = newValue
+                    dataGrids[index] = vc.grid!
+                }
+                /*// for user-friendliness, existing keys are saved over
+                 // to prevent duplicate keys
+                 if dataKeys.contains(newValue) {
                     index = dataKeys.index(of: newValue)!
+                    dataKeys[index] = newValue
                     dataGrids[index] = vc.grid!
                 } else {
                     dataKeys.append(newValue)
                     dataGrids.append(vc.grid!)
-                }
+                }*/
                 self.tableView.reloadData()
             }
         }
