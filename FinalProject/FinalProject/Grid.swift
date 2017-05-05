@@ -285,6 +285,16 @@ class StandardEngine: EngineProtocol {
         self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
     }
     
+    func setGrid2(rows: Int, cols: Int, grid: GridProtocol) {
+        self.grid = grid
+        self.grid.setConfiguration()
+        let intPairsDict = self.grid.getConfiguration()
+        self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
+        self.rows = rows
+        self.cols = cols
+        //notify()
+    }
+    
     func setGrid(rows: Int, cols: Int, intPairs: [[Int]] = []) {
         self.cellInitializer = Grid.makeCellInitializer(intPairs: intPairs)
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
@@ -302,7 +312,7 @@ class StandardEngine: EngineProtocol {
     }
     
     func notify() {
-        delegate?.engineDidUpdate(withGrid: self.grid)
+        //delegate?.engineDidUpdate(withGrid: self.grid)
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         let n = Notification(name: name,

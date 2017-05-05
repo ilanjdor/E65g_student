@@ -90,7 +90,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         if let vc = segue.destination as? GridEditorViewController {
             vc.gridNameValue = gridNameValue
             vc.grid = grid
-            vc.saveClosure = { newValue in
+            vc.isNewTableViewRow = isNewTableViewRow
+            vc.saveClosure = { newValue, isNewTableViewRow in //, segueBack in
                 if isNewTableViewRow {
                     dataKeys.append(newValue)
                     dataGrids.append(vc.grid!)
@@ -108,7 +109,9 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     dataKeys.append(newValue)
                     dataGrids.append(vc.grid!)
                 }*/
-                self.tableView.reloadData()
+                //if segueBack {
+                    self.tableView.reloadData()
+                //}
             }
         }
         isNewTableViewRow = false

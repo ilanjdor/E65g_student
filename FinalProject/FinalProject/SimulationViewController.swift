@@ -103,6 +103,7 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
         let defaults = UserDefaults.standard
         defaults.set(configuration, forKey: "configuration")
         defaults.set(size, forKey: "size")
+        notify()//
         //let recoveredConfiguration = defaults.object(forKey: "configuration")
         //let recoveredSize = defaults.object(forKey: "size")
         //print(recoveredConfiguration ?? [])
@@ -111,11 +112,20 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
     
     func engineDidUpdate(withGrid: GridProtocol) {
         //self.gridView.gridViewDataSource = withGrid as? GridViewDataSource
-        let nc = NotificationCenter.default
+        /*let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         let n = Notification(name: name,
                              object: nil,
-                             userInfo: ["engine" : self])
+                             userInfo: ["engine" : engine])
+        nc.post(n)*/
+    }
+    
+    func notify() {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "SimulationStateSaved")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["engine" : engine])
         nc.post(n)
     }
 }

@@ -9,17 +9,21 @@
 import UIKit
 
 class GridEditorViewController: UIViewController, GridViewDataSource {//, EditorDelegate {
-    static var rows: Int = 0
-    static var cols: Int = 0
-    static var intPairs: [[Int]] = []
+    //static var rows: Int = 0
+    //static var cols: Int = 0
+    //static var intPairs: [[Int]] = []
 
     @IBOutlet weak var gridNameTextField: UITextField!
     @IBOutlet weak var gridView: GridView!
     
     var grid: GridProtocol?
     var gridNameValue: String?
-    var intPairs: [[Int]]?
-    var saveClosure: ((String) -> Void)?
+    //var intPairs: [[Int]]?
+    var configuration: [String:[[Int]]]?
+    //var configurationAndSize: [String: [String: Int], [String:[[Int]]]]?
+    var saveClosure: ((String, Bool) -> Void)?//((String, Bool) -> Void)?
+    //var segueBack: Bool = true
+    var isNewTableViewRow: Bool = false
     
     var engine: StandardEngine!
     
@@ -57,6 +61,31 @@ class GridEditorViewController: UIViewController, GridViewDataSource {//, Editor
             queue: nil) { (n) in
                 self.gridView.setNeedsDisplay()
         }
+        
+        let name2 = Notification.Name(rawValue: "SimulationStateSaved")
+        nc.addObserver(
+            forName: name2,
+            object: nil,
+            queue: nil) { (n) in
+                //self.configuration = n.userInfo?["configuration"] as! [String : [[Int]]]?
+                let engine = n.userInfo?["engine"] as! StandardEngine
+                self.grid = engine.grid //.userInfo?["engine"].grid as! GridProtocol?
+                //self.engine = StandardEngine.getEngine()
+                //self.engine.setFancierGrid(rows: recoveredSize as! Int, cols: recoveredSize as! Int, intPairsDict: recoveredConfiguration as! [String : [[Int]]])
+                GridView.useEngineGrid = false
+                self.gridView.setNeedsDisplay()
+                //self.segueBack = false
+                if let newValue = self.gridNameTextField.text,
+                    let saveClosure = self.saveClosure {
+                    saveClosure(newValue, self.isNewTableViewRow)//, self.segueBack)
+                    //self.engine = StandardEngine.getEngine()
+                    //self.engine.grid = self.grid!
+                    //notify()
+                    //StatisticsViewController.clearStatistics()
+                    //_ = self.navigationController?.popViewController(animated: true)
+                }
+
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -66,18 +95,31 @@ class GridEditorViewController: UIViewController, GridViewDataSource {//, Editor
     
     @IBAction func save(_ sender: UIBarButtonItem) {
         grid!.setConfiguration()
-        let configuration = grid!.getConfiguration()
+        configuration = grid!.getConfiguration()
         let size = grid!.size.rows
         let defaults = UserDefaults.standard
         defaults.set(configuration, forKey: "configuration")
         defaults.set(size, forKey: "size")
+        //self.segueBack = true
         if let newValue = gridNameTextField.text,
             let saveClosure = saveClosure {
-                saveClosure(newValue)
+                saveClosure(newValue, isNewTableViewRow)//, self.segueBack)
                 engine = StandardEngine.getEngine()
                 engine.grid = grid!
+                //notify()
                 //StatisticsViewController.clearStatistics()
                 _ = self.navigationController?.popViewController(animated: true)
         }
     }
+    
+    /*func notify() {
+        //self.configuration?["size"] = self.grid!.size.rows
+        //self.configuration?.set(10, forKey:"size")
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "GridEditorSaved")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["configuration" : configuration!])
+        nc.post(n)
+    }*/
 }
