@@ -593,12 +593,21 @@
                                             <constraint firstAttribute="width" secondItem="bFK-xT-CwX" secondAttribute="height" multiplier="1:1" id="dZg-me-dki"/>
                                         </constraints>
                                     </view>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6NC-OJ-agO" userLabel="Grid Name">
+                                        <rect key="frame" x="56.5" y="88" width="208" height="30"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
                                 </subviews>
                                 <color key="backgroundColor" red="0.98801177740097046" green="0.82213610410690308" blue="0.0070145032368600368" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
+                                    <constraint firstItem="6NC-OJ-agO" firstAttribute="centerX" secondItem="bFK-xT-CwX" secondAttribute="centerX" id="2NG-pd-Va4"/>
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="centerY" secondItem="h2n-GP-QIH" secondAttribute="centerY" id="57O-7Z-4Wz"/>
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="width" relation="lessThanOrEqual" secondItem="h2n-GP-QIH" secondAttribute="width" multiplier="0.65" id="AB2-5O-y3O"/>
+                                    <constraint firstItem="bFK-xT-CwX" firstAttribute="top" secondItem="6NC-OJ-agO" secondAttribute="bottom" constant="8" id="Ahf-Fq-1hJ"/>
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="height" secondItem="h2n-GP-QIH" secondAttribute="height" multiplier="0.65" priority="750" id="MWa-4P-qJ1"/>
+                                    <constraint firstItem="6NC-OJ-agO" firstAttribute="width" secondItem="bFK-xT-CwX" secondAttribute="width" id="UcG-Z6-Nhx"/>
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="height" relation="lessThanOrEqual" secondItem="h2n-GP-QIH" secondAttribute="height" multiplier="0.65" id="hqD-M1-3ep"/>
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="centerX" secondItem="h2n-GP-QIH" secondAttribute="centerX" id="oj2-ej-mE4"/>
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="width" secondItem="h2n-GP-QIH" secondAttribute="width" multiplier="0.65" priority="750" id="vhX-7d-Uvw"/>

@@ -13,6 +13,7 @@ var dataKeys: [String] = []
 var dataGrids: [GridProtocol] = []
 var gridEditorVC: GridEditorViewController?
 var isNewTableViewRow: Bool = false
+var tableViewHeader: String = "Configurations"
 var newRowName: String = "New GridEditor Grid"
 var newRowTitleSuffix: Int = 0
 
@@ -42,7 +43,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return nil
+        return tableViewHeader
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
