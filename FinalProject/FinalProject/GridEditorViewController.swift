@@ -17,7 +17,6 @@ class GridEditorViewController: UIViewController, GridViewDataSource {//, Editor
     @IBOutlet weak var gridView: GridView!
     
     var grid: GridProtocol?
-    var fruitValue: String?
     var gridNameValue: String?
     var intPairs: [[Int]]?
     var saveClosure: ((String) -> Void)?

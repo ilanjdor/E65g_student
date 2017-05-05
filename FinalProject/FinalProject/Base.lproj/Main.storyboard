@@ -206,11 +206,11 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s5l-V2-ejo" userLabel="Instruments Shader">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="114"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="6wy-5h-o08" userLabel="Instruments Stack">
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="6wy-5h-o08" userLabel="Instruments Stack">
                                                 <rect key="frame" x="10" y="10" width="300" height="94"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="22" translatesAutoresizingMaskIntoConstraints="NO" id="ftu-Yj-fRX" userLabel="Size Stack">
-                                                        <rect key="frame" x="0.0" y="0.0" width="279" height="30"/>
+                                                        <rect key="frame" x="10.5" y="0.0" width="279" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4so-VO-MaD" userLabel="Size Label">
                                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="30"/>
@@ -250,7 +250,7 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="22" translatesAutoresizingMaskIntoConstraints="NO" id="7Zc-oz-2uV" userLabel="Speed Stack">
-                                                        <rect key="frame" x="0.0" y="64" width="279" height="30"/>
+                                                        <rect key="frame" x="10.5" y="64" width="279" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Speed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jKO-JG-BIe" userLabel="Speed Label">
                                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="30"/>
@@ -594,7 +594,7 @@
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.98801177740097046" green="0.82213610410690308" blue="0.0070145032368600368" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="centerY" secondItem="h2n-GP-QIH" secondAttribute="centerY" id="57O-7Z-4Wz"/>
                                     <constraint firstItem="bFK-xT-CwX" firstAttribute="width" relation="lessThanOrEqual" secondItem="h2n-GP-QIH" secondAttribute="width" multiplier="0.65" id="AB2-5O-y3O"/>

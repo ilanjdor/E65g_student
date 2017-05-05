@@ -24,7 +24,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
 
     override func viewWillAppear(_ animated: Bool) {
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
-
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -49,9 +48,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            var newData = dataKeys
-            newData.remove(at: indexPath.row)
-            dataKeys = newData as [String]
+            dataKeys.remove(at: indexPath.row)
+            dataGrids.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.reloadData()
         }
@@ -63,7 +61,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         
         if isNewTableViewRow {
             index = dataKeys.count - 1
-            isNewTableViewRow = false
         } else {
             let indexPath = tableView.indexPathForSelectedRow
             index = (indexPath?.row)!
@@ -74,16 +71,24 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             vc.gridNameValue = gridNameValue
             vc.grid = dataGrids[index]
             vc.saveClosure = { newValue in
-                if newValue == gridNameValue {
-                    dataKeys[index] = newValue
-                    dataGrids[index] = vc.grid!
-                } else {
+                if isNewTableViewRow {
+                    dataKeys.remove(at: index)
+                    dataGrids.remove(at: index)
                     dataKeys.append(newValue)
                     dataGrids.append(vc.grid!)
+                } else {
+                    if newValue == gridNameValue {
+                        dataKeys[index] = newValue
+                        dataGrids[index] = vc.grid!
+                    } else {
+                        dataKeys.append(newValue)
+                        dataGrids.append(vc.grid!)
+                    }
                 }
                 self.tableView.reloadData()
             }
         }
+        isNewTableViewRow = false
     }
     
     func fetch() {
@@ -135,12 +140,13 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     @IBAction func addRow(_ sender: UIBarButtonItem) {
         isNewTableViewRow = true
-        rowsAddedCount += 1
-        dataKeys.append("New GridEditor Grid " + "\(rowsAddedCount)")
+        //rowsAddedCount += 1
+        //dataKeys.append("New GridEditor Grid " + "\(rowsAddedCount)")
+        dataKeys.append("New GridEditor Grid")
         let nextSize = engine.rows
         let nextGrid = Grid(nextSize, nextSize) as GridProtocol
         dataGrids.append(nextGrid)
-        self.tableView.reloadData()
+        //self.tableView.reloadData()
         self.performSegue(withIdentifier: "gridEditor", sender: nil)
     }
 

@@ -219,19 +219,33 @@ public extension Grid {
         if intPairsDict.count == 0 {
             return {_,_ in .empty}
         }
-        var alivePositions: [GridPosition] = []
+        
+        /*var alivePositions: [GridPosition] = []
         var bornPositions: [GridPosition] = []
-        var diedPositions: [GridPosition] = []
-        if let aliveIntPairs = intPairsDict["alive"] {
-            alivePositions = aliveIntPairs.map { GridPosition($0[0], $0[1]) }
-        }
-        if let bornIntPairs = intPairsDict["born"] {
+        var diedPositions: [GridPosition] = []*/
+        
+        
+        let aliveIntPairs = intPairsDict["alive"] ?? []
+        let bornIntPairs = intPairsDict["born"] ?? []
+        let diedIntPairs = intPairsDict["died"] ?? []
+        //if let aliveIntPairs = intPairsDict["alive"] {
+            //alivePositions = aliveIntPairs.map { (pos) -> GridPosition in return GridPosition(row: pos[0],col: pos[1]) }
+        //}
+        /*if let bornIntPairs = intPairsDict["born"] {
             bornPositions = bornIntPairs.map { GridPosition($0[0], $0[1]) }
         }
         if let diedIntPairs = intPairsDict["died"] {
             diedPositions = diedIntPairs.map { GridPosition($0[0], $0[1]) }
-        }
+        }*/
+        
         func cellInitializer(pos: GridPosition) -> CellState {
+            let intPair = [pos.row, pos.col]
+            if aliveIntPairs.contains(where: {$0 == intPair}) { return .alive }
+            if bornIntPairs.contains(where: {$0 == intPair}) { return .born }
+            if diedIntPairs.contains(where: {$0 == intPair}) { return .died }
+            
+            /*if alivePositions.contains(where: {$0 == pos}) { return .alive }
+            
             for position in alivePositions {
                 if pos.row == position.row && pos.col == position.col {
                     return .alive
@@ -246,9 +260,10 @@ public extension Grid {
                 if pos.row == position.row && pos.col == position.col {
                     return .died
                 }
-            }
+            }*/
             return .empty
         }
+        
         return cellInitializer
     }
 }
