@@ -98,7 +98,7 @@ class SimulationViewController: UIViewController, GridViewDataSource, EngineDele
     
     @IBAction func save(_ sender: Any) {
         engine.grid.setConfiguration()
-        let configuration = engine.grid.getConfiguration()
+        let configuration = engine.grid.configuration
         let size = engine.grid.size.rows
         let defaults = UserDefaults.standard
         defaults.set(configuration, forKey: "configuration")
