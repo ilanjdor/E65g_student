@@ -46,7 +46,7 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
                 GridView.wasManualTouch = false
         }
         
-        let name2 = Notification.Name(rawValue: "GridStep")
+        /*let name = Notification.Name(rawValue: "GridStep")
         nc.addObserver(
             forName: name2,
             object: nil,
@@ -59,6 +59,15 @@ class StatisticsViewController: UIViewController, GridViewDataSource {
                 }
                 GridView.wasManualTouch = false
         }
+        
+        func stepNotify() {
+            let nc = NotificationCenter.default
+            let name = Notification.Name(rawValue: "GridStep")
+            let n = Notification(name: name,
+                                 object: nil,
+                                 userInfo: ["statistics" : self.grid.getStatistics()])
+            nc.post(n)
+        }*/
     }
     
     override func didReceiveMemoryWarning() {

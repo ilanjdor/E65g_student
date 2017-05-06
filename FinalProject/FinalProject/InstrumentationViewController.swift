@@ -89,7 +89,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         if let vc = segue.destination as? GridEditorViewController {
             vc.gridNameValue = gridNameValue
             vc.grid = grid
-            if isNewTableViewRow {
+            /*if isNewTableViewRow {
             // we cannot allow the user to select the simulation tab with
             // an unsaved new grid in the grid editor because he could
             // potentially attempt to save the simulation grid into
@@ -97,7 +97,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 TabBarController.canSelectSimulationTab(isEnabled: false)
             } else {
                 TabBarController.canSelectSimulationTab(isEnabled: true)
-            }
+            }*/
             //vc.changesSaved = false
             vc.saveClosure = { newValue in //, changesSaved in //, segueBack in
                 if isNewTableViewRow {
@@ -120,7 +120,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 //if segueBack {
                     self.tableView.reloadData()
                 //}
-                TabBarController.canSelectSimulationTab(isEnabled: true)
+                //TabBarController.canSelectSimulationTab(isEnabled: true)
                 // if changes were saved to a new grid, a table view
                 // row now exists for it; if changes were not saved,
                 //
