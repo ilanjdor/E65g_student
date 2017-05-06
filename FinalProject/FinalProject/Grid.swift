@@ -34,8 +34,8 @@ public protocol GridProtocol {
     func next() -> Self
     mutating func setConfiguration()
     /*func getConfiguration() -> [String:[[Int]]]
-    mutating func resetStatistics() -> Void
-    mutating func accumulateStatistics() -> Void*/
+    mutating func resetStatistics() -> Void*/
+    mutating func setStateCounts()
 }
 
 public let lazyPositions = { (size: GridSize) in
@@ -232,11 +232,13 @@ public extension Grid {
         statistics["empty"] = 0
     }*/
     
-    mutating public func tallyStateCounts() -> Void {
-        self.stateCounts["alive"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .alive }).count
-        self.stateCounts["born"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .born }).count
-        self.stateCounts["died"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .died }).count
-        self.stateCounts["empty"] = self.size.rows * self.size.cols - stateCounts["alive"]! - stateCounts["born"]! - stateCounts["died"]!
+    mutating public func setStateCounts() {
+        //var stateCounts: [String:Int] = [:]
+        stateCounts["alive"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .alive }).count
+        stateCounts["born"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .born }).count
+        stateCounts["died"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .died }).count
+        stateCounts["empty"] = self.size.rows * self.size.cols - stateCounts["alive"]! - stateCounts["born"]! - stateCounts["died"]!
+        //return stateCounts
     }
  
  /*public mutating func resetStateCounts() -> Void {
@@ -246,14 +248,14 @@ public extension Grid {
  stateCounts["empty"] = 0
  }*/
  
- public static func combineStateCounts(existing: [String:Int], new: [String:Int]) -> [String:Int] {
- var combined: [String:Int] = [:]
- combined["alive"] = existing["alive"]! + new["alive"]!
- combined["born"] = existing["born"]! + new["born"]!
- combined["died"] = existing["died"]! + new["died"]!
- combined["empty"] = existing["empty"]! + new["empty"]!
- return combined
- }
+    public static func combineStateCounts(existing: [String:Int], new: [String:Int]) -> [String:Int] {
+        var combined: [String:Int] = [:]
+        combined["alive"] = existing["alive"]! + new["alive"]!
+        combined["born"] = existing["born"]! + new["born"]!
+        combined["died"] = existing["died"]! + new["died"]!
+        combined["empty"] = existing["empty"]! + new["empty"]!
+        return combined
+    }
 }
 
 public protocol EngineDelegate {
