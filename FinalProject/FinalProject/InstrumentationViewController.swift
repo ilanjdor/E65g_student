@@ -23,6 +23,10 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     var grid: GridProtocol?
     var gridNameValue: String = ""
 
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        return true
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
     }
