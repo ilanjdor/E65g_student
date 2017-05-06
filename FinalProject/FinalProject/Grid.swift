@@ -32,6 +32,7 @@ public protocol GridProtocol {
     func next() -> Self
     mutating func setConfiguration()
     func getConfiguration() -> [String:[[Int]]]
+    func getStatistics() -> [String:Int]
 }
 
 public let lazyPositions = { (size: GridSize) in
@@ -78,24 +79,6 @@ extension GridProtocol {
 }
 
 public struct Grid: GridProtocol {
-    mutating public func setConfiguration() {
-        lazyPositions(self.size).forEach {
-            switch self[$0.row, $0.col] {
-            case .born:
-                configuration["born"] = (configuration["born"] ?? []) + [[$0.row, $0.col]]
-            case .died:
-                configuration["died"] = (configuration["died"] ?? []) + [[$0.row, $0.col]]
-            case .alive:
-                configuration["alive"] = (configuration["alive"] ?? []) + [[$0.row, $0.col]]
-            case .empty:
-                ()
-            }
-        }
-    }
-    public func getConfiguration() -> [String:[[Int]]] {
-        return configuration
-    }
-
     private var _cells: [[CellState]]
     public let size: GridSize
     public var configuration: [String:[[Int]]] = [:]
@@ -206,6 +189,34 @@ public extension Grid {
             return .empty
         }
         return cellInitializer
+    }
+    
+    mutating public func setConfiguration() {
+        lazyPositions(self.size).forEach {
+            switch self[$0.row, $0.col] {
+            case .born:
+                configuration["born"] = (configuration["born"] ?? []) + [[$0.row, $0.col]]
+            case .died:
+                configuration["died"] = (configuration["died"] ?? []) + [[$0.row, $0.col]]
+            case .alive:
+                configuration["alive"] = (configuration["alive"] ?? []) + [[$0.row, $0.col]]
+            case .empty:
+                ()
+            }
+        }
+    }
+    
+    public func getConfiguration() -> [String:[[Int]]] {
+        return configuration
+    }
+    
+    public func getStatistics() -> [String:Int] {
+        var dict: [String:Int] = [:]
+        dict["alive"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .alive }).count
+        dict["born"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .born }).count
+        dict["died"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .died }).count
+        dict["empty"] = self.size.rows - dict["alive"]! - dict["born"]! - dict["died"]!
+        return dict
     }
 }
 
@@ -326,7 +337,7 @@ class StandardEngine: EngineProtocol {
         let name = Notification.Name(rawValue: "GridStep")
         let n = Notification(name: name,
                              object: nil,
-                             userInfo: ["intPairsDict" : self.grid.getConfiguration()])
+                             userInfo: ["statistics" : self.grid.getStatistics()])
         nc.post(n)
     }
     
@@ -335,7 +346,7 @@ class StandardEngine: EngineProtocol {
         let name = Notification.Name(rawValue: "GridLoad")
         let n = Notification(name: name,
                              object: nil,
-                             userInfo: ["intPairsDict" : self.grid.getConfiguration()])
+                             userInfo: ["statistics" : self.grid.getStatistics()])
         nc.post(n)
     }
     
@@ -344,7 +355,7 @@ class StandardEngine: EngineProtocol {
         let name = Notification.Name(rawValue: "GridReset")
         let n = Notification(name: name,
                              object: nil,
-                             userInfo: ["intPairsDict" : self.grid.getConfiguration()])
+                             userInfo: ["statistics" : self.grid.getStatistics()])
         nc.post(n)
     }
     
