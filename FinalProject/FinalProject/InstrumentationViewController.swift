@@ -12,15 +12,16 @@ let finalProjectURL = "https://dl.dropboxusercontent.com/u/7544475/S65g.json"
 var dataKeys: [String] = []
 var dataGrids: [GridProtocol] = []
 var gridEditorVC: GridEditorViewController?
-var isNewTableViewRow: Bool = false
 var tableViewHeader: String = "Configurations"
+var isNewTableViewRow: Bool = false
 var newRowName: String = "New GridEditor Grid"
 var newRowTitleSuffix: Int = 0
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
-
-    
     var jsonContents: String?
+    var index: Int? = 0
+    var grid: GridProtocol?
+    var gridNameValue: String = ""
 
     override func viewWillAppear(_ animated: Bool) {
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
@@ -56,10 +57,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        var index: Int = 0
-        var gridNameValue: String = ""
-        var grid: GridProtocol?
-        
         if isNewTableViewRow {
             let nextSize = engine.rows
             // all of the following rigamarole for gridNameValue is used
@@ -68,7 +65,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             // 2) if a user saves a grid as, say "New GridEditor Grid 6"
             //    that particular default title, should its turn come, will be skipped over
             //    and the title "New GridEditor Grid 7" will be returned instead
-            if newRowTitleSuffix == 0 {
+            /*if newRowTitleSuffix == 0 {
                 gridNameValue = newRowName
             } else {
                 gridNameValue = newRowName + " \(newRowTitleSuffix)"
@@ -78,26 +75,37 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     newRowTitleSuffix += 1
                     gridNameValue = newRowName + " \(newRowTitleSuffix)"
                 }
-            }
+            }*/
+            index = nil
+            gridNameValue = newRowName
             grid = Grid(nextSize, nextSize) as GridProtocol
         } else {
             let indexPath = tableView.indexPathForSelectedRow
             index = (indexPath?.row)!
-            gridNameValue = dataKeys[index]
-            grid = dataGrids[index]
+            gridNameValue = dataKeys[index!]
+            grid = dataGrids[index!]
         }
         
         if let vc = segue.destination as? GridEditorViewController {
             vc.gridNameValue = gridNameValue
             vc.grid = grid
-            vc.isNewTableViewRow = isNewTableViewRow
-            vc.saveClosure = { newValue, isNewTableViewRow in //, segueBack in
+            if isNewTableViewRow {
+            // we cannot allow the user to select the simulation tab with
+            // an unsaved new grid in the grid editor because he could
+            // potentially attempt to save the simulation grid into
+            // a table view row that doesn't exist
+                TabBarController.canSelectSimulationTab(isEnabled: false)
+            } else {
+                TabBarController.canSelectSimulationTab(isEnabled: true)
+            }
+            //vc.changesSaved = false
+            vc.saveClosure = { newValue in //, changesSaved in //, segueBack in
                 if isNewTableViewRow {
                     dataKeys.append(newValue)
                     dataGrids.append(vc.grid!)
                 } else {
-                    dataKeys[index] = newValue
-                    dataGrids[index] = vc.grid!
+                    dataKeys[self.index!] = newValue
+                    dataGrids[self.index!] = vc.grid!
                 }
                 /*// for user-friendliness, existing keys are saved over
                  // to prevent duplicate keys
@@ -112,9 +120,20 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 //if segueBack {
                     self.tableView.reloadData()
                 //}
+                TabBarController.canSelectSimulationTab(isEnabled: true)
+                // if changes were saved to a new grid, a table view
+                // row now exists for it; if changes were not saved,
+                //
+                // this is kind of deep...
+                // without it, we run into a problem caused by an unsaved new grid.
+                // if the unsaved grid was new, we cannot change isNewTableViewRow back to false
+                // because we are still without a
+                /*if changesSaved {
+                    isNewTableViewRow = false
+                }*/
+                isNewTableViewRow = false
             }
         }
-        isNewTableViewRow = false
     }
     
     func fetch() {
@@ -204,6 +223,41 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 self.engine = StandardEngine.getEngine()
                 self.sizeTextField.text = "\(self.engine.rows)"
                 self.sizeStepper.value = Double(self.engine.rows)
+        }
+        
+        let name2 = Notification.Name(rawValue: "SimulationStateSaved")
+        nc.addObserver(
+            forName: name2,
+            object: nil,
+            queue: nil) { (n) in
+                //self.configuration = n.userInfo?["configuration"] as! [String : [[Int]]]?
+                let engine = n.userInfo?["engine"] as! StandardEngine
+                self.grid = engine.grid //.userInfo?["engine"].grid as! GridProtocol?
+                if isNewTableViewRow {
+                    dataKeys.append(self.gridNameValue)
+                    dataGrids.append(self.grid!)
+                } else {
+                    dataKeys[self.index!] = self.gridNameValue
+                    dataGrids[self.index!] = self.grid!
+                }
+                
+                //self.engine = StandardEngine.getEngine()
+                //self.engine.setFancierGrid(rows: recoveredSize as! Int, cols: recoveredSize as! Int, intPairsDict: recoveredConfiguration as! [String : [[Int]]])
+                //GridView.useEngineGrid = false
+                //self.gridView.setNeedsDisplay()
+                //self.segueBack = false
+                /*if let newValue = self.gridNameTextField.text,
+                    let saveClosure = self.saveClosure {
+                    saveClosure(newValue, self.isNewTableViewRow, self.index)//, self.segueBack)
+                    //self.engine = StandardEngine.getEngine()
+                    //self.engine.grid = self.grid!
+                    //notify()
+                    //StatisticsViewController.clearStatistics()
+                    //_ = self.navigationController?.popViewController(animated: true)
+                }*/
+                isNewTableViewRow = false
+                // user must select the desired table view row to retrieve the updated grid
+                _ = self.navigationController?.popViewController(animated: true)
         }
     }
 
