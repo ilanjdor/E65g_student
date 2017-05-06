@@ -36,6 +36,7 @@ public protocol GridProtocol {
     /*func getConfiguration() -> [String:[[Int]]]
     mutating func resetStatistics() -> Void*/
     mutating func setStateCounts()
+    //mutating func resetStateCounts()
 }
 
 public let lazyPositions = { (size: GridSize) in
@@ -240,6 +241,15 @@ public extension Grid {
         stateCounts["empty"] = self.size.rows * self.size.cols - stateCounts["alive"]! - stateCounts["born"]! - stateCounts["died"]!
         //return stateCounts
     }
+    
+    public static func getZeroedOutStateCounts() -> [String:Int] {
+        var stateCounts: [String:Int] = [:]
+        stateCounts["alive"] = 0
+        stateCounts["born"] = 0
+        stateCounts["died"] = 0
+        stateCounts["empty"] = 0
+        return stateCounts
+    }
  
  /*public mutating func resetStateCounts() -> Void {
  stateCounts["alive"] = 0
@@ -271,7 +281,7 @@ public protocol EngineProtocol {
     var rows: Int { get set }
     var cols: Int { get set }
     var cellInitializer: (GridPosition) -> CellState { get set }
-    var statistics: [String:Int]? { get }
+    var statistics: [String:Int] { get }
     init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]])
     func step() -> GridProtocol
 }
@@ -281,13 +291,18 @@ class StandardEngine: EngineProtocol {
     var delegate: EngineDelegate?
     var grid: GridProtocol {
         didSet {
+            let cumulativeStateCounts = self.statistics
+            self.grid.setStateCounts()
+            let gridStateCounts = self.grid.stateCounts
+            self.statistics = Grid.combineStateCounts(existing: cumulativeStateCounts, new: gridStateCounts)
             self.rows = grid.size.rows
             self.cols = grid.size.cols
             notify()
+            statisticsNotify()
         }
     }
     var cellInitializer: (GridPosition) -> CellState
-    var statistics: [String:Int]?
+    var statistics: [String:Int]
     var rows: Int /*{
         didSet {
             self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
@@ -303,6 +318,7 @@ class StandardEngine: EngineProtocol {
     
     required init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
         self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
+        self.statistics = Grid.getZeroedOutStateCounts()
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
@@ -327,7 +343,11 @@ class StandardEngine: EngineProtocol {
     }
     
     func step() -> GridProtocol {
-        let newGrid = grid.next()
+        //self.grid.setStateCounts()
+        //let prevStateCounts = self.grid.stateCounts
+        let newGrid = self.grid.next()
+        //newGrid.setStateCounts()
+        //let newStateCounts = newGrid.stateCounts
         self.grid = newGrid
         return grid
     }
@@ -377,7 +397,7 @@ class StandardEngine: EngineProtocol {
         let name = Notification.Name(rawValue: "StatisticsUpdate")
         let n = Notification(name: name,
                              object: nil,
-                             userInfo: ["statistics" : self.statistics!])
+                             userInfo: ["statistics" : self.statistics])
         nc.post(n)
     }
     
