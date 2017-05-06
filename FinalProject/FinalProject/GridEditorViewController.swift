@@ -46,6 +46,7 @@ class GridEditorViewController: UIViewController, GridViewDataSource {//, Editor
         if (self.isMovingFromParentViewController){
             GridView.useEngineGrid = true
         }
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
 /*    @available(iOS 4.0, *)

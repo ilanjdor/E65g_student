@@ -19,7 +19,7 @@ var newRowTitleSuffix: Int = 0
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     var jsonContents: String?
-    var index: Int? = 0
+    var index: Int?
     var grid: GridProtocol?
     var gridNameValue: String = ""
 
@@ -103,6 +103,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 if isNewTableViewRow {
                     dataKeys.append(newValue)
                     dataGrids.append(vc.grid!)
+                    self.index = dataKeys.count - 1
                 } else {
                     dataKeys[self.index!] = newValue
                     dataGrids[self.index!] = vc.grid!
@@ -231,6 +232,13 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             object: nil,
             queue: nil) { (n) in
                 //self.configuration = n.userInfo?["configuration"] as! [String : [[Int]]]?
+                
+                if self.index == nil {
+                    self.showErrorAlert(withMessage: "You must select a row in the table view " +
+                        "before you can save a simulation grid to the grid editor."){}
+                    return
+                }
+                
                 let engine = n.userInfo?["engine"] as! StandardEngine
                 self.grid = engine.grid //.userInfo?["engine"].grid as! GridProtocol?
                 if isNewTableViewRow {
@@ -258,6 +266,9 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 isNewTableViewRow = false
                 // user must select the desired table view row to retrieve the updated grid
                 _ = self.navigationController?.popViewController(animated: true)
+                
+                
+
         }
     }
 
