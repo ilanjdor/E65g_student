@@ -28,14 +28,13 @@ public protocol GridProtocol {
     var description: String { get }
     var size: GridSize { get }
     var living: [GridPosition] { get }
-    var statistics: [String:Int] { get }
+    var stateCounts: [String:Int] { get }
+    var configuration: [String:[[Int]]] { get }
     subscript (row: Int, col: Int) -> CellState { get set }
-    func next() -> Self
+    mutating func next() -> Self // made mutating so that grid can store cumulative statistics
     mutating func setConfiguration()
-    func getConfiguration() -> [String:[[Int]]]
-    mutating func resetStatistics() -> Void
-    mutating func accumulateStatistics() -> Void
-    func getStatistics() -> [String:Int]
+    //mutating func resetStateCounts() -> Void
+    mutating func tallyStateCounts() -> Void
 }
 
 public let lazyPositions = { (size: GridSize) in
@@ -74,9 +73,10 @@ extension GridProtocol {
         }
     }
     
-    public func next() -> Self {
+    public mutating func next() -> Self {
         var nextGrid = Self(size.rows, size.cols) { _, _ in .empty }
         lazyPositions(self.size).forEach { nextGrid[$0.row, $0.col] = self.nextState(of: $0) }
+        self.tallyStateCounts() // IJD added
         return nextGrid
     }
 }
@@ -85,7 +85,7 @@ public struct Grid: GridProtocol {
     private var _cells: [[CellState]]
     public let size: GridSize
     public var configuration: [String:[[Int]]] = [:]
-    public var statistics: [String:Int] = [:]
+    public var stateCounts: [String:Int] = [:]
     
     public subscript (row: Int, col: Int) -> CellState {
         get { return _cells[norm(row, to: size.rows)][norm(col, to: size.cols)] }
@@ -96,6 +96,9 @@ public struct Grid: GridProtocol {
         _cells = [[CellState]](repeatElement( [CellState](repeatElement(.empty, count: cols)), count: rows))
         size = GridSize(rows, cols)
         lazyPositions(self.size).forEach { self[$0.row, $0.col] = cellInitializer($0) }
+        self.tallyStateCounts()
+        //self.resetStateCounts() // IJD added
+        //self.tallyStateCounts() // IJD added
     }
 }
 
@@ -210,30 +213,27 @@ public extension Grid {
         }
     }
     
-    public func getConfiguration() -> [String:[[Int]]] {
-        return configuration
+    public mutating func tallyStateCounts() -> Void {
+        self.stateCounts["alive"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .alive }).count
+        self.stateCounts["born"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .born }).count
+        self.stateCounts["died"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .died }).count
+        self.stateCounts["empty"] = self.size.rows * self.size.cols - stateCounts["alive"]! - stateCounts["born"]! - stateCounts["died"]!
     }
     
-    public mutating func accumulateStatistics() -> Void {
-        let alive = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .alive }).count
-        let born = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .born }).count
-        let died = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .died }).count
-        let empty = self.size.rows - alive - born - died
-        statistics["alive"]! += alive
-        statistics["born"]! += born
-        statistics["died"]! += died
-        statistics["empty"]! += empty
-    }
+    /*public mutating func resetStateCounts() -> Void {
+        stateCounts["alive"] = 0
+        stateCounts["born"] = 0
+        stateCounts["died"] = 0
+        stateCounts["empty"] = 0
+    }*/
     
-    public mutating func resetStatistics() -> Void {
-        statistics["alive"] = 0
-        statistics["born"] = 0
-        statistics["died"] = 0
-        statistics["empty"] = 0
-    }
-    
-    public func getStatistics() -> [String:Int] {
-        return statistics
+    public static func combineStateCounts(existing: [String:Int], new: [String:Int]) -> [String:Int] {
+        var combined: [String:Int] = [:]
+        combined["alive"] = existing["alive"]! + new["alive"]!
+        combined["born"] = existing["born"]! + new["born"]!
+        combined["died"] = existing["died"]! + new["died"]!
+        combined["empty"] = existing["empty"]! + new["empty"]!
+        return combined
     }
 }
 
@@ -250,6 +250,7 @@ public protocol EngineProtocol {
     var rows: Int { get set }
     var cols: Int { get set }
     var cellInitializer: (GridPosition) -> CellState { get set }
+    var statistics: [String:Int] { get }
     init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]])
     func step() -> GridProtocol
 }
@@ -259,12 +260,15 @@ class StandardEngine: EngineProtocol {
     var delegate: EngineDelegate?
     var grid: GridProtocol {
         didSet {
+            self.statistics = self.grid.stateCounts
             self.rows = grid.size.rows
             self.cols = grid.size.cols
             notify()
+            statisticsNotify()
         }
     }
     var cellInitializer: (GridPosition) -> CellState
+    var statistics: [String : Int] = [:]
     var rows: Int /*{
         didSet {
             self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
@@ -281,9 +285,10 @@ class StandardEngine: EngineProtocol {
     required init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
         self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+        //self.statistics = self.grid.stateCounts
         self.rows = rows
         self.cols = cols
-        notify()
+        //notify()
     }
 
     var refreshTimer: Timer?
@@ -304,9 +309,12 @@ class StandardEngine: EngineProtocol {
     }
     
     func step() -> GridProtocol {
-        let newGrid = grid.next()
+        let newGrid = self.grid.next()
         self.grid = newGrid
-        return grid
+        //self.grid.tallyStateCounts()
+        let prevStateCounts = self.statistics
+        self.statistics = Grid.combineStateCounts(existing: prevStateCounts, new: self.grid.stateCounts)
+        return self.grid
     }
     
     /*func setCellInitializer(intPairs: [[Int]]) {
@@ -354,11 +362,11 @@ class StandardEngine: EngineProtocol {
         let name = Notification.Name(rawValue: "StatisticsUpdate")
         let n = Notification(name: name,
                              object: nil,
-                             userInfo: ["statistics" : self.grid.getStatistics()])
+                             userInfo: ["statistics" : self.statistics])
         nc.post(n)
     }
     
-    func stepNotify() {
+    /*func stepNotify() {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "GridStep")
         let n = Notification(name: name,
@@ -383,7 +391,7 @@ class StandardEngine: EngineProtocol {
                              object: nil,
                              userInfo: ["statistics" : self.grid.getStatistics()])
         nc.post(n)
-    }
+    }*/
     
     static func getEngine() -> StandardEngine {
         return StandardEngine.engine

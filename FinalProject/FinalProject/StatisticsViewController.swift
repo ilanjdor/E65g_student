@@ -17,7 +17,7 @@ class StatisticsViewController: UIViewController {//, GridViewDataSource {
     
     //var engine: StandardEngine!
     //var gridViewDataSource: GridViewDataSource?
-    var statistics: [String:Int]?
+    var statistics: [String:Int] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +52,7 @@ class StatisticsViewController: UIViewController {//, GridViewDataSource {
             forName: name,
             object: nil,
             queue: nil) { (n) in
-                self.statistics = n.userInfo?["statistics"] as? [String:Int]
+                self.statistics = n.userInfo?["statistics"] as! [String:Int]
                 self.displayStatistics()
         }
         
@@ -95,10 +95,10 @@ class StatisticsViewController: UIViewController {//, GridViewDataSource {
     }
     
     private func displayStatistics() {
-        aliveCountTextField.text = "\(self.statistics?["alive"])"
-        bornCountTextField.text = "\(self.statistics?["born"])"
-        diedCountTextField.text = "\(self.statistics?["died"])"
-        emptyCountTextField.text = "\(self.statistics?["empty"])"
+        aliveCountTextField.text = "\(self.statistics["alive"]!)"
+        bornCountTextField.text = "\(self.statistics["born"]!)"
+        diedCountTextField.text = "\(self.statistics["died"]!)"
+        emptyCountTextField.text = "\(self.statistics["empty"]!)"
     }
     
     /*public subscript (row: Int, col: Int) -> CellState {
