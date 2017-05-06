@@ -52,7 +52,11 @@ class StatisticsViewController: UIViewController {//, GridViewDataSource {
             forName: name,
             object: nil,
             queue: nil) { (n) in
+<<<<<<< HEAD
                 self.statistics = n.userInfo!["statistics"] as! [String:Int]
+=======
+                self.statistics = n.userInfo?["statistics"] as! [String:Int]
+>>>>>>> refs/remotes/origin/master
                 self.displayStatistics()
         }
         
@@ -95,7 +99,10 @@ class StatisticsViewController: UIViewController {//, GridViewDataSource {
     }
     
     private func displayStatistics() {
+<<<<<<< HEAD
         print ("\(self.statistics["alive"])")
+=======
+>>>>>>> refs/remotes/origin/master
         aliveCountTextField.text = "\(self.statistics["alive"]!)"
         bornCountTextField.text = "\(self.statistics["born"]!)"
         diedCountTextField.text = "\(self.statistics["died"]!)"

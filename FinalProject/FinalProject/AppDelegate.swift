@@ -12,10 +12,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let defaults = UserDefaults.standard
-        let recoveredConfiguration = defaults.object(forKey: "configuration") ?? [:]
+        let recoveredConfig = defaults.object(forKey: "configuration") ?? [:]
         let recoveredSize = defaults.object(forKey: "size") ?? StandardEngine.defaultGridSize
         engine = StandardEngine.getEngine()
-        engine.setFancierGrid(rows: recoveredSize as! Int, cols: recoveredSize as! Int, intPairsDict: recoveredConfiguration as! [String : [[Int]]])
+        engine.setFancierGrid(rows: recoveredSize as! Int, cols: recoveredSize as! Int, intPairsDict: recoveredConfig as! [String : [[Int]]])
         // the following code ensures that the subsequent launch loads the standard defaults
         // unless the user saves a configuration during the current session
         defaults.set([:], forKey: "configuration")

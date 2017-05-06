@@ -28,15 +28,25 @@ public protocol GridProtocol {
     var description: String { get }
     var size: GridSize { get }
     var living: [GridPosition] { get }
+<<<<<<< HEAD
     var configuration: [String:[[Int]]] { get }
     var stateCounts: [String:Int] { get }
+=======
+    var stateCounts: [String:Int] { get }
+    var configuration: [String:[[Int]]] { get }
+>>>>>>> refs/remotes/origin/master
     subscript (row: Int, col: Int) -> CellState { get set }
-    func next() -> Self
+    mutating func next() -> Self // made mutating so that grid can store cumulative statistics
     mutating func setConfiguration()
+<<<<<<< HEAD
     /*func getConfiguration() -> [String:[[Int]]]
     mutating func resetStatistics() -> Void*/
     mutating func setStateCounts()
     //mutating func resetStateCounts()
+=======
+    //mutating func resetStateCounts() -> Void
+    mutating func tallyStateCounts() -> Void
+>>>>>>> refs/remotes/origin/master
 }
 
 public let lazyPositions = { (size: GridSize) in
@@ -75,9 +85,10 @@ extension GridProtocol {
         }
     }
     
-    public func next() -> Self {
+    public mutating func next() -> Self {
         var nextGrid = Self(size.rows, size.cols) { _, _ in .empty }
         lazyPositions(self.size).forEach { nextGrid[$0.row, $0.col] = self.nextState(of: $0) }
+        self.tallyStateCounts() // IJD added
         return nextGrid
     }
 }
@@ -97,6 +108,9 @@ public struct Grid: GridProtocol {
         _cells = [[CellState]](repeatElement( [CellState](repeatElement(.empty, count: cols)), count: rows))
         size = GridSize(rows, cols)
         lazyPositions(self.size).forEach { self[$0.row, $0.col] = cellInitializer($0) }
+        self.tallyStateCounts()
+        //self.resetStateCounts() // IJD added
+        //self.tallyStateCounts() // IJD added
     }
 }
 
@@ -211,6 +225,7 @@ public extension Grid {
         }
     }
     
+<<<<<<< HEAD
     /*public func getConfiguration() -> [String:[[Int]]] {
         return configuration
     }
@@ -258,6 +273,22 @@ public extension Grid {
  stateCounts["empty"] = 0
  }*/
  
+=======
+    public mutating func tallyStateCounts() -> Void {
+        self.stateCounts["alive"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .alive }).count
+        self.stateCounts["born"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .born }).count
+        self.stateCounts["died"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .died }).count
+        self.stateCounts["empty"] = self.size.rows * self.size.cols - stateCounts["alive"]! - stateCounts["born"]! - stateCounts["died"]!
+    }
+    
+    /*public mutating func resetStateCounts() -> Void {
+        stateCounts["alive"] = 0
+        stateCounts["born"] = 0
+        stateCounts["died"] = 0
+        stateCounts["empty"] = 0
+    }*/
+    
+>>>>>>> refs/remotes/origin/master
     public static func combineStateCounts(existing: [String:Int], new: [String:Int]) -> [String:Int] {
         var combined: [String:Int] = [:]
         combined["alive"] = existing["alive"]! + new["alive"]!
@@ -291,10 +322,14 @@ class StandardEngine: EngineProtocol {
     var delegate: EngineDelegate?
     var grid: GridProtocol {
         didSet {
+<<<<<<< HEAD
             let cumulativeStateCounts = self.statistics
             self.grid.setStateCounts()
             let gridStateCounts = self.grid.stateCounts
             self.statistics = Grid.combineStateCounts(existing: cumulativeStateCounts, new: gridStateCounts)
+=======
+            self.statistics = self.grid.stateCounts
+>>>>>>> refs/remotes/origin/master
             self.rows = grid.size.rows
             self.cols = grid.size.cols
             notify()
@@ -302,7 +337,11 @@ class StandardEngine: EngineProtocol {
         }
     }
     var cellInitializer: (GridPosition) -> CellState
+<<<<<<< HEAD
     var statistics: [String:Int]
+=======
+    var statistics: [String : Int] = [:]
+>>>>>>> refs/remotes/origin/master
     var rows: Int /*{
         didSet {
             self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
@@ -320,9 +359,10 @@ class StandardEngine: EngineProtocol {
         self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
         self.statistics = Grid.getZeroedOutStateCounts()
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+        //self.statistics = self.grid.stateCounts
         self.rows = rows
         self.cols = cols
-        notify()
+        //notify()
     }
 
     var refreshTimer: Timer?
@@ -343,13 +383,20 @@ class StandardEngine: EngineProtocol {
     }
     
     func step() -> GridProtocol {
+<<<<<<< HEAD
         //self.grid.setStateCounts()
         //let prevStateCounts = self.grid.stateCounts
         let newGrid = self.grid.next()
         //newGrid.setStateCounts()
         //let newStateCounts = newGrid.stateCounts
+=======
+        let newGrid = self.grid.next()
+>>>>>>> refs/remotes/origin/master
         self.grid = newGrid
-        return grid
+        //self.grid.tallyStateCounts()
+        let prevStateCounts = self.statistics
+        self.statistics = Grid.combineStateCounts(existing: prevStateCounts, new: self.grid.stateCounts)
+        return self.grid
     }
     
     /*func setCellInitializer(intPairs: [[Int]]) {

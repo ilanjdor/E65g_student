@@ -1,4 +1,4 @@
-//
+/*//
 //  TabBarController.swift
 //  FinalProject
 //
@@ -32,4 +32,4 @@ class TabBarController: UITabBarController {
     static func disableSimulationTab() {
         items?[1].isEnabled = false
     }*/
-}
+}*/
