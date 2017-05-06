@@ -217,7 +217,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         refreshRateSlider.isEnabled = true
         refreshRateTextField.text = "\(refreshRateSlider.value)"
         refreshRateTextField.isEnabled = true
-        engine.prevRefreshRate = Double(refreshRateSlider.value)
+        engine.prevRefreshRate = Double(1 / refreshRateSlider.value)
         
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")

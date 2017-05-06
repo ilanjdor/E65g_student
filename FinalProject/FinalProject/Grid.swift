@@ -28,10 +28,13 @@ public protocol GridProtocol {
     var description: String { get }
     var size: GridSize { get }
     var living: [GridPosition] { get }
+    var statistics: [String:Int] { get }
     subscript (row: Int, col: Int) -> CellState { get set }
     func next() -> Self
     mutating func setConfiguration()
     func getConfiguration() -> [String:[[Int]]]
+    mutating func resetStatistics() -> Void
+    mutating func accumulateStatistics() -> Void
     func getStatistics() -> [String:Int]
 }
 
@@ -82,6 +85,7 @@ public struct Grid: GridProtocol {
     private var _cells: [[CellState]]
     public let size: GridSize
     public var configuration: [String:[[Int]]] = [:]
+    public var statistics: [String:Int] = [:]
     
     public subscript (row: Int, col: Int) -> CellState {
         get { return _cells[norm(row, to: size.rows)][norm(col, to: size.cols)] }
@@ -210,13 +214,26 @@ public extension Grid {
         return configuration
     }
     
+    public mutating func accumulateStatistics() -> Void {
+        let alive = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .alive }).count
+        let born = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .born }).count
+        let died = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .died }).count
+        let empty = self.size.rows - alive - born - died
+        statistics["alive"]! += alive
+        statistics["born"]! += born
+        statistics["died"]! += died
+        statistics["empty"]! += empty
+    }
+    
+    public mutating func resetStatistics() -> Void {
+        statistics["alive"] = 0
+        statistics["born"] = 0
+        statistics["died"] = 0
+        statistics["empty"] = 0
+    }
+    
     public func getStatistics() -> [String:Int] {
-        var dict: [String:Int] = [:]
-        dict["alive"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .alive }).count
-        dict["born"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .born }).count
-        dict["died"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .died }).count
-        dict["empty"] = self.size.rows - dict["alive"]! - dict["born"]! - dict["died"]!
-        return dict
+        return statistics
     }
 }
 
@@ -329,6 +346,15 @@ class StandardEngine: EngineProtocol {
         let n = Notification(name: name,
                              object: nil,
                              userInfo: ["engine" : self])
+        nc.post(n)
+    }
+    
+    func statisticsNotify() {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "StatisticsUpdate")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["statistics" : self.grid.getStatistics()])
         nc.post(n)
     }
     
