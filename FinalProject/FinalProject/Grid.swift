@@ -144,19 +144,15 @@ extension Grid: Sequence {
         
         public mutating func next() -> GridProtocol? {
             if history.hasCycle { return nil }
-            let newGrid: Grid = grid.next() as! Grid
+            let newGrid: Grid = self.grid.next() as! Grid
             history = GridHistory(newGrid.living, history)
-            grid = newGrid
-            return grid
-        }
-        
-        /*public mutating func next() -> GridProtocol? {
-            if history.hasCycle { return nil }
-            let newGrid2: Grid = self.grid.next() as! Grid
-            history = GridHistory(newGrid2.living, history)
-            self.grid = newGrid2
+            self.grid = newGrid
             return self.grid
-        }*/
+        }
+
+        public mutating func replaceGrid(grid: GridProtocol) {
+            self.grid = grid
+        }
     }
     
     public func makeIterator() -> GridIterator { return GridIterator(grid: self) }
@@ -325,20 +321,41 @@ class StandardEngine: EngineProtocol {
     }
     
     func step() -> GridProtocol? {
+        // We use a Grid.GridIterator iterator to retain the history
+        // of stepped grids for the purpose of detecting a cycle.
+        //
         // The iterator needs to recapture a manually touched grid
-        // because its OWN next method only knows about GoL steps
+        // because its next() method only knows about GoL steps
         // Why not simply ALWAYS recapture the grid before stepping?
         // Because then the iterator would never retain a history
-        // and thus never be able to detect a cycle - a situation that
-        // would defeat the entire purpose of using the iterator
-        // in the first place!
+        // and thus would never be able to detect a cycle - a situation
+        // that would defeat the entire purpose of using this
+        // particular iterator object type in the first place!
+        // 
+        // Making a new iterator would avoid the need to replace the grid
+        // within the existing iterator, the latter being a mutation
+        // that is admittedly an unideal one to perform onto an iterator.
+        // However, making a new iterator would discard the history
+        // and thus fail to detect a cycle against any state prior
+        // to that of the manually updated grid.
+        //
+        // Here are some possible grid-stepping handlings
+        // in order of increasing rigor:
+        //
+        // 1) Use Grid's next() method without iterator (cannot detect a cycle)
+        // 2) Use iterator; replace entire iterator on manual touch (can detect a cycle since manual touch)
+        // 3) Use iterator; replace iterator's grid on manual touch (can detect a cycle since beginning)
+        // 4) Use iterator; make the simulator's GridViewDataSource
+        // be the iterator's grid. I think that this is the ultimate
+        // solution since it only allows for a very specific modification
+        // of the iterator's grid as opposed to exposing the grid for replacement
+        // as I've done here. Well, if this wasn't due tomorrow as I write this...
+        //
         if self.receivedManualTouch {
-            StandardEngine.iterator = self.grid.makeIterator()
+            StandardEngine.iterator?.replaceGrid(grid: self.grid)
             self.receivedManualTouch = false
         }
-        // We use the iterator to retain the history
-        // of stepped grids for the purpose of
-        // detecting a cycle
+
         if let newGrid = StandardEngine.iterator?.next() {
             if self.isNewlyLoadedGrid {
                 accumulateIntoStatistics(grid: self.grid)
