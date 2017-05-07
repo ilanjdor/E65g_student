@@ -189,6 +189,7 @@ public extension Grid {
     }
     
     mutating public func setConfiguration() {
+        configuration = [:]
         lazyPositions(self.size).forEach {
             switch self[$0.row, $0.col] {
             case .born:

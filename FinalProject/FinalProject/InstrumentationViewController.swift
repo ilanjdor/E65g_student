@@ -124,7 +124,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                         nextSize = intPair[1]
                     }
                 }
-                nextSize = nextSize * 2
+                nextSize = (nextSize + 1) * 2
                 nextIntPairsDict["alive"] = jsonContents
                 let nextCellInitializer = Grid.makeCellInitializer(intPairsDict: nextIntPairsDict)
                 let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
