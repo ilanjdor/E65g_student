@@ -1,6 +1,13 @@
 //
 //  Grid.swift
 //
+//  Ilan Dor
+//  CSCI E-65g, Spring 2017, FinalProject
+//
+//  All modules created and/or modified by Van Simmons and/or Ilan Dor
+//  Copyright © 2017 Harvard Division of Continuing Education. All rights reserved.
+//
+
 import Foundation
 
 public typealias GridPosition = (row: Int, col: Int)
@@ -31,12 +38,10 @@ public protocol GridProtocol {
     var configuration: [String:[[Int]]] { get }
     var stateCounts: [String:Int] { get }
     subscript (row: Int, col: Int) -> CellState { get set }
-    func next() -> Self
+    //func next() -> Self /* We need to use next() from GridIterator in order to detect grid cycles */
+    func makeIterator() -> Grid.GridIterator
     mutating func setConfiguration()
-    /*func getConfiguration() -> [String:[[Int]]]
-     mutating func resetStatistics() -> Void*/
     mutating func setStateCounts()
-    //mutating func resetStateCounts()
 }
 
 public let lazyPositions = { (size: GridSize) in
@@ -158,26 +163,9 @@ public extension Grid {
     }
 }
 
-/*public extension Grid {
- public static func makeCellInitializer(intPairs: [[Int]]) -> (GridPosition) -> CellState {
- if intPairs.count == 0 {
- return {_,_ in .empty}
- }
- var alivePositions = intPairs.map { GridPosition($0[0], $0[1]) }
- func cellInitializer(pos: GridPosition) -> CellState {
- for position in alivePositions {
- if pos.row == position.row && pos.col == position.col {
- return .alive
- }
- }
- return .empty
- }
- return cellInitializer
- }
- }*/
-
 public extension Grid {
-    public static func makeFancierCellInitializer(intPairsDict: [String:[[Int]]]) -> (GridPosition) -> CellState {
+    // This function manufactures a cellInitializer function bespoke for a dictionary of integer pairs/arrays
+    public static func makeCellInitializer(intPairsDict: [String:[[Int]]]) -> (GridPosition) -> CellState {
         if intPairsDict.count == 0 {
             return {_,_ in .empty}
         }
@@ -211,35 +199,11 @@ public extension Grid {
         }
     }
     
-    /*public func getConfiguration() -> [String:[[Int]]] {
-     return configuration
-     }
-     
-     public mutating func accumulateStatistics() -> Void {
-     let alive = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .alive }).count
-     let born = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .born }).count
-     let died = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .died }).count
-     let empty = self.size.rows - alive - born - died
-     statistics["alive"]! += alive
-     statistics["born"]! += born
-     statistics["died"]! += died
-     statistics["empty"]! += empty
-     }
-     
-     public mutating func resetStatistics() -> Void {
-     statistics["alive"] = 0
-     statistics["born"] = 0
-     statistics["died"] = 0
-     statistics["empty"] = 0
-     }*/
-    
     mutating public func setStateCounts() {
-        //var stateCounts: [String:Int] = [:]
         stateCounts["alive"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .alive }).count
         stateCounts["born"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .born }).count
         stateCounts["died"] = (lazyPositions(self.size).filter { self[$0.row, $0.col] == .died }).count
         stateCounts["empty"] = self.size.rows * self.size.cols - stateCounts["alive"]! - stateCounts["born"]! - stateCounts["died"]!
-        //return stateCounts
     }
     
     public static func getZeroedOutStateCounts() -> [String:Int] {
@@ -250,13 +214,6 @@ public extension Grid {
         stateCounts["empty"] = 0
         return stateCounts
     }
-    
-    /*public mutating func resetStateCounts() -> Void {
-     stateCounts["alive"] = 0
-     stateCounts["born"] = 0
-     stateCounts["died"] = 0
-     stateCounts["empty"] = 0
-     }*/
     
     public static func combineStateCounts(existing: [String:Int], new: [String:Int]) -> [String:Int] {
         var combined: [String:Int] = [:]
@@ -269,6 +226,9 @@ public extension Grid {
 }
 
 public protocol EngineProtocol {
+    // Note: It is not a requirement to use a delegate in the Final Project
+    // according to Prof. Simmons during the Zoom session he held
+    // at 8:00AM (EST) on 5/6/17
     var grid: GridProtocol { get set }
     var prevRefreshRate: Double { get set }
     var refreshRate: Double { get set }
@@ -276,7 +236,7 @@ public protocol EngineProtocol {
     var rows: Int { get set }
     var cols: Int { get set }
     init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]])
-    func step() -> GridProtocol
+    func step() -> GridProtocol?
 }
 
 class StandardEngine: EngineProtocol {
@@ -291,9 +251,11 @@ class StandardEngine: EngineProtocol {
     var isNewlyLoadedGrid: Bool = true
     var cellInitializer: (GridPosition) -> CellState
     var statistics: [String:Int]
-    // using didSet as below causes circular issues, but I'm leaving it in as a comment so
-    // that you can see I am aware that I must manually take on the responsibility of
-    // keeping the grid's rows and cols in sync with the engine's rows and cols
+    
+    // Using didSet as below causes circular issues with grid's didSet
+    // but I'm leaving it in as a comment to let you know that I am aware
+    // that I must manually take on the responsibility of keeping
+    // the grid's rows and cols in sync with the engine's rows and cols
     var rows: Int /*{
         didSet {
             self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
@@ -306,13 +268,15 @@ class StandardEngine: EngineProtocol {
     }*/
     
     private static var engine: StandardEngine = StandardEngine(rows: defaultGridSize, cols: defaultGridSize)
+    private static var iterator: Grid.GridIterator?
     
     required init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
         self.isNewlyLoadedGrid = true
-        self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
+        self.cellInitializer = Grid.makeCellInitializer(intPairsDict: intPairsDict)
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
+        StandardEngine.iterator = self.grid.makeIterator()
         self.statistics = Grid.getZeroedOutStateCounts()
         self.statisticsNotify()
     }
@@ -342,18 +306,28 @@ class StandardEngine: EngineProtocol {
         self.statistics = Grid.combineStateCounts(existing: cumulativeStateCounts, new: gridStateCounts)
     }
     
-    func step() -> GridProtocol {
-        let newGrid = self.grid.next()
-        if self.isNewlyLoadedGrid {
-            accumulateIntoStatistics(grid: self.grid)
-            self.isNewlyLoadedGrid = false
+    func step() -> GridProtocol? {
+        // We use the iterator to retain the history
+        // of stepped grids for the purpose of
+        // detecting a cycle
+        if let newGrid = StandardEngine.iterator?.next() {
+            if self.isNewlyLoadedGrid {
+                accumulateIntoStatistics(grid: self.grid)
+                self.isNewlyLoadedGrid = false
+            }
+            accumulateIntoStatistics(grid: newGrid)
+            self.grid = newGrid
+            self.statisticsNotify()
+            return grid
+        } else {
+            // Pre-stepped grid state formed a cycle
+            return nil
         }
-        accumulateIntoStatistics(grid: newGrid)
-        self.grid = newGrid
-        self.statisticsNotify()
-        return grid
     }
     
+    // Funnel this into setGrid further below
+    // so that we can equip it with a cellInitializer
+    // for the sake of posterity and consistency
     func setGrid(grid: GridProtocol) {
         var grid = grid
         grid.setConfiguration()
@@ -361,31 +335,15 @@ class StandardEngine: EngineProtocol {
         let rows = grid.size.rows
         let cols = grid.size.cols
         self.setGrid(rows: rows, cols: cols, intPairsDict: intPairsDict)
-        /*self.grid = grid
-        self.grid.setConfiguration()
-        
-        self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
-        self.rows = grid.size.rows
-        self.cols = grid.size.cols*/
-        //notify()
     }
     
     func setGrid(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
-        /*//self.statistics = Grid.getZeroedOutStateCounts()
-        //statisticsNotify()
-        self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
-        self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
-        self.rows = rows
-        self.cols = cols
-        //notify()*/
-        
-        
         self.isNewlyLoadedGrid = true
-        self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
+        self.cellInitializer = Grid.makeCellInitializer(intPairsDict: intPairsDict)
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
-        //self.notify()
+        StandardEngine.iterator = self.grid.makeIterator()
         self.statistics = Grid.getZeroedOutStateCounts()
         self.statisticsNotify()
     }

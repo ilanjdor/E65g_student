@@ -1,8 +1,10 @@
 //
 //  TabBarController.swift
-//  FinalProject
 //
-//  Created by Ilan on 5/5/17.
+//  Ilan Dor
+//  CSCI E-65g, Spring 2017, FinalProject
+//
+//  All modules created and/or modified by Van Simmons and/or Ilan Dor
 //  Copyright © 2017 Harvard Division of Continuing Education. All rights reserved.
 //
 

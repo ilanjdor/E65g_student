@@ -1,6 +1,12 @@
 //
 //  GridView.swift
 //
+//  Ilan Dor
+//  CSCI E-65g, Spring 2017, FinalProject
+//
+//  All modules created and/or modified by Van Simmons and/or Ilan Dor
+//  Copyright © 2017 Harvard Division of Continuing Education. All rights reserved.
+//
 
 import UIKit
 
@@ -114,17 +120,17 @@ import UIKit
     func drawLine(start:CGPoint, end: CGPoint) {
         let path = UIBezierPath()
         
-        //set the path's line width to the height of the stroke
+        // Set the path's line width to the height of the stroke
         path.lineWidth = gridWidth
         
-        //move the initial point of the path
-        //to the start of the horizontal stroke
+        // Move the initial point of the path
+        // to the start of the horizontal stroke
         path.move(to: start)
         
-        //add a point to the path at the end of the stroke
+        // Add a point to the path at the end of the stroke
         path.addLine(to: end)
         
-        //draw the stroke
+        // Draw the stroke
         gridColor.setStroke()
         path.stroke()
     }
@@ -141,7 +147,6 @@ import UIKit
         lastTouchedPosition = nil
     }
     
-    // Updated since class
     var lastTouchedPosition: GridPosition?
     
     func process(touches: Set<UITouch>) -> GridPosition? {

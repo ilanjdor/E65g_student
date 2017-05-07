@@ -1,9 +1,15 @@
 //
 //  InstrumentationViewController.swift
 //
-
-//Tab icons from: https://icons8.com
-//App icon from http://www.directindustry.com/prod/teledyne-dalsa/product-25439-1174957.html
+//  Ilan Dor
+//  CSCI E-65g, Spring 2017, FinalProject
+//
+//  All modules created and/or modified by Van Simmons and/or Ilan Dor
+//  Copyright © 2017 Harvard Division of Continuing Education. All rights reserved.
+//
+//  Tab icons from: https://icons8.com
+//  App icon from http://www.directindustry.com/prod/teledyne-dalsa/product-25439-1174957.html
+//
 
 import UIKit
 
@@ -15,7 +21,6 @@ var gridEditorVC: GridEditorViewController?
 var tableViewHeader: String = "Configurations"
 var isNewTableViewRow: Bool = false
 var newRowName: String = "New GridEditor Grid"
-var newRowTitleSuffix: Int = 0
 
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     var jsonContents: String?
@@ -63,23 +68,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if isNewTableViewRow {
             let nextSize = engine.rows
-            // all of the following rigamarole for gridNameValue is used
-            // to provide user-friendly default titles when new rows are added:
-            // 1) it only shows a suffix if the suffix is at least '2'
-            // 2) if a user saves a grid as, say "New GridEditor Grid 6"
-            //    that particular default title, should its turn come, will be skipped over
-            //    and the title "New GridEditor Grid 7" will be returned instead
-            /*if newRowTitleSuffix == 0 {
-             gridNameValue = newRowName
-             } else {
-             gridNameValue = newRowName + " \(newRowTitleSuffix)"
-             }
-             if dataKeys.contains(gridNameValue) {
-             while dataKeys.contains(gridNameValue) || newRowTitleSuffix < 2 {
-             newRowTitleSuffix += 1
-             gridNameValue = newRowName + " \(newRowTitleSuffix)"
-             }
-             }*/
             index = nil
             gridNameValue = newRowName
             grid = Grid(nextSize, nextSize) as GridProtocol
@@ -89,21 +77,10 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             gridNameValue = dataKeys[index!]
             grid = dataGrids[index!]
         }
-        
         if let vc = segue.destination as? GridEditorViewController {
             vc.gridNameValue = gridNameValue
             vc.grid = grid
-            /*if isNewTableViewRow {
-             // we cannot allow the user to select the simulation tab with
-             // an unsaved new grid in the grid editor because he could
-             // potentially attempt to save the simulation grid into
-             // a table view row that doesn't exist
-             TabBarController.canSelectSimulationTab(isEnabled: false)
-             } else {
-             TabBarController.canSelectSimulationTab(isEnabled: true)
-             }*/
-            //vc.changesSaved = false
-            vc.saveClosure = { newValue in //, changesSaved in //, segueBack in
+            vc.saveClosure = { newValue in
                 if isNewTableViewRow {
                     dataKeys.append(newValue)
                     dataGrids.append(vc.grid!)
@@ -112,30 +89,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     dataKeys[self.index!] = newValue
                     dataGrids[self.index!] = vc.grid!
                 }
-                /*// for user-friendliness, existing keys are saved over
-                 // to prevent duplicate keys
-                 if dataKeys.contains(newValue) {
-                 index = dataKeys.index(of: newValue)!
-                 dataKeys[index] = newValue
-                 dataGrids[index] = vc.grid!
-                 } else {
-                 dataKeys.append(newValue)
-                 dataGrids.append(vc.grid!)
-                 }*/
-                //if segueBack {
                 self.tableView.reloadData()
-                //}
-                //TabBarController.canSelectSimulationTab(isEnabled: true)
-                // if changes were saved to a new grid, a table view
-                // row now exists for it; if changes were not saved,
-                //
-                // this is kind of deep...
-                // without it, we run into a problem caused by an unsaved new grid.
-                // if the unsaved grid was new, we cannot change isNewTableViewRow back to false
-                // because we are still without a
-                /*if changesSaved {
-                 isNewTableViewRow = false
-                 }*/
                 isNewTableViewRow = false
             }
         }
@@ -170,23 +124,15 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                         nextSize = intPair[1]
                     }
                 }
-                // if you wanted to make the grid only 1.5x nextSize instead of 2x
-                /*if nextSize % 2 == 1 {
-                 nextSize = nextSize + 1
-                 }
-                 nextSize = nextSize * 3 / 2*/
                 nextSize = nextSize * 2
                 nextIntPairsDict["alive"] = jsonContents
-                let nextCellInitializer = Grid.makeFancierCellInitializer(intPairsDict: nextIntPairsDict)
+                let nextCellInitializer = Grid.makeCellInitializer(intPairsDict: nextIntPairsDict)
                 let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
                 dataGrids.append(nextGrid)
             }
-            
             OperationQueue.main.addOperation {
                 self.tableView.reloadData()
             }
-            //print(dataKeys)
-            //print(dataValues)
         }
     }
     
@@ -206,7 +152,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     override func viewDidLoad() {
         fetch()
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.black], for:.normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.blue], for:.selected)
         
@@ -241,7 +186,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     return
                 }
                 let engine = n.userInfo?["engine"] as! StandardEngine
-                self.grid = engine.grid //.userInfo?["engine"].grid as! GridProtocol?
+                self.grid = engine.grid
                 if isNewTableViewRow {
                     dataKeys.append(self.gridNameValue)
                     dataGrids.append(self.grid!)
@@ -250,14 +195,9 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     dataGrids[self.index!] = self.grid!
                 }
                 isNewTableViewRow = false
-                // user must select the desired table view row to retrieve the updated grid
+                // User must select the desired table view row to retrieve the updated grid
                 _ = self.navigationController?.popViewController(animated: true)
         }
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func sizeEditingDidEnd(_ sender: UITextField) {
@@ -287,13 +227,11 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     private func updateGridSize(size: Int) {
-        //StatisticsViewController.clearStatistics()
         if engine.rows != size {
             if engine.refreshRate > 0.0 {
                 engine.prevRefreshRate = engine.refreshRate
             }
             engine.refreshRate = 0.0
-            // send notification to turn off switch in SimulationViewController
             engine.setGrid(rows: size, cols: size)
             sizeTextField.text = "\(size)"
         }
@@ -326,17 +264,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         engine.prevRefreshRate = Double(1 / refreshRateSlider.value)
         engine.refreshRate = Double(1 / refreshRateSlider.value)
     }
-    /*@IBAction func refreshOnOff(_ sender: UISwitch) {
-     if sender.isOn {
-     refreshRateTextField.isEnabled = true
-     refreshRateSlider.isEnabled = true
-     engine.refreshRate = Double(refreshRateSlider.value)
-     } else {
-     refreshRateSlider.isEnabled = false
-     refreshRateTextField.isEnabled = false
-     engine.refreshRate = 0.0
-     }
-     }*/
     
     //MARK: AlertController Handling
     func showErrorAlert(withMessage msg:String, action: (() -> Void)? ) {

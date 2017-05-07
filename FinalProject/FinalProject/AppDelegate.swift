@@ -1,12 +1,18 @@
 //
 //  AppDelegate.swift
 //
+//  Ilan Dor
+//  CSCI E-65g, Spring 2017, FinalProject
+//
+//  All modules created and/or modified by Van Simmons and/or Ilan Dor
+//  Copyright © 2017 Harvard Division of Continuing Education. All rights reserved.
+//
 
 import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
+
     var window: UIWindow?
     var engine: StandardEngine!
     
@@ -16,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let recoveredSize = defaults.object(forKey: "size") ?? StandardEngine.defaultGridSize
         engine = StandardEngine.getEngine()
         engine.setGrid(rows: recoveredSize as! Int, cols: recoveredSize as! Int, intPairsDict: recoveredConfiguration as! [String : [[Int]]])
-        // the following code ensures that the subsequent launch loads the standard defaults
+        // The following code ensures that the subsequent launch loads the standard defaults
         // unless the user saves a configuration during the current session
         defaults.set([:], forKey: "configuration")
         defaults.set(StandardEngine.defaultGridSize, forKey: "size")
@@ -44,7 +50,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-    
-    
 }
-

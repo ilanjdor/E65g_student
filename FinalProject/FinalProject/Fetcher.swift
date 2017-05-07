@@ -32,7 +32,6 @@ class Fetcher: NSObject, URLSessionDelegate {
         completionHandler(.performDefaultHandling,nil)
     }
 
-
     enum EitherOr {
         case failure(String)
         case success(Data)
@@ -74,5 +73,4 @@ class Fetcher: NSObject, URLSessionDelegate {
         }
         task.resume()
     }
-    
 }
