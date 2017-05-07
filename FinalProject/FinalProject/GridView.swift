@@ -163,6 +163,11 @@ import UIKit
         if gridViewDataSource != nil {
             gridViewDataSource![pos.row, pos.col] = gridViewDataSource![pos.row, pos.col].isAlive ? .empty : .alive
             setNeedsDisplay()
+            // We don't need to notify the engine about manual touches
+            // in the grid editor because its grid cannot be stepped
+            if GridView.useEngineGrid {
+                self.touchNotify()
+            }
         }
         return pos
     }
@@ -181,5 +186,14 @@ import UIKit
             else { return nil }
         
         return GridPosition(row: Int(row), col: Int(col))
+    }
+    
+    func touchNotify() {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "EngineGridReceivedManualTouch")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["none" : "none"])
+        nc.post(n)
     }
  }

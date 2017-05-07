@@ -43,8 +43,8 @@ class SimulationViewController: UIViewController, GridViewDataSource {
             forName: name,
             object: nil,
             queue: nil) { (n) in
-                self.engine = StandardEngine.getEngine()
-                self.gridView.gridViewDataSource = self
+                //self.engine = StandardEngine.getEngine()
+                //self.gridView.gridViewDataSource = self
                 self.gridView.setNeedsDisplay()
         }
     }

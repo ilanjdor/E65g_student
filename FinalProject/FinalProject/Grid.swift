@@ -144,11 +144,19 @@ extension Grid: Sequence {
         
         public mutating func next() -> GridProtocol? {
             if history.hasCycle { return nil }
-            let newGrid:Grid = grid.next() as! Grid
+            let newGrid: Grid = grid.next() as! Grid
             history = GridHistory(newGrid.living, history)
             grid = newGrid
             return grid
         }
+        
+        /*public mutating func next() -> GridProtocol? {
+            if history.hasCycle { return nil }
+            let newGrid2: Grid = self.grid.next() as! Grid
+            history = GridHistory(newGrid2.living, history)
+            self.grid = newGrid2
+            return self.grid
+        }*/
     }
     
     public func makeIterator() -> GridIterator { return GridIterator(grid: self) }
@@ -249,6 +257,7 @@ class StandardEngine: EngineProtocol {
         }
     }
     var isNewlyLoadedGrid: Bool = true
+    var receivedManualTouch: Bool = false
     var cellInitializer: (GridPosition) -> CellState
     var statistics: [String:Int]
     
@@ -279,6 +288,17 @@ class StandardEngine: EngineProtocol {
         StandardEngine.iterator = self.grid.makeIterator()
         self.statistics = Grid.getZeroedOutStateCounts()
         self.statisticsNotify()
+        
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "EngineGridReceivedManualTouch")
+        nc.addObserver(
+            forName: name,
+            object: nil,
+            queue: nil) { (n) in
+                //self.engine = StandardEngine.getEngine()
+                //self.gridView.gridViewDataSource = self
+                self.receivedManualTouch = true
+        }
     }
     
     var refreshTimer: Timer?
@@ -299,14 +319,23 @@ class StandardEngine: EngineProtocol {
     }
     
     func accumulateIntoStatistics(grid: GridProtocol) {
-        let cumulativeStateCounts = self.statistics
         var grid = grid
         grid.setStateCounts()
-        let gridStateCounts =  grid.stateCounts
-        self.statistics = Grid.combineStateCounts(existing: cumulativeStateCounts, new: gridStateCounts)
+        self.statistics = Grid.combineStateCounts(existing: self.statistics, new: grid.stateCounts)
     }
     
     func step() -> GridProtocol? {
+        // The iterator needs to recapture a manually touched grid
+        // because its OWN next method only knows about GoL steps
+        // Why not simply ALWAYS recapture the grid before stepping?
+        // Because then the iterator would never retain a history
+        // and thus never be able to detect a cycle - a situation that
+        // would defeat the entire purpose of using the iterator
+        // in the first place!
+        if self.receivedManualTouch {
+            StandardEngine.iterator = self.grid.makeIterator()
+            self.receivedManualTouch = false
+        }
         // We use the iterator to retain the history
         // of stepped grids for the purpose of
         // detecting a cycle

@@ -164,6 +164,11 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         refreshRateTextField.isEnabled = true
         engine.prevRefreshRate = Double(1 / refreshRateSlider.value)
         
+        func test1() {
+            let viewController = UIApplication.shared.windows[0].rootViewController?.childViewControllers[2] as? SimulationViewController
+            viewController?.viewDidLoad()
+        }
+        
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         nc.addObserver(
