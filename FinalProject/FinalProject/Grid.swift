@@ -268,10 +268,6 @@ public extension Grid {
     }
 }
 
-public protocol EngineDelegate {
-    func engineDidUpdate(withGrid: GridProtocol)
-}
-
 public protocol EngineProtocol {
     var grid: GridProtocol { get set }
     var prevRefreshRate: Double { get set }
@@ -279,51 +275,46 @@ public protocol EngineProtocol {
     var refreshTimer: Timer? { get set }
     var rows: Int { get set }
     var cols: Int { get set }
-    //var cellInitializer: (GridPosition) -> CellState { get set }
-    //var statistics: [String:Int] { get }
     init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]])
     func step() -> GridProtocol
 }
 
 class StandardEngine: EngineProtocol {
     static var defaultGridSize: Int = 10
-    //var delegate: EngineDelegate?
     var grid: GridProtocol {
         didSet {
-            let cumulativeStateCounts = self.statistics
-            self.grid.setStateCounts()
-            let gridStateCounts = self.grid.stateCounts
-            self.statistics = Grid.combineStateCounts(existing: cumulativeStateCounts, new: gridStateCounts)
             self.rows = grid.size.rows
             self.cols = grid.size.cols
-            notify()
-            //statisticsNotify()
+            self.notify()
         }
     }
     var isNewlyLoadedGrid: Bool = true
     var cellInitializer: (GridPosition) -> CellState
     var statistics: [String:Int]
+    // using didSet as below causes circular issues, but I'm leaving it in as a comment so
+    // that you can see I am aware that I must manually take on the responsibility of
+    // keeping the grid's rows and cols in sync with the engine's rows and cols
     var rows: Int /*{
-     didSet {
-     self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
-     }
-     }*/
+        didSet {
+            self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+        }
+    }*/
     var cols: Int /*{
-     didSet {
-     self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
-     }
-     }*/
+        didSet {
+            self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+        }
+    }*/
     
     private static var engine: StandardEngine = StandardEngine(rows: defaultGridSize, cols: defaultGridSize)
     
     required init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
-        self.statistics = Grid.getZeroedOutStateCounts()
+        self.isNewlyLoadedGrid = true
         self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
-        notify()
-        statisticsNotify()
+        self.statistics = Grid.getZeroedOutStateCounts()
+        self.statisticsNotify()
     }
     
     var refreshTimer: Timer?
@@ -343,36 +334,60 @@ class StandardEngine: EngineProtocol {
         }
     }
     
+    func accumulateIntoStatistics(grid: GridProtocol) {
+        let cumulativeStateCounts = self.statistics
+        var grid = grid
+        grid.setStateCounts()
+        let gridStateCounts =  grid.stateCounts
+        self.statistics = Grid.combineStateCounts(existing: cumulativeStateCounts, new: gridStateCounts)
+    }
+    
     func step() -> GridProtocol {
-        //self.grid.setStateCounts()
-        //let prevStateCounts = self.grid.stateCounts
         let newGrid = self.grid.next()
-        //newGrid.setStateCounts()
-        //let newStateCounts = newGrid.stateCounts
+        if self.isNewlyLoadedGrid {
+            accumulateIntoStatistics(grid: self.grid)
+            self.isNewlyLoadedGrid = false
+        }
+        accumulateIntoStatistics(grid: newGrid)
         self.grid = newGrid
-        statisticsNotify()
+        self.statisticsNotify()
         return grid
     }
     
     func setGrid(grid: GridProtocol) {
-        self.grid = grid
+        var grid = grid
+        grid.setConfiguration()
+        let intPairsDict = grid.configuration
+        let rows = grid.size.rows
+        let cols = grid.size.cols
+        self.setGrid(rows: rows, cols: cols, intPairsDict: intPairsDict)
+        /*self.grid = grid
         self.grid.setConfiguration()
-        let intPairsDict = self.grid.configuration
+        
         self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
         self.rows = grid.size.rows
-        self.cols = grid.size.cols
+        self.cols = grid.size.cols*/
         //notify()
     }
     
     func setGrid(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
-        self.isNewlyLoadedGrid = true
-        self.statistics = Grid.getZeroedOutStateCounts()
-        statisticsNotify()
+        /*//self.statistics = Grid.getZeroedOutStateCounts()
+        //statisticsNotify()
         self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
         self.rows = rows
         self.cols = cols
-        //notify()
+        //notify()*/
+        
+        
+        self.isNewlyLoadedGrid = true
+        self.cellInitializer = Grid.makeFancierCellInitializer(intPairsDict: intPairsDict)
+        self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+        self.rows = rows
+        self.cols = cols
+        //self.notify()
+        self.statistics = Grid.getZeroedOutStateCounts()
+        self.statisticsNotify()
     }
     
     func notify() {
