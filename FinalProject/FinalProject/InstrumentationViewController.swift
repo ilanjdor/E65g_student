@@ -195,19 +195,17 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         refreshRateTextField.isEnabled = true
         
         let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EngineGridChanged")
+        
         nc.addObserver(
-            forName: name,
+            forName: Notification.Name(rawValue: "EngineGridChanged"),
             object: nil,
             queue: nil) { (n) in
-                //self.engine = StandardEngine.engine
                 self.sizeTextField.text = "\(self.engine.rows)"
                 self.sizeStepper.value = Double(self.engine.rows)
         }
         
-        let name2 = Notification.Name(rawValue: "SimulationStateSaved")
         nc.addObserver(
-            forName: name2,
+            forName: Notification.Name(rawValue: "SimulationStateSaved"),
             object: nil,
             queue: nil) { (n) in
                 if self.index == nil {
@@ -358,7 +356,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             return
         }
         refreshRateSlider.value = Float(val)
-        self.speedAdjustNotify()
+        speedAdjustNotify()
     }
     
     @IBAction func refreshRateEditingDidEndOnExit(_ sender: UITextField) {
@@ -366,16 +364,15 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     @IBAction func refreshRateSlideMove(_ sender: UISlider) {
         refreshRateTextField.text = "\(refreshRateSlider.value)"
-        self.speedAdjustNotify()
+        speedAdjustNotify()
     }
     
     func speedAdjustNotify() {
         let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "SpeedWasAdjusted")
-        let n = Notification(name: name,
-                             object: nil,
-                             userInfo: ["none" : "none"])
-        nc.post(n)
+        nc.post(Notification(
+                    name: Notification.Name(rawValue: "SpeedWasAdjusted"),
+                    object: nil,
+                    userInfo: ["none" : "none"]))
     }
     
     //MARK: AlertController Handling

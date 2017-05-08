@@ -11,20 +11,20 @@
 import UIKit
 
 class StatisticsViewController: UIViewController {
+    static var tabWasClicked: Bool = false
     @IBOutlet weak var aliveCountTextField: UITextField!
     @IBOutlet weak var bornCountTextField: UITextField!
     @IBOutlet weak var diedCountTextField: UITextField!
     @IBOutlet weak var emptyCountTextField: UITextField!
 
-    static var tabWasClicked: Bool = false
     var statistics: [String:Int] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        aliveCountTextField.isEnabled = false
-        bornCountTextField.isEnabled = false
-        diedCountTextField.isEnabled = false
-        emptyCountTextField.isEnabled = false
+        self.aliveCountTextField.isEnabled = false
+        self.bornCountTextField.isEnabled = false
+        self.diedCountTextField.isEnabled = false
+        self.emptyCountTextField.isEnabled = false
         StatisticsViewController.tabWasClicked = true
         
         let nc = NotificationCenter.default
@@ -39,9 +39,9 @@ class StatisticsViewController: UIViewController {
     }
     
     private func displayStatistics() {
-        aliveCountTextField.text = "\(self.statistics["alive"]!)"
-        bornCountTextField.text = "\(self.statistics["born"]!)"
-        diedCountTextField.text = "\(self.statistics["died"]!)"
-        emptyCountTextField.text = "\(self.statistics["empty"]!)"
+        self.aliveCountTextField.text = "\(self.statistics["alive"]!)"
+        self.bornCountTextField.text = "\(self.statistics["born"]!)"
+        self.diedCountTextField.text = "\(self.statistics["died"]!)"
+        self.emptyCountTextField.text = "\(self.statistics["empty"]!)"
     }
 }

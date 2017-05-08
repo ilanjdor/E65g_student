@@ -266,13 +266,11 @@ class StandardEngine: EngineProtocol {
         self.cols = cols
         StandardEngine.iterator = self.grid.makeIterator()
         self.statistics = Grid.getZeroedOutStateCounts()
-        self.replacedGridNotify()
-        self.statisticsNotify()
-        
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EngineGridReceivedManualTouch")
+        replacedGridNotify()
+        statisticsNotify()
+
         nc.addObserver(
-            forName: name,
+            forName: Notification.Name(rawValue: "EngineGridReceivedManualTouch"),
             object: nil,
             queue: nil) { (n) in
                 self.receivedManualTouch = true
@@ -283,7 +281,7 @@ class StandardEngine: EngineProtocol {
         didSet {
             self.rows = grid.size.rows
             self.cols = grid.size.cols
-            self.changedGridNotify()
+            changedGridNotify()
         }
     }
 
@@ -339,20 +337,20 @@ class StandardEngine: EngineProtocol {
             StandardEngine.iterator = self.grid.makeIterator()
             self.isNewlyLoadedGrid = true
             self.statistics = Grid.getZeroedOutStateCounts()
-            self.replacedGridNotify()
+            replacedGridNotify()
             self.receivedManualTouch = false
         }
         
         if let newGrid = StandardEngine.iterator?.next() {
             if self.grid.living.count > 0 {
                 if self.isNewlyLoadedGrid {
-                    self.accumulateIntoStatistics(grid: self.grid)
+                    accumulateIntoStatistics(grid: self.grid)
                 }
-                self.accumulateIntoStatistics(grid: newGrid)
+                accumulateIntoStatistics(grid: newGrid)
             }
             self.isNewlyLoadedGrid = false
             self.grid = newGrid
-            self.statisticsNotify()
+            statisticsNotify()
             return grid
         } else {
             // Pre-stepped grid state formed a cycle.
@@ -364,8 +362,8 @@ class StandardEngine: EngineProtocol {
             // we need to remove the statistics already accumulated
             // for the revisited state.
             if self.grid.living.count > 0 {
-                self.removeFromStatistics(grid: self.grid)
-                self.GoLCycledNotify()
+                removeFromStatistics(grid: self.grid)
+                GoLCycledNotify()
             } /* else {
                // The special case is the empty intial grid.
                // The GoL, again, as I've implemented it, should
@@ -374,8 +372,8 @@ class StandardEngine: EngineProtocol {
                // and it can be easily seen from the above that an initially
                // empty grid never accumulates statistics.
              } */
-            self.statisticsNotify()
-            self.GoLEndedNotify()
+            statisticsNotify()
+            GoLEndedNotify()
             return nil
         }
     }
@@ -390,9 +388,9 @@ class StandardEngine: EngineProtocol {
         self.cols = grid.size.cols
         StandardEngine.iterator = self.grid.makeIterator()
         self.statistics = Grid.getZeroedOutStateCounts()
-        self.replacedGridNotify()
-        self.GoLEndedNotify()
-        self.statisticsNotify()
+        replacedGridNotify()
+        GoLEndedNotify()
+        statisticsNotify()
     }
     
     // A nice feature of this version of setGrid is that when the optional
@@ -410,9 +408,9 @@ class StandardEngine: EngineProtocol {
         self.cols = cols
         StandardEngine.iterator = self.grid.makeIterator()
         self.statistics = Grid.getZeroedOutStateCounts()
-        self.replacedGridNotify()
-        self.GoLEndedNotify()
-        self.statisticsNotify()
+        replacedGridNotify()
+        GoLEndedNotify()
+        statisticsNotify()
     }
     
     private func accumulateIntoStatistics(grid: GridProtocol) {

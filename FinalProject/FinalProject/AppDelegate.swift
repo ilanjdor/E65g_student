@@ -12,7 +12,6 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
     var engine: StandardEngine!
     
@@ -20,8 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let defaults = UserDefaults.standard
         let recoveredConfiguration = defaults.object(forKey: "configuration") ?? [:]
         let recoveredSize = defaults.object(forKey: "size") ?? StandardEngine.defaultGridSize
-        engine = StandardEngine.engine
-        engine.setGrid(rows: recoveredSize as! Int, cols: recoveredSize as! Int, intPairsDict: recoveredConfiguration as! [String : [[Int]]])
+        self.engine = StandardEngine.engine
+        self.engine.setGrid(rows: recoveredSize as! Int, cols: recoveredSize as! Int, intPairsDict: recoveredConfiguration as! [String : [[Int]]])
         // The following code ensures that the subsequent launch loads the standard defaults
         // unless the user saves a configuration during the current session
         defaults.set([:], forKey: "configuration")

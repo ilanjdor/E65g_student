@@ -11,6 +11,8 @@
 import UIKit
 
 @IBDesignable class GridView: UIView, GridViewDataSource {
+    static var useEngineGrid: Bool = true
+    
     @IBInspectable var rows: Int = StandardEngine.defaultGridSize
     @IBInspectable var cols: Int = StandardEngine.defaultGridSize
     @IBInspectable var livingColor: UIColor = UIColor(
@@ -39,24 +41,23 @@ import UIKit
         blue: (0/255.0),
         alpha: 1.0)
     @IBInspectable var gridWidth:CGFloat = CGFloat(0.5)
-    
-    static var wasManualTouch: Bool = false
-    static var useEngineGrid: Bool = true
+
     var engine: StandardEngine!
     var gridViewDataSource: GridViewDataSource?
+    var lastTouchedPosition: GridPosition?
     
     public subscript (row: Int, col: Int) -> CellState {
-        get { return gridViewDataSource![row,col] }
-        set { gridViewDataSource?[row,col] = newValue }
+        get { return self.gridViewDataSource![row,col] }
+        set { self.gridViewDataSource?[row,col] = newValue }
     }
     
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
         if GridView.useEngineGrid {
-            engine = StandardEngine.engine
-            self.rows = engine.rows
-            self.cols = engine.cols
+            self.engine = StandardEngine.engine
+            self.rows = self.engine.rows
+            self.cols = self.engine.cols
         }
     // Drawing code
         let size = CGSize(
@@ -104,7 +105,7 @@ import UIKit
             )
         }
         (0 ... self.rows).forEach {
-            drawLine(
+            self.drawLine(
                 start: CGPoint(
                     x: rect.origin.x,
                     y: rect.origin.y + (CGFloat($0) * size.height)
@@ -117,7 +118,7 @@ import UIKit
         }
     }
     
-    func drawLine(start:CGPoint, end: CGPoint) {
+    private func drawLine(start:CGPoint, end: CGPoint) {
         let path = UIBezierPath()
         
         // Set the path's line width to the height of the stroke
@@ -131,48 +132,47 @@ import UIKit
         path.addLine(to: end)
         
         // Draw the stroke
-        gridColor.setStroke()
+        self.gridColor.setStroke()
         path.stroke()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        lastTouchedPosition = process(touches: touches)
+        self.lastTouchedPosition = process(touches: touches)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        lastTouchedPosition = process(touches: touches)
+        self.lastTouchedPosition = process(touches: touches)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        lastTouchedPosition = nil
+        self.lastTouchedPosition = nil
     }
     
-    var lastTouchedPosition: GridPosition?
-    
-    func process(touches: Set<UITouch>) -> GridPosition? {
-        GridView.wasManualTouch = true
+    private func process(touches: Set<UITouch>) -> GridPosition? {
+        //GridView.wasManualTouch = true
         guard touches.count == 1 else { return nil }
         guard let pos = convert(touch: touches.first!) else { return nil }
         
         //************* IMPORTANT ****************
-        guard lastTouchedPosition?.row != pos.row
-            || lastTouchedPosition?.col != pos.col
+        guard self.lastTouchedPosition?.row != pos.row
+            || self.lastTouchedPosition?.col != pos.col
             else { return pos }
         //****************************************
         
-        if gridViewDataSource != nil {
-            gridViewDataSource![pos.row, pos.col] = gridViewDataSource![pos.row, pos.col].isAlive ? .empty : .alive
+        if self.gridViewDataSource != nil {
+            self.gridViewDataSource![pos.row, pos.col] =
+                self.gridViewDataSource![pos.row, pos.col].isAlive ? .empty : .alive
             setNeedsDisplay()
             // We don't need to notify the engine about manual touches
             // in the grid editor because its grid cannot be stepped
             if GridView.useEngineGrid {
-                self.touchNotify()
+                touchNotify()
             }
         }
         return pos
     }
     
-    func convert(touch: UITouch) -> GridPosition? {
+    private func convert(touch: UITouch) -> GridPosition? {
         let touchX = touch.location(in: self).x
         let gridWidth = frame.size.width
         let row = touchX / gridWidth * CGFloat(self.rows)
@@ -188,12 +188,11 @@ import UIKit
         return GridPosition(row: Int(row), col: Int(col))
     }
     
-    func touchNotify() {
+    private func touchNotify() {
         let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EngineGridReceivedManualTouch")
-        let n = Notification(name: name,
-                             object: nil,
-                             userInfo: ["none" : "none"])
-        nc.post(n)
+        nc.post(Notification(
+                    name: Notification.Name(rawValue: "EngineGridReceivedManualTouch"),
+                    object: nil,
+                    userInfo: ["none" : "none"]))
     }
  }

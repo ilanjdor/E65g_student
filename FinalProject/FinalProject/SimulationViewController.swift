@@ -41,7 +41,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
             return
         }
         if sender.isOn {
-            self.speedSwitchTurnedOnNotify()
+            speedSwitchTurnedOnNotify()
         } else {
             self.engine.refreshRate = 0.0
         }
@@ -64,17 +64,16 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         self.gridView.setNeedsDisplay()
         
         let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EngineGridChanged")
+        
         nc.addObserver(
-            forName: name,
+            forName: Notification.Name(rawValue: "EngineGridChanged"),
             object: nil,
             queue: nil) { (n) in
                 self.gridView.setNeedsDisplay()
         }
         
-        let name2 = Notification.Name(rawValue: "GoLCycled")
         nc.addObserver(
-            forName: name2,
+            forName: Notification.Name(rawValue: "GoLCycled"),
             object: nil,
             queue: nil) { (n) in
                 self.cycleOccurred = true
@@ -82,9 +81,8 @@ class SimulationViewController: UIViewController, GridViewDataSource {
                     + "or manually touch the grid before you can step.") {}
         }
         
-        let name3 = Notification.Name(rawValue: "EngineGridReceivedManualTouch")
         nc.addObserver(
-            forName: name3,
+            forName: Notification.Name(rawValue: "EngineGridReceivedManualTouch"),
             object: nil,
             queue: nil) { (n) in
                 self.cycleOccurred = false
@@ -155,25 +153,23 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         let defaults = UserDefaults.standard
         defaults.set(configuration, forKey: "configuration")
         defaults.set(size, forKey: "size")
-        self.notify()
+        simulationStateSavedNotify()
     }
+    
+    let nc = NotificationCenter.default
 
-    func notify() {
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "SimulationStateSaved")
-        let n = Notification(name: name,
-                             object: nil,
-                             userInfo: ["engine" : engine])
-        nc.post(n)
+    func simulationStateSavedNotify() {
+        nc.post(Notification(
+                    name: Notification.Name(rawValue: "SimulationStateSaved"),
+                    object: nil,
+                    userInfo: ["engine" : engine]))
     }
     
     func speedSwitchTurnedOnNotify() {
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "SpeedSwitchTurnedOn")
-        let n = Notification(name: name,
-                             object: nil,
-                             userInfo: ["none" : "none"])
-        nc.post(n)
+        nc.post(Notification(
+                    name: Notification.Name(rawValue: "SpeedSwitchTurnedOn"),
+                    object: nil,
+                    userInfo: ["none" : "none"]))
     }
     
     //MARK: AlertController Handling
