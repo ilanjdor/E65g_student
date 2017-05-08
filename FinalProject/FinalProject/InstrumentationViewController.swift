@@ -64,6 +64,33 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             tableView.reloadData()
         }
     }
+    /*[shouldPerformSegueWithIdentifier: "gridEditor", sender: Any?];
+    func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        //super.shouldPerformSegueWithIdentifier() //gridEditor
+        return true // or false, depending on what you need
+    }*/
+    
+    override func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool {
+        if identifier == "gridEditor" { // you define it in the storyboard (click on the segue, then Attributes' inspector > Identifier
+            
+            let segueShouldOccur = SimulationViewController.tabWasClicked/** do whatever you need to set this var to true or false */
+            
+            if !segueShouldOccur {
+                if let index = self.tableView.indexPathForSelectedRow {
+                    self.tableView.deselectRow(at: index, animated: true)
+                }
+                self.showErrorAlert(withMessage: "You must click Simulation tab once before you can load a configuration."){}
+                //print("*** NOPE, segue wont occur")
+                return false
+            }
+            else {
+                print("*** YEP, segue will occur")
+            }
+        }
+        
+        // by default, transition
+        return true
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
@@ -74,7 +101,12 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
          Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
          for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
         if !SimulationViewController.tabWasClicked {
-            showErrorAlert(withMessage: "You must click Simulation tab once before you can load a configuration.") {}
+            self.showErrorAlert(withMessage: "You must click Simulation tab once before you can load a configuration.") {
+                /*if let index = self.tableView.indexPathForSelectedRow {
+                    self.tableView.deselectRow(at: index, animated: true)
+                }*/
+                //return
+            }
             return
         }
         
@@ -298,6 +330,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
          for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
         if !SimulationViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Simulation tab once before you can change speed.") {}
+            self.refreshRateSlider.value = refreshRateSlider.minimumValue
+            self.refreshRateTextField.text = "\(refreshRateSlider.value)"
             return
         }
     }
@@ -358,4 +392,16 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         alert.addAction(okAction)
         self.present(alert, animated: true, completion: nil)
     }
+    
+    /*var refreshAlert = UIAlertController(title: "Refresh", message: "All data will be lost.", preferredStyle: UIAlertControllerStyle.alert)
+    
+    refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
+    print("Handle Ok logic here")
+    }))
+    
+    refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+    print("Handle Cancel Logic here")
+    }))
+    
+    present(refreshAlert, animated: true, completion: nil)*/
 }
