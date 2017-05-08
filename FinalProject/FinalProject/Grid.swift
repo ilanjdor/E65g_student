@@ -243,8 +243,8 @@ public protocol EngineProtocol {
     var grid: GridProtocol { get set }
     var rows: Int { get set }
     var cols: Int { get set }
-    var refreshRate: Double { get set }
     var refreshTimer: Timer? { get set }
+    var refreshRate: Double { get set }
     func step() -> GridProtocol?
 }
 
@@ -253,10 +253,11 @@ class StandardEngine: EngineProtocol {
     // engine is static to denote the fact this application uses only a single instance of it
     static var engine: StandardEngine = StandardEngine(rows: defaultGridSize, cols: defaultGridSize)
     private static var iterator: Grid.GridIterator?
-    var isNewlyLoadedGrid: Bool = true
-    var receivedManualTouch: Bool = false
-    var cellInitializer: (GridPosition) -> CellState
-    var statistics: [String:Int]
+    private let nc = NotificationCenter.default
+    private var isNewlyLoadedGrid: Bool = true
+    private var receivedManualTouch: Bool = false
+    private var cellInitializer: (GridPosition) -> CellState
+    private var statistics: [String:Int]
     
     required init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
         self.isNewlyLoadedGrid = true
@@ -320,20 +321,32 @@ class StandardEngine: EngineProtocol {
         // We use a GridIterator iterator to retain the history
         // of stepped grids for the purpose of detecting a cycle.
         //
-        // Here are the rules I implemented for GoL statistics:
+        // Here are the rules I implemented for my GoL statistics:
         //
         // 1) The initial grid states will be included in the statistics
-        // if and only if the initial grid is able to step
+        // if and only if the initial grid is able to step.
         // 2) An empty grid cannot step and thus will never be
-        // included in statistics
+        // included in statistics.
         // 3) A running GoL (that is, an intial grid that's been stepped
-        // at least once) ends when its state meets either of the following
-        // conditions:
+        // at least once) ends when any one of the following things occurs:
         //     i) No living cells remain
         //    ii) The state is a revisited one
-        // 4) The state that ends the GoL will not be included in the statistics
+        //   iii) A manual touch
+        //
+        // For i) and ii) only, the speed switch will automatically shut off.
+        // For ii) only, the simulator will display a cycle alert.
+        // For iii) only, if the speed switch is on, the statistics and the cycle-detectable state
+        // history will both be reset, however, the stepping will continue without interruption.
+        // The manually-touched grid will become the initial state of a new GoL, from a statistics
+        // and cycle-detection history perspective; from the user's perspecitve, the grid
+        // will keep stepping without interruption.
+        //
+        // 4) The state that ends the GoL will not be included in the statistics.
         //
         if self.receivedManualTouch {
+            // Statistics are reset upon manual touch
+            // since resulting grid is not part of the
+            // existing GoL, if one is running at the time
             StandardEngine.iterator = self.grid.makeIterator()
             self.isNewlyLoadedGrid = true
             self.statistics = Grid.getZeroedOutStateCounts()
@@ -371,6 +384,9 @@ class StandardEngine: EngineProtocol {
                // it does, although the cycle is detected after two steps
                // and it can be easily seen from the above that an initially
                // empty grid never accumulates statistics.
+               // As should be the case, none of this manifests for the user
+               // who, when attempting to step, simply observes 
+               // a motionless, empty grid and zeroed-out statistics.
              } */
             statisticsNotify()
             GoLEndedNotify()
@@ -381,7 +397,7 @@ class StandardEngine: EngineProtocol {
     // When we have an actual GridProtocol object available,
     // we don't need to resort to the more costly approach
     // of creating and then utilizing a cellInitializer
-    public func setGrid(grid: GridProtocol) {
+    func setGrid(grid: GridProtocol) {
         self.isNewlyLoadedGrid = true
         self.grid = grid
         self.rows = grid.size.rows
@@ -400,7 +416,7 @@ class StandardEngine: EngineProtocol {
     // I suppose that I could have instead used an optional cellInitializer since
     // Grid's initializer treats it as optional, but the way I did it seemed
     // neat, explicit and straightforward to me.
-    public func setGrid(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
+    func setGrid(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
         self.isNewlyLoadedGrid = true
         self.cellInitializer = Grid.makeCellInitializer(intPairsDict: intPairsDict)
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
@@ -424,8 +440,6 @@ class StandardEngine: EngineProtocol {
         grid.setStateCounts()
         self.statistics = Grid.removeStateCounts(existing: self.statistics, new: grid.stateCounts)
     }
-    
-    private let nc = NotificationCenter.default
     
     private func changedGridNotify() {
         nc.post(Notification(
