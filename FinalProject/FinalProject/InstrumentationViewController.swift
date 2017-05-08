@@ -64,52 +64,32 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             tableView.reloadData()
         }
     }
-    /*[shouldPerformSegueWithIdentifier: "gridEditor", sender: Any?];
-    func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        //super.shouldPerformSegueWithIdentifier() //gridEditor
-        return true // or false, depending on what you need
-    }*/
     
+    /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
+     What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
+     
+     1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been 
+     clicked for the first time (so that its viewDidLoad method can execute)
+     
+     Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
+     for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section,
+     I don't recall it) */
     override func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool {
-        if identifier == "gridEditor" { // you define it in the storyboard (click on the segue, then Attributes' inspector > Identifier
-            
-            let segueShouldOccur = SimulationViewController.tabWasClicked/** do whatever you need to set this var to true or false */
-            
-            if !segueShouldOccur {
+        if identifier == "gridEditor" {
+            if !SimulationViewController.tabWasClicked {
+                // segue will not occur
                 if let index = self.tableView.indexPathForSelectedRow {
                     self.tableView.deselectRow(at: index, animated: true)
                 }
                 self.showErrorAlert(withMessage: "You must click Simulation tab once before you can load a configuration."){}
-                //print("*** NOPE, segue wont occur")
                 return false
             }
-            else {
-                print("*** YEP, segue will occur")
-            }
         }
-        
-        // by default, transition
+        // segue will occur
         return true
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
-         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
-         
-         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
-         
-         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
-         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
-        if !SimulationViewController.tabWasClicked {
-            self.showErrorAlert(withMessage: "You must click Simulation tab once before you can load a configuration.") {
-                /*if let index = self.tableView.indexPathForSelectedRow {
-                    self.tableView.deselectRow(at: index, animated: true)
-                }*/
-                //return
-            }
-            return
-        }
-        
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {        
         if isNewTableViewRow {
             let nextSize = engine.rows
             index = nil
