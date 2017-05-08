@@ -215,9 +215,12 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     "before you can save a simulation grid to the grid editor."){}
                     return
                 }
-                // engine is static, so we don't need userInfo to discern its grid
-                //let engine = n.userInfo?["engine"] as! StandardEngine
-                //self.grid = engine.grid
+                // engine is static, so we don't need userInfo to discern
+                // its grid but I'm including the commented-out code
+                // as evidence that I know how to do so:
+                //
+                // let engine = n.userInfo?["engine"] as! StandardEngine
+                // self.grid = engine.grid
                 self.grid = self.engine.grid
                 if isNewTableViewRow {
                     self.dataKeys.append(self.gridNameValue)
@@ -296,7 +299,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     private func updateGridSize(size: Int) {
         if engine.rows != size {
-            engine.refreshRate = 0.0
+            //engine.refreshRate = 0.0
             engine.setGrid(rows: size, cols: size)
             sizeTextField.text = "\(size)"
         }
@@ -312,7 +315,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
          */
         if !SimulationViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Simulation tab once before you can change speed.") {
-                self.engine.refreshRate = 0.0
+                //self.engine.refreshRate = 0.0
                 self.refreshRateSlider.value = self.refreshRateSlider.minimumValue
                 self.refreshRateTextField.text = "\(self.refreshRateSlider.value)"
             }
@@ -331,7 +334,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
          */
         if !SimulationViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Simulation tab once before you can change speed.") {
-                self.engine.refreshRate = 0.0
+                //self.engine.refreshRate = 0.0
                 self.refreshRateSlider.value = self.refreshRateSlider.minimumValue
                 self.refreshRateTextField.text = "\(self.refreshRateSlider.value)"
             }

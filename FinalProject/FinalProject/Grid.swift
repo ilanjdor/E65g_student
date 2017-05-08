@@ -149,36 +149,6 @@ extension Grid: Sequence {
             self.grid = newGrid
             return self.grid
         }
-        
-        // The function below is used in order
-        // to make the cycle halt on the first repeated state
-        // as opposed to the state after that, as does
-        // the original next() function above.
-        //
-        // The fact that we count the initial state in the statistics
-        // would seem to support using the function below.
-        // In this way, we will only count the cycled state
-        // once and an empty grid will not step in the first place.
-        //
-        // If manual touches are added to the cycled state, the
-        // user may resume stepping, and the statistics will incorporate
-        // the manually-touched state once as part of the next run,
-        // accumulating further the statistics for the run
-        // that just cycled.
-        /*public mutating func next() -> GridProtocol? {
-            history = GridHistory(self.grid.living, history)
-            if history.hasCycle { return nil }
-            let newGrid: Grid = self.grid.next() as! Grid
-            self.grid = newGrid
-            return self.grid
-        }*/
-
-        // As explained further in the comments in StandardEngine,
-        // we need to replace the grid before a step that succeeds
-        // manual touches.
-        /*public mutating func replaceGrid(grid: GridProtocol) {
-            self.grid = grid
-        }*/
     }
     
     public func makeIterator() -> GridIterator { return GridIterator(grid: self) }
@@ -194,7 +164,7 @@ public extension Grid {
 }
 
 public extension Grid {
-    // This function manufactures a cellInitializer function bespoke for a dictionary of integer pairs/arrays
+    // This function manufactures a cellInitializer function for a dictionary of integer pairs/arrays
     public static func makeCellInitializer(intPairsDict: [String:[[Int]]]) -> (GridPosition) -> CellState {
         if intPairsDict.count == 0 {
             return {_,_ in .empty}
@@ -361,30 +331,27 @@ class StandardEngine: EngineProtocol {
     }
     
     func step() -> GridProtocol? {
-        // We use a Grid.GridIterator iterator to retain the history
+        // We use a GridIterator iterator to retain the history
         // of stepped grids for the purpose of detecting a cycle.
         //
-        // The iterator needs to recapture a manually touched grid
-        // because its next() method only knows about GoL steps
-        // Why not simply ALWAYS recapture the grid before stepping?
-        // Because then the iterator would never retain a history
-        // and thus would never be able to detect a cycle - a situation
-        // that would defeat the entire purpose of using this
-        // particular iterator object type in the first place!
-        // 
-        // Making a new iterator would avoid the need to replace the grid
-        // within the existing iterator, the latter being a mutation
-        // that is admittedly an unideal one to perform onto an iterator.
-        // However, making a new iterator would discard the history
-        // and thus fail to detect a cycle against any state prior
-        // to that of the manually updated grid.
+        // Here are the rules I implemented for GoL statistics:
+        //
+        // 1) The initial grid states will be included in the statistics
+        // if and only if the initial grid is able to step
+        // 2) An empty grid cannot step and thus will never be
+        // included in statistics
+        // 3) A running GoL (that is, an intial grid that's been stepped
+        // at least once) ends when its state meets either of the following
+        // conditions:
+        //     i) No living cells remain
+        //    ii) The state is a revisited one
+        // 4) The state that ends the GoL will not be included in the statistics
+        //
         if self.receivedManualTouch {
-            //StandardEngine.iterator?.replaceGrid(grid: self.grid)
             StandardEngine.iterator = self.grid.makeIterator()
             self.isNewlyLoadedGrid = true
             self.statistics = Grid.getZeroedOutStateCounts()
             self.setGridNotify()
-            //self.GoLEndNotify()
             self.receivedManualTouch = false
         }
 
@@ -402,31 +369,53 @@ class StandardEngine: EngineProtocol {
             self.statisticsNotify()
             return grid
         } else {
-            // Pre-stepped grid state formed a cycle
+            // Pre-stepped grid state formed a cycle.
+            // The GoL, at least as I've implemented it,
+            // ends upon a revisited state.
+            // However, that phenomenon can only be detected
+            // by the iterator once it attempts to next()
+            // the revisited state. Once the cycle is detected,
+            // we need to remove the statistics already accumulated
+            // for the revisited state.
             if self.grid.living.count > 0 {
                 self.removeFromStatistics(grid: self.grid)
                 self.cycleNotify()
-            } else {
-                self.statistics = Grid.getZeroedOutStateCounts()
-            }
+            } /* else {
+                // The special case is the empty intial grid.
+                // The GoL, again, as I've implemented it, should
+                // not run on an empty state. Programatically, here,
+                // it does, although the cycle is detected after two steps
+                // and it can be easily seen from the above that an intially
+                // empty grid never accumulates statistics.
+            } */
             self.statisticsNotify()
             self.GoLEndNotify()
             return nil
         }
     }
     
-    // Funnel this into setGrid further below
-    // so that we can equip it with a cellInitializer
-    // for the sake of posterity and consistency
+    // When we have an actual GridProtocol object available,
+    // we don't need to resort to the more costly approach
+    // of creating and then utilizing a cellInitializer
     func setGrid(grid: GridProtocol) {
-        var grid = grid
-        grid.setConfiguration()
-        let intPairsDict = grid.configuration
-        let rows = grid.size.rows
-        let cols = grid.size.cols
-        self.setGrid(rows: rows, cols: cols, intPairsDict: intPairsDict)
+        self.isNewlyLoadedGrid = true
+        self.grid = grid
+        self.rows = grid.size.rows
+        self.cols = grid.size.cols
+        StandardEngine.iterator = self.grid.makeIterator()
+        self.statistics = Grid.getZeroedOutStateCounts()
+        self.setGridNotify()
+        self.GoLEndNotify()
+        self.statisticsNotify()
     }
     
+    // A nice feature of this version of setGrid is that when the optional
+    // intPairsDict argument is excluded, as is the case everywhere
+    // except for when the user defaults are restored, the relatively costly
+    // cellInitializer procedure will immediately return the default empty initializer.
+    // I suppose that I could have instead used an optional cellInitializer since
+    // Grid's initializer treats it as optional, but the way I did it just seemed
+    // neater, more explicit and straightforward to me.
     func setGrid(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
         self.isNewlyLoadedGrid = true
         self.cellInitializer = Grid.makeCellInitializer(intPairsDict: intPairsDict)
@@ -440,49 +429,41 @@ class StandardEngine: EngineProtocol {
         self.statisticsNotify()
     }
     
+    let nc = NotificationCenter.default
+    
     func notify() {
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EngineUpdate")
-        let n = Notification(name: name,
-                             object: nil,
-                             //userInfo: ["engine" : self]) /* now, engine is static */
-                             userInfo: ["none" : "none"])
-        nc.post(n)
+        nc.post(Notification(
+                    name: Notification.Name(rawValue: "EngineUpdate"),
+                    object: nil,
+                    //userInfo: ["engine" : self]) /* now, engine is static */
+                    userInfo: ["none" : "none"]))
     }
     
     func setGridNotify() {
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EngineSetGrid")
-        let n = Notification(name: name,
-                             object: nil,
-                             userInfo: ["none" : "none"])
-        nc.post(n)
+        nc.post(Notification(
+                    name: Notification.Name(rawValue: "EngineSetGrid"),
+                    object: nil,
+                    userInfo: ["none" : "none"]))
     }
     
     func statisticsNotify() {
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "StatisticsUpdate")
-        let n = Notification(name: name,
-                             object: nil,
-                             userInfo: ["statistics" : self.statistics])
-        nc.post(n)
+        nc.post(Notification(
+                    name: Notification.Name(rawValue: "StatisticsUpdate"),
+                    object: nil,
+                    userInfo: ["statistics" : self.statistics]))
     }
     
     func cycleNotify() {
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "CycleOccurred")
-        let n = Notification(name: name,
-                             object: nil,
-                             userInfo: ["none" : "none"])
-        nc.post(n)
+        nc.post(Notification(
+                    name: Notification.Name(rawValue: "CycleOccurred"),
+                    object: nil,
+                    userInfo: ["none" : "none"]))
     }
     
     func GoLEndNotify() {
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "GoLEnded")
-        let n = Notification(name: name,
-                             object: nil,
-                             userInfo: ["none" : "none"])
-        nc.post(n)
+        nc.post(Notification(
+                    name: Notification.Name(rawValue: "GoLEnded"),
+                    object: nil,
+                    userInfo: ["none" : "none"]))
     }
 }
