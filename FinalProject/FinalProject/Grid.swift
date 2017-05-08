@@ -239,47 +239,24 @@ public protocol EngineProtocol {
     // Note: It is not a requirement to use a delegate in the Final Project
     // according to Prof. Simmons during the Zoom session he held
     // at 8:00AM (EST) on 5/6/17
+    init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]])
     var grid: GridProtocol { get set }
-    var refreshRate: Double { get set }
-    var refreshTimer: Timer? { get set }
     var rows: Int { get set }
     var cols: Int { get set }
-    init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]])
+    var refreshRate: Double { get set }
+    var refreshTimer: Timer? { get set }
     func step() -> GridProtocol?
 }
 
 class StandardEngine: EngineProtocol {
     static var defaultGridSize: Int = 10
-    var grid: GridProtocol {
-        didSet {
-            self.rows = grid.size.rows
-            self.cols = grid.size.cols
-            self.changedGridNotify()
-        }
-    }
+    // engine is static to denote the fact this application uses only a single instance of it
+    static var engine: StandardEngine = StandardEngine(rows: defaultGridSize, cols: defaultGridSize)
+    private static var iterator: Grid.GridIterator?
     var isNewlyLoadedGrid: Bool = true
     var receivedManualTouch: Bool = false
     var cellInitializer: (GridPosition) -> CellState
     var statistics: [String:Int]
-    
-    // Using didSet as below causes circular issues with grid's didSet
-    // but I'm leaving it in as a comment to let you know that I am aware
-    // that I must manually take on the responsibility of keeping
-    // the grid's rows and cols in sync with the engine's rows and cols
-    var rows: Int /*{
-        didSet {
-            self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
-        }
-    }*/
-    var cols: Int /*{
-        didSet {
-            self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
-        }
-    }*/
-    
-    // engine is static to denote the fact this application uses only a single instance of it
-    static var engine: StandardEngine = StandardEngine(rows: defaultGridSize, cols: defaultGridSize)
-    private static var iterator: Grid.GridIterator?
     
     required init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
         self.isNewlyLoadedGrid = true
@@ -302,6 +279,29 @@ class StandardEngine: EngineProtocol {
         }
     }
     
+    var grid: GridProtocol {
+        didSet {
+            self.rows = grid.size.rows
+            self.cols = grid.size.cols
+            self.changedGridNotify()
+        }
+    }
+
+    // Using didSet as below causes circular issues with grid's didSet
+    // but I'm leaving it in as a comment to let you know that I am aware
+    // that I must manually take on the responsibility of keeping
+    // the grid's rows and cols in sync with the engine's rows and cols
+    var rows: Int /*{
+        didSet {
+            self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+        }
+    }*/
+    var cols: Int /*{
+        didSet {
+            self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
+        }
+    }*/
+    
     var refreshTimer: Timer?
     var refreshRate: TimeInterval = 0.0 {
         didSet {
@@ -316,18 +316,6 @@ class StandardEngine: EngineProtocol {
                 }
             }
         }
-    }
-    
-    func accumulateIntoStatistics(grid: GridProtocol) {
-        var grid = grid
-        grid.setStateCounts()
-        self.statistics = Grid.combineStateCounts(existing: self.statistics, new: grid.stateCounts)
-    }
-    
-    func removeFromStatistics(grid: GridProtocol) {
-        var grid = grid
-        grid.setStateCounts()
-        self.statistics = Grid.removeStateCounts(existing: self.statistics, new: grid.stateCounts)
     }
     
     func step() -> GridProtocol? {
@@ -354,17 +342,15 @@ class StandardEngine: EngineProtocol {
             self.replacedGridNotify()
             self.receivedManualTouch = false
         }
-
+        
         if let newGrid = StandardEngine.iterator?.next() {
-            if self.isNewlyLoadedGrid {
-                if self.grid.living.count > 0 {
+            if self.grid.living.count > 0 {
+                if self.isNewlyLoadedGrid {
                     self.accumulateIntoStatistics(grid: self.grid)
                 }
-                self.isNewlyLoadedGrid = false
-            }
-            if self.grid.living.count > 0 {
                 self.accumulateIntoStatistics(grid: newGrid)
             }
+            self.isNewlyLoadedGrid = false
             self.grid = newGrid
             self.statisticsNotify()
             return grid
@@ -381,13 +367,13 @@ class StandardEngine: EngineProtocol {
                 self.removeFromStatistics(grid: self.grid)
                 self.GoLCycledNotify()
             } /* else {
-                // The special case is the empty intial grid.
-                // The GoL, again, as I've implemented it, should
-                // not run on an empty state. Programatically, here,
-                // it does, although the cycle is detected after two steps
-                // and it can be easily seen from the above that an intially
-                // empty grid never accumulates statistics.
-            } */
+               // The special case is the empty intial grid.
+               // The GoL, again, as I've implemented it, should
+               // not run on an empty state. Programatically, here,
+               // it does, although the cycle is detected after two steps
+               // and it can be easily seen from the above that an initially
+               // empty grid never accumulates statistics.
+             } */
             self.statisticsNotify()
             self.GoLEndedNotify()
             return nil
@@ -397,7 +383,7 @@ class StandardEngine: EngineProtocol {
     // When we have an actual GridProtocol object available,
     // we don't need to resort to the more costly approach
     // of creating and then utilizing a cellInitializer
-    func setGrid(grid: GridProtocol) {
+    public func setGrid(grid: GridProtocol) {
         self.isNewlyLoadedGrid = true
         self.grid = grid
         self.rows = grid.size.rows
@@ -414,9 +400,9 @@ class StandardEngine: EngineProtocol {
     // except for when the user defaults are restored, the relatively costly
     // cellInitializer procedure will immediately return the default empty initializer.
     // I suppose that I could have instead used an optional cellInitializer since
-    // Grid's initializer treats it as optional, but the way I did it just seemed
-    // neater, more explicit and straightforward to me.
-    func setGrid(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
+    // Grid's initializer treats it as optional, but the way I did it seemed
+    // neat, explicit and straightforward to me.
+    public func setGrid(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
         self.isNewlyLoadedGrid = true
         self.cellInitializer = Grid.makeCellInitializer(intPairsDict: intPairsDict)
         self.grid = Grid(rows, cols, cellInitializer: self.cellInitializer)
@@ -429,9 +415,21 @@ class StandardEngine: EngineProtocol {
         self.statisticsNotify()
     }
     
-    let nc = NotificationCenter.default
+    private func accumulateIntoStatistics(grid: GridProtocol) {
+        var grid = grid
+        grid.setStateCounts()
+        self.statistics = Grid.combineStateCounts(existing: self.statistics, new: grid.stateCounts)
+    }
     
-    func changedGridNotify() {
+    private func removeFromStatistics(grid: GridProtocol) {
+        var grid = grid
+        grid.setStateCounts()
+        self.statistics = Grid.removeStateCounts(existing: self.statistics, new: grid.stateCounts)
+    }
+    
+    private let nc = NotificationCenter.default
+    
+    private func changedGridNotify() {
         nc.post(Notification(
                     name: Notification.Name(rawValue: "EngineGridChanged"),
                     object: nil,
@@ -439,28 +437,28 @@ class StandardEngine: EngineProtocol {
                     userInfo: ["none" : "none"]))
     }
     
-    func replacedGridNotify() {
+    private func replacedGridNotify() {
         nc.post(Notification(
                     name: Notification.Name(rawValue: "EngineInitializedOrLoadedOrSteppedGrid"),
                     object: nil,
                     userInfo: ["none" : "none"]))
     }
     
-    func statisticsNotify() {
+    private func statisticsNotify() {
         nc.post(Notification(
                     name: Notification.Name(rawValue: "StatisticsUpdate"),
                     object: nil,
                     userInfo: ["statistics" : self.statistics]))
     }
     
-    func GoLCycledNotify() {
+    private func GoLCycledNotify() {
         nc.post(Notification(
                     name: Notification.Name(rawValue: "GoLCycled"),
                     object: nil,
                     userInfo: ["none" : "none"]))
     }
     
-    func GoLEndedNotify() {
+    private func GoLEndedNotify() {
         nc.post(Notification(
                     name: Notification.Name(rawValue: "GoLEnded"),
                     object: nil,
