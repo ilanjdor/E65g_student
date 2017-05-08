@@ -352,8 +352,9 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             return
         }
         refreshRateSlider.value = Float(val)
-        engine.prevRefreshRate = 1 / val
-        engine.refreshRate = 1 / val
+        //engine.prevRefreshRate = 1 / val
+        //engine.refreshRate = 1 / val
+        self.speedAdjustNotify()
     }
     
     @IBAction func refreshRateEditingDidEndOnExit(_ sender: UITextField) {
@@ -361,19 +362,21 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     @IBAction func refreshRateSlideMove(_ sender: UISlider) {
         refreshRateTextField.text = "\(refreshRateSlider.value)"
-        engine.prevRefreshRate = Double(1 / refreshRateSlider.value)
-        
-        engine.refreshRate = Double(1 / refreshRateSlider.value)
+        //engine.prevRefreshRate = Double(1 / refreshRateSlider.value)
+        //engine.refreshRate = Double(1 / refreshRateSlider.value)
+        self.speedAdjustNotify()
     }
     
-    func notify() {
+    func speedAdjustNotify() {
         let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "GridSizeChanged")
+        let name = Notification.Name(rawValue: "SpeedWasAdjusted")
         let n = Notification(name: name,
                              object: nil,
-                             userInfo: ["refreshRate" : refreshRateSlider.value])
+                             userInfo: ["none" : "none"])
         nc.post(n)
     }
+    
+    
     
     //MARK: AlertController Handling
     func showErrorAlert(withMessage msg:String, action: (() -> Void)? ) {

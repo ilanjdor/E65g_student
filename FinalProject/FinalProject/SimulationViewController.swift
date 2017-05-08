@@ -93,12 +93,20 @@ class SimulationViewController: UIViewController, GridViewDataSource {
                 self.cycleOccurred = false
         }
         
-        //let name4 = Notification.Name(rawValue: "EngineSetGrid")
         nc.addObserver(
             forName: Notification.Name(rawValue: "EngineSetGrid"),
             object: nil,
             queue: nil) { (n) in
                 self.cycleOccurred = false
+                self.engine.prevRefreshRate = self.engine.refreshRate
+                self.engine.refreshRate = 0.0
+                self.refreshOnOffSwitch.isOn = false
+        }
+        
+        nc.addObserver(
+            forName: Notification.Name(rawValue: "SpeedWasAdjusted"),
+            object: nil,
+            queue: nil) { (n) in
                 self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false

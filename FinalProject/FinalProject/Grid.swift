@@ -391,19 +391,26 @@ class StandardEngine: EngineProtocol {
 
         if let newGrid = StandardEngine.iterator?.next() {
             if self.isNewlyLoadedGrid {
-                self.accumulateIntoStatistics(grid: self.grid)
+                if self.grid.living.count > 0 {
+                    self.accumulateIntoStatistics(grid: self.grid)
+                }
                 self.isNewlyLoadedGrid = false
             }
-            self.accumulateIntoStatistics(grid: newGrid)
+            if self.grid.living.count > 0 {
+                self.accumulateIntoStatistics(grid: newGrid)
+            }
             self.grid = newGrid
             self.statisticsNotify()
             return grid
         } else {
             // Pre-stepped grid state formed a cycle
             if self.grid.living.count > 0 {
-                //self.removeFromStatistics(grid: self.grid)
+                self.removeFromStatistics(grid: self.grid)
                 self.cycleNotify()
+            } else {
+                self.statistics = Grid.getZeroedOutStateCounts()
             }
+            self.statisticsNotify()
             return nil
         }
     }
