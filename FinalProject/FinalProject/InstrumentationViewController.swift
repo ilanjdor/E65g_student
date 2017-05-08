@@ -186,7 +186,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.black], for:.normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.blue], for:.selected)
         
-        engine = StandardEngine.engine
+        self.engine = StandardEngine.engine
         sizeTextField.text = "\(engine.rows)"
         sizeStepper.value = Double(engine.rows)
         refreshRateSlider.value = refreshRateSlider.minimumValue
@@ -201,7 +201,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             forName: name,
             object: nil,
             queue: nil) { (n) in
-                self.engine = StandardEngine.engine
+                //self.engine = StandardEngine.engine
                 self.sizeTextField.text = "\(self.engine.rows)"
                 self.sizeStepper.value = Double(self.engine.rows)
         }
@@ -216,8 +216,10 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     "before you can save a simulation grid to the grid editor."){}
                     return
                 }
-                let engine = n.userInfo?["engine"] as! StandardEngine
-                self.grid = engine.grid
+                // engine is static, so we don't need userInfo to discern its grid
+                //let engine = n.userInfo?["engine"] as! StandardEngine
+                //self.grid = engine.grid
+                self.grid = self.engine.grid
                 if isNewTableViewRow {
                     self.dataKeys.append(self.gridNameValue)
                     self.dataGrids.append(self.grid!)
@@ -360,6 +362,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     @IBAction func refreshRateSlideMove(_ sender: UISlider) {
         refreshRateTextField.text = "\(refreshRateSlider.value)"
         engine.prevRefreshRate = Double(1 / refreshRateSlider.value)
+        
         engine.refreshRate = Double(1 / refreshRateSlider.value)
     }
     

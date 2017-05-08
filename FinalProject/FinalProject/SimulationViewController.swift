@@ -33,6 +33,14 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         }
         // end of tab click validation
         
+        if SimulationViewController.cycleOccurred {
+            showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid or load a new grid before you can step.") {
+                self.engine.prevRefreshRate = self.engine.refreshRate
+                self.engine.refreshRate = 0.0
+                self.refreshOnOffSwitch.isOn = false
+            }
+            return
+        }
         if sender.isOn {
             engine.refreshRate = engine.prevRefreshRate
         } else {

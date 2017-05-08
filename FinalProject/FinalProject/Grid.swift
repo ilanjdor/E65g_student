@@ -142,13 +142,13 @@ extension Grid: Sequence {
             self.history = GridHistory(grid.living)
         }
         
-        /*public mutating func next() -> GridProtocol? {
+        public mutating func next() -> GridProtocol? {
             if history.hasCycle { return nil }
             let newGrid: Grid = self.grid.next() as! Grid
             history = GridHistory(newGrid.living, history)
             self.grid = newGrid
             return self.grid
-        }*/
+        }
         
         // The function below is used in order
         // to make the cycle halt on the first repeated state
@@ -165,20 +165,20 @@ extension Grid: Sequence {
         // the manually-touched state once as part of the next run,
         // accumulating further the statistics for the run
         // that just cycled.
-        public mutating func next() -> GridProtocol? {
+        /*public mutating func next() -> GridProtocol? {
             history = GridHistory(self.grid.living, history)
             if history.hasCycle { return nil }
             let newGrid: Grid = self.grid.next() as! Grid
             self.grid = newGrid
             return self.grid
-        }
+        }*/
 
         // As explained further in the comments in StandardEngine,
         // we need to replace the grid before a step that succeeds
         // manual touches.
-        public mutating func replaceGrid(grid: GridProtocol) {
+        /*public mutating func replaceGrid(grid: GridProtocol) {
             self.grid = grid
-        }
+        }*/
     }
     
     public func makeIterator() -> GridIterator { return GridIterator(grid: self) }
@@ -254,6 +254,15 @@ public extension Grid {
         combined["empty"] = existing["empty"]! + new["empty"]!
         return combined
     }
+    
+    public static func removeStateCounts(existing: [String:Int], new: [String:Int]) -> [String:Int] {
+        var combined: [String:Int] = [:]
+        combined["alive"] = existing["alive"]! - new["alive"]!
+        combined["born"] = existing["born"]! - new["born"]!
+        combined["died"] = existing["died"]! - new["died"]!
+        combined["empty"] = existing["empty"]! - new["empty"]!
+        return combined
+    }
 }
 
 public protocol EngineProtocol {
@@ -311,6 +320,7 @@ class StandardEngine: EngineProtocol {
         self.cols = cols
         StandardEngine.iterator = self.grid.makeIterator()
         self.statistics = Grid.getZeroedOutStateCounts()
+        self.setGridNotify()
         self.statisticsNotify()
         
         let nc = NotificationCenter.default
@@ -346,6 +356,12 @@ class StandardEngine: EngineProtocol {
         self.statistics = Grid.combineStateCounts(existing: self.statistics, new: grid.stateCounts)
     }
     
+    func removeFromStatistics(grid: GridProtocol) {
+        var grid = grid
+        grid.setStateCounts()
+        self.statistics = Grid.removeStateCounts(existing: self.statistics, new: grid.stateCounts)
+    }
+    
     func step() -> GridProtocol? {
         // We use a Grid.GridIterator iterator to retain the history
         // of stepped grids for the purpose of detecting a cycle.
@@ -365,22 +381,26 @@ class StandardEngine: EngineProtocol {
         // and thus fail to detect a cycle against any state prior
         // to that of the manually updated grid.
         if self.receivedManualTouch {
-            StandardEngine.iterator?.replaceGrid(grid: self.grid)
+            //StandardEngine.iterator?.replaceGrid(grid: self.grid)
+            StandardEngine.iterator = self.grid.makeIterator()
+            self.statistics = Grid.getZeroedOutStateCounts()
+            self.setGridNotify()
             self.receivedManualTouch = false
         }
 
         if let newGrid = StandardEngine.iterator?.next() {
             if self.isNewlyLoadedGrid {
-                accumulateIntoStatistics(grid: self.grid)
+                self.accumulateIntoStatistics(grid: self.grid)
                 self.isNewlyLoadedGrid = false
             }
-            accumulateIntoStatistics(grid: newGrid)
+            self.accumulateIntoStatistics(grid: newGrid)
             self.grid = newGrid
             self.statisticsNotify()
             return grid
         } else {
             // Pre-stepped grid state formed a cycle
             if self.grid.living.count > 0 {
+                self.removeFromStatistics(grid: self.grid)
                 self.cycleNotify()
             }
             return nil
@@ -407,6 +427,7 @@ class StandardEngine: EngineProtocol {
         self.cols = cols
         StandardEngine.iterator = self.grid.makeIterator()
         self.statistics = Grid.getZeroedOutStateCounts()
+        self.setGridNotify()
         self.statisticsNotify()
     }
     
@@ -415,7 +436,8 @@ class StandardEngine: EngineProtocol {
         let name = Notification.Name(rawValue: "EngineUpdate")
         let n = Notification(name: name,
                              object: nil,
-                             userInfo: ["engine" : self])
+                             //userInfo: ["engine" : self]) /* now, engine is static */
+                             userInfo: ["none" : "none"])
         nc.post(n)
     }
     
