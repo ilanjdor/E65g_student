@@ -11,8 +11,7 @@
 import UIKit
 
 class SimulationViewController: UIViewController, GridViewDataSource {
-    static var isEngineGrid: Bool = true
-    static var cycleOccurred: Bool = false
+    var cycleOccurred: Bool = false
     
     @IBOutlet weak var gridView: GridView!
     @IBOutlet weak var refreshOnOffSwitch: UISwitch!
@@ -33,7 +32,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         }
         // end of tab click validation
         
-        if SimulationViewController.cycleOccurred {
+        if self.cycleOccurred {
             showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid or load a new grid before you can step.") {
                 self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
@@ -61,7 +60,6 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         super.viewDidLoad()
         engine = StandardEngine.engine
         gridView.gridViewDataSource = self
-        SimulationViewController.cycleOccurred = false
         refreshOnOffSwitch.isOn = false
         SimulationViewController.tabWasClicked = true
         self.gridView.setNeedsDisplay()
@@ -80,7 +78,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
             forName: name2,
             object: nil,
             queue: nil) { (n) in
-                SimulationViewController.cycleOccurred = true
+                self.cycleOccurred = true
                 self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false
@@ -92,37 +90,15 @@ class SimulationViewController: UIViewController, GridViewDataSource {
             forName: name3,
             object: nil,
             queue: nil) { (n) in
-                SimulationViewController.cycleOccurred = false
+                self.cycleOccurred = false
         }
         
-        /*let name4 = Notification.Name(rawValue: "GridSizeChanged")
+        //let name4 = Notification.Name(rawValue: "EngineSetGrid")
         nc.addObserver(
-            forName: name4,
+            forName: Notification.Name(rawValue: "EngineSetGrid"),
             object: nil,
             queue: nil) { (n) in
-                SimulationViewController.cycleOccurred = false
-                self.engine.prevRefreshRate = n.userInfo!["refreshRate"] as! Double
-                self.engine.refreshRate = 0.0
-                self.refreshOnOffSwitch.isOn = false
-        }*/
-        
-        /*let name5 = Notification.Name(rawValue: "GridEditorGridSaved")
-        nc.addObserver(
-            forName: name5,
-            object: nil,
-            queue: nil) { (n) in
-                SimulationViewController.cycleOccurred = false
-                self.engine.prevRefreshRate = self.engine.refreshRate
-                self.engine.refreshRate = 0.0
-                self.refreshOnOffSwitch.isOn = false
-        }*/
-        
-        let name6 = Notification.Name(rawValue: "EngineSetGrid")
-        nc.addObserver(
-            forName: name6,
-            object: nil,
-            queue: nil) { (n) in
-                SimulationViewController.cycleOccurred = false
+                self.cycleOccurred = false
                 self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false
@@ -143,7 +119,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         }
         // end of tab click validation
         
-        if SimulationViewController.cycleOccurred {
+        if self.cycleOccurred {
             showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid or load a new grid before you can step.") {
                 self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
@@ -161,7 +137,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         self.engine.refreshRate = 0.0
         self.refreshOnOffSwitch.isOn = false
         engine.setGrid(rows: engine.rows, cols: engine.cols)
-        SimulationViewController.cycleOccurred = false
+        self.cycleOccurred = false
     }
     
     @IBAction func save(_ sender: Any) {

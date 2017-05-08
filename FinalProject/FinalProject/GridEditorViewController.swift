@@ -75,7 +75,6 @@ class GridEditorViewController: UIViewController, GridViewDataSource {
             saveClosure(newValue)
             engine = StandardEngine.engine
             engine.setGrid(grid: self.grid!)
-            SimulationViewController.cycleOccurred = false
             _ = self.navigationController?.popViewController(animated: true)
         }
     }

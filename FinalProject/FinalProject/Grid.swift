@@ -383,6 +383,7 @@ class StandardEngine: EngineProtocol {
         if self.receivedManualTouch {
             //StandardEngine.iterator?.replaceGrid(grid: self.grid)
             StandardEngine.iterator = self.grid.makeIterator()
+            self.isNewlyLoadedGrid = true
             self.statistics = Grid.getZeroedOutStateCounts()
             self.setGridNotify()
             self.receivedManualTouch = false
@@ -400,7 +401,7 @@ class StandardEngine: EngineProtocol {
         } else {
             // Pre-stepped grid state formed a cycle
             if self.grid.living.count > 0 {
-                self.removeFromStatistics(grid: self.grid)
+                //self.removeFromStatistics(grid: self.grid)
                 self.cycleNotify()
             }
             return nil
