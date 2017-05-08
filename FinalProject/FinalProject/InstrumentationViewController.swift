@@ -17,22 +17,23 @@ let finalProjectURL = "https://dl.dropboxusercontent.com/u/7544475/S65g.json"
 
 var isNewTableViewRow: Bool = false
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+    @IBOutlet weak var sizeTextField: UITextField!
+    @IBOutlet weak var sizeStepper: UIStepper!
+    @IBOutlet weak var refreshRateTextField: UITextField!
+    @IBOutlet weak var refreshRateSlider: UISlider!
+    @IBOutlet weak var tableView: UITableView!
     var dataKeys: [String] = []
     var dataGrids: [GridProtocol] = []
-    var gridEditorVC: GridEditorViewController?
     var tableViewHeader: String = "Configurations"
     var newRowName: String = "New GridEditor Grid"
     var jsonContents: String?
     var index: Int?
     var grid: GridProtocol?
     var gridNameValue: String = ""
+    var engine: StandardEngine!
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         return true
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -57,21 +58,13 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            dataKeys.remove(at: indexPath.row)
-            dataGrids.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            tableView.reloadData()
+            self.dataKeys.remove(at: indexPath.row)
+            self.dataGrids.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            self.tableView.reloadData()
         }
     }
     
-    /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
-     What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
-     
-     1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been 
-     clicked for the first time (so that its viewDidLoad method can execute)
-     
-     If I knew of a more elegant or idiomatic solution to this issue, I would have used it
-     */
     override func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool {
         if identifier == "gridEditor" {
             if !SimulationViewController.tabWasClicked {
@@ -79,30 +72,38 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 if let index = self.tableView.indexPathForSelectedRow {
                     self.tableView.deselectRow(at: index, animated: true)
                 }
-                self.showErrorAlert(withMessage: "You must click Simulation tab once before you can load a configuration."){}
+                showErrorAlert(withMessage: "You must click Simulation tab once before you can load a configuration."){}
                 return false
             }
         }
         // segue will occur
         return true
     }
-    // end of tab click validation
+    
+    @IBAction func addRow(_ sender: UIBarButtonItem) {
+        if !SimulationViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Simulation tab once before you can load a new grid.") {}
+            return
+        }
+        isNewTableViewRow = true
+        performSegue(withIdentifier: "gridEditor", sender: nil)
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {        
         if isNewTableViewRow {
-            let nextSize = engine.rows
-            index = nil
-            gridNameValue = newRowName
-            grid = Grid(nextSize, nextSize) as GridProtocol
+            let nextSize = self.engine.rows
+            self.index = nil
+            self.gridNameValue = self.newRowName
+            self.grid = Grid(nextSize, nextSize) as GridProtocol
         } else {
-            let indexPath = tableView.indexPathForSelectedRow
-            index = (indexPath?.row)!
-            gridNameValue = dataKeys[index!]
-            grid = dataGrids[index!]
+            let indexPath = self.tableView.indexPathForSelectedRow
+            self.index = (indexPath?.row)!
+            self.gridNameValue = self.dataKeys[index!]
+            self.grid = self.dataGrids[index!]
         }
         if let vc = segue.destination as? GridEditorViewController {
-            vc.gridNameValue = gridNameValue
-            vc.grid = grid
+            vc.gridNameValue = self.gridNameValue
+            vc.grid = self.grid
             vc.saveClosure = { newValue in
                 if isNewTableViewRow {
                     self.dataKeys.append(newValue)
@@ -118,7 +119,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-    func fetch() {
+    private func fetch() {
         let fetcher = Fetcher()
         fetcher.fetchJSON(url: URL(string:finalProjectURL)!) { (json: Any?, message: String?) in
             guard message == nil else {
@@ -155,30 +156,9 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-    @IBAction func addRow(_ sender: UIBarButtonItem) {
-        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
-         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
-         
-         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
-         
-         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
-         */
-        if !SimulationViewController.tabWasClicked {
-            showErrorAlert(withMessage: "You must click Simulation tab once before you can load a new grid.") {}
-            return
-        }
-        isNewTableViewRow = true
-        self.performSegue(withIdentifier: "gridEditor", sender: nil)
-        // end of tab click validation
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
     }
-    
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var sizeTextField: UITextField!
-    @IBOutlet weak var sizeStepper: UIStepper!
-    @IBOutlet weak var refreshRateTextField: UITextField!
-    @IBOutlet weak var refreshRateSlider: UISlider!
-    
-    var engine: StandardEngine!
     
     override func viewDidLoad() {
         fetch()
@@ -187,12 +167,21 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.blue], for:.selected)
         
         self.engine = StandardEngine.engine
-        sizeTextField.text = "\(engine.rows)"
-        sizeStepper.value = Double(engine.rows)
-        refreshRateSlider.value = refreshRateSlider.minimumValue
-        refreshRateSlider.isEnabled = true
-        refreshRateTextField.text = "\(refreshRateSlider.value)"
-        refreshRateTextField.isEnabled = true
+        self.sizeTextField.text = "\(self.engine.rows)"
+        self.sizeStepper.value = Double(self.engine.rows)
+        // Note: All refreshRate IBOutlet variables and IBAction functions in this module
+        // should really be called 'speed' rather than 'refreshRate' because
+        // I invert their values prior to sending them to StandardEngine.
+        // Unfortunately, it is 6:58PM EST on 5/8/17 as I write this,
+        // and Prof. Simmons said that the deadline is 9:00PM EST
+        // so I'm not going to have the time to rewire all of the storyboard items
+        // to turn these variables into 'speed' ones.
+        // The refreshRate in StandardEngine is still an actual refresh rate
+        // and not a speed. Sorry for any confusion. I really wanted to rewire these.
+        self.refreshRateSlider.value = self.refreshRateSlider.minimumValue
+        self.refreshRateSlider.isEnabled = true
+        self.refreshRateTextField.text = "\(self.refreshRateSlider.value)"
+        self.refreshRateTextField.isEnabled = true
         
         let nc = NotificationCenter.default
         
@@ -241,18 +230,10 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     @IBAction func sizeTouchDown(_ sender: UITextField) {
-        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
-         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
-         
-         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
-         
-         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
-         */
         if !SimulationViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Simulation tab once before you can change size.") {}
             return
         }
-        // end of tab click validation
     }
     @IBAction func sizeEditingDidEnd(_ sender: UITextField) {
         guard let text = sender.text else { return }
@@ -276,18 +257,10 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     @IBAction func sizeStepperTouchDown(_ sender: UIStepper) {
-        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
-         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
-         
-         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
-         
-         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
-         */
         if !SimulationViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Simulation tab once before you can change size.") {}
             return
         }
-        // end of tab click validation
     }
     
     @IBAction func sizeStep(_ sender: UIStepper) {
@@ -297,48 +270,19 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     private func updateGridSize(size: Int) {
         if engine.rows != size {
-            //engine.refreshRate = 0.0
             engine.setGrid(rows: size, cols: size)
             sizeTextField.text = "\(size)"
         }
     }
     
-    @IBAction func refreshRateSliderTouchDown(_ sender: UISlider) {
-        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
-         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
-         
-         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
-         
-         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
-         */
-        if !SimulationViewController.tabWasClicked {
-            showErrorAlert(withMessage: "You must click Simulation tab once before you can change speed.") {
-                //self.engine.refreshRate = 0.0
-                self.refreshRateSlider.value = self.refreshRateSlider.minimumValue
-                self.refreshRateTextField.text = "\(self.refreshRateSlider.value)"
-            }
-            return
-        }
-        // end of tab click validation
-    }
-    
     @IBAction func refreshRateTouchDown(_ sender: UITextField) {
-        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
-         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
-         
-         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
-         
-         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
-         */
         if !SimulationViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Simulation tab once before you can change speed.") {
-                //self.engine.refreshRate = 0.0
                 self.refreshRateSlider.value = self.refreshRateSlider.minimumValue
                 self.refreshRateTextField.text = "\(self.refreshRateSlider.value)"
             }
             return
         }
-        // end of tab click validation
     }
     
     @IBAction func refreshRateEditingDidEnd(_ sender: UITextField) {
@@ -360,6 +304,16 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     @IBAction func refreshRateEditingDidEndOnExit(_ sender: UITextField) {
+    }
+    
+    @IBAction func refreshRateSliderTouchDown(_ sender: UISlider) {
+        if !SimulationViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Simulation tab once before you can change speed.") {
+                self.refreshRateSlider.value = self.refreshRateSlider.minimumValue
+                self.refreshRateTextField.text = "\(self.refreshRateSlider.value)"
+            }
+            return
+        }
     }
     
     @IBAction func refreshRateSlideMove(_ sender: UISlider) {
