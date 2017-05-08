@@ -25,8 +25,9 @@ class SimulationViewController: UIViewController, GridViewDataSource {
          Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
          for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
         if !StatisticsViewController.tabWasClicked {
-            showErrorAlert(withMessage: "You must click Statistics tab once before you can step.") {}
-            sender.isOn = false
+            showErrorAlert(withMessage: "You must click Statistics tab once before you can step.") {
+                self.refreshOnOffSwitch.isOn = false
+            }
             return
         }
         
