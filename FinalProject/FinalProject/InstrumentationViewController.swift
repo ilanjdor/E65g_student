@@ -71,9 +71,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
      1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been 
      clicked for the first time (so that its viewDidLoad method can execute)
      
-     Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
-     for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section,
-     I don't recall it) */
+     If I knew of a more elegant or idiomatic solution to this issue, I would have used it
+     */
     override func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool {
         if identifier == "gridEditor" {
             if !SimulationViewController.tabWasClicked {
@@ -88,6 +87,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         // segue will occur
         return true
     }
+    // end of tab click validation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {        
         if isNewTableViewRow {
@@ -162,14 +162,15 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
          
          1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
          
-         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
-         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
+         */
         if !SimulationViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Simulation tab once before you can load a new grid.") {}
             return
         }
         isNewTableViewRow = true
         self.performSegue(withIdentifier: "gridEditor", sender: nil)
+        // end of tab click validation
     }
     
     @IBOutlet weak var tableView: UITableView!
@@ -186,7 +187,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.black], for:.normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.blue], for:.selected)
         
-        engine = StandardEngine.getEngine()
+        engine = StandardEngine.engine
         sizeTextField.text = "\(engine.rows)"
         sizeStepper.value = Double(engine.rows)
         refreshRateSlider.value = refreshRateSlider.minimumValue
@@ -195,18 +196,13 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         refreshRateTextField.isEnabled = true
         engine.prevRefreshRate = Double(1 / refreshRateSlider.value)
         
-        func test1() {
-            let viewController = UIApplication.shared.windows[0].rootViewController?.childViewControllers[2] as? SimulationViewController
-            viewController?.viewDidLoad()
-        }
-        
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         nc.addObserver(
             forName: name,
             object: nil,
             queue: nil) { (n) in
-                self.engine = StandardEngine.getEngine()
+                self.engine = StandardEngine.engine
                 self.sizeTextField.text = "\(self.engine.rows)"
                 self.sizeStepper.value = Double(self.engine.rows)
         }
@@ -242,12 +238,13 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
          
          1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
          
-         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
-         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
+         */
         if !SimulationViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Simulation tab once before you can change size.") {}
             return
         }
+        // end of tab click validation
     }
     @IBAction func sizeEditingDidEnd(_ sender: UITextField) {
         guard let text = sender.text else { return }
@@ -276,12 +273,13 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
          
          1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
          
-         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
-         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
+         */
         if !SimulationViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Simulation tab once before you can change size.") {}
             return
         }
+        // end of tab click validation
     }
     
     @IBAction func sizeStep(_ sender: UIStepper) {
@@ -306,14 +304,17 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
          
          1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
          
-         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
-         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
+         */
         if !SimulationViewController.tabWasClicked {
-            showErrorAlert(withMessage: "You must click Simulation tab once before you can change speed.") {}
-            self.refreshRateSlider.value = refreshRateSlider.minimumValue
-            self.refreshRateTextField.text = "\(refreshRateSlider.value)"
+            showErrorAlert(withMessage: "You must click Simulation tab once before you can change speed.") {
+                self.engine.refreshRate = 0.0
+                self.refreshRateSlider.value = self.refreshRateSlider.minimumValue
+                self.refreshRateTextField.text = "\(self.refreshRateSlider.value)"
+            }
             return
         }
+        // end of tab click validation
     }
     
     @IBAction func refreshRateTouchDown(_ sender: UITextField) {
@@ -322,12 +323,17 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
          
          1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
          
-         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
-         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
+         */
         if !SimulationViewController.tabWasClicked {
-            showErrorAlert(withMessage: "You must click Simulation tab once before you can change speed.") {}
+            showErrorAlert(withMessage: "You must click Simulation tab once before you can change speed.") {
+                self.engine.refreshRate = 0.0
+                self.refreshRateSlider.value = self.refreshRateSlider.minimumValue
+                self.refreshRateTextField.text = "\(self.refreshRateSlider.value)"
+            }
             return
         }
+        // end of tab click validation
     }
     
     @IBAction func refreshRateEditingDidEnd(_ sender: UITextField) {
@@ -372,16 +378,4 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         alert.addAction(okAction)
         self.present(alert, animated: true, completion: nil)
     }
-    
-    /*var refreshAlert = UIAlertController(title: "Refresh", message: "All data will be lost.", preferredStyle: UIAlertControllerStyle.alert)
-    
-    refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
-    print("Handle Ok logic here")
-    }))
-    
-    refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
-    print("Handle Cancel Logic here")
-    }))
-    
-    present(refreshAlert, animated: true, completion: nil)*/
 }

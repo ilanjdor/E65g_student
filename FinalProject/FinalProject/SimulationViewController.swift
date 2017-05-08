@@ -12,6 +12,7 @@ import UIKit
 
 class SimulationViewController: UIViewController, GridViewDataSource {
     static var isEngineGrid: Bool = true
+    static var cycleOccurred: Bool = false
     
     @IBOutlet weak var gridView: GridView!
     @IBOutlet weak var refreshOnOffSwitch: UISwitch!
@@ -22,14 +23,15 @@ class SimulationViewController: UIViewController, GridViewDataSource {
          
          2) Actions taking place in SimulationVC before StatisticsVC has been clicked for the time (so that its viewDidLoad method can execute)
          
-         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
-         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
+         */
         if !StatisticsViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Statistics tab once before you can step.") {
                 self.refreshOnOffSwitch.isOn = false
             }
             return
         }
+        // end of tab click validation
         
         if sender.isOn {
             engine.refreshRate = engine.prevRefreshRate
@@ -48,20 +50,28 @@ class SimulationViewController: UIViewController, GridViewDataSource {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        engine = StandardEngine.getEngine()
+        engine = StandardEngine.engine
         gridView.gridViewDataSource = self
         refreshOnOffSwitch.isOn = false
         SimulationViewController.tabWasClicked = true
         self.gridView.setNeedsDisplay()
+        
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         nc.addObserver(
             forName: name,
             object: nil,
             queue: nil) { (n) in
-                //self.engine = StandardEngine.getEngine()
-                //self.gridView.gridViewDataSource = self
                 self.gridView.setNeedsDisplay()
+        }
+        
+        let name2 = Notification.Name(rawValue: "CycleOccurred")
+        nc.addObserver(
+            forName: name2,
+            object: nil,
+            queue: nil) { (n) in
+                SimulationViewController.cycleOccurred = true
+                self.refreshOnOffSwitch.isOn = false
         }
     }
     
@@ -71,10 +81,20 @@ class SimulationViewController: UIViewController, GridViewDataSource {
          
          2) Actions taking place in SimulationVC before StatisticsVC has been clicked for the time (so that its viewDidLoad method can execute)
          
-         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
-         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
+        */
         if !StatisticsViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Statistics tab once before you can step.") {}
+            return
+        }
+        // end of tab click validation
+        
+        if SimulationViewController.cycleOccurred {
+            showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid or load a new grid before you can step.") {
+                self.engine.prevRefreshRate = self.engine.refreshRate
+                self.engine.refreshRate = 0.0
+                self.refreshOnOffSwitch.isOn = false
+            }
             return
         }
         if self.gridView.gridViewDataSource != nil {
@@ -84,6 +104,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
     
     @IBAction func reset(_ sender: Any) {
         engine.setGrid(rows: engine.rows, cols: engine.cols)
+        SimulationViewController.cycleOccurred = false
     }
     
     @IBAction func save(_ sender: Any) {

@@ -54,7 +54,7 @@ import UIKit
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
         if GridView.useEngineGrid {
-            engine = StandardEngine.getEngine()
+            engine = StandardEngine.engine
             self.rows = engine.rows
             self.cols = engine.cols
         }

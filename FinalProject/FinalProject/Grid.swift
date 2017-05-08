@@ -142,34 +142,36 @@ extension Grid: Sequence {
             self.history = GridHistory(grid.living)
         }
         
-        public mutating func next() -> GridProtocol? {
+        /*public mutating func next() -> GridProtocol? {
             if history.hasCycle { return nil }
             let newGrid: Grid = self.grid.next() as! Grid
             history = GridHistory(newGrid.living, history)
             self.grid = newGrid
             return self.grid
-        }
+        }*/
         
-        // The function below could be used if we wanted
+        // The function below is used in order
         // to make the cycle halt on the first repeated state
-        // as opposed to the state after that. I created it
-        // and then wasn't sure which handling is preferable
-        // so I went with the original next() function above.
+        // as opposed to the state after that, as does
+        // the original next() function above.
         //
         // The fact that we count the initial state in the statistics
-        // would seem to support using the function below
-        // since, when the initial state causes a cycle,
-        // we now count both the initial state twice AND
-        // the first transition twice by using the original next()
-        // function. That's why I created it in the first place.
+        // would seem to support using the function below.
+        // In this way, we will only count the cycled state
+        // once and an empty grid will not step in the first place.
         //
-        /*public mutating func next() -> GridProtocol? {
+        // If manual touches are added to the cycled state, the
+        // user may resume stepping, and the statistics will incorporate
+        // the manually-touched state once as part of the next run,
+        // accumulating further the statistics for the run
+        // that just cycled.
+        public mutating func next() -> GridProtocol? {
             history = GridHistory(self.grid.living, history)
             if history.hasCycle { return nil }
             let newGrid: Grid = self.grid.next() as! Grid
             self.grid = newGrid
             return self.grid
-        }*/
+        }
 
         // As explained further in the comments in StandardEngine,
         // we need to replace the grid before a step that succeeds
@@ -297,7 +299,8 @@ class StandardEngine: EngineProtocol {
         }
     }*/
     
-    private static var engine: StandardEngine = StandardEngine(rows: defaultGridSize, cols: defaultGridSize)
+    // engine is static to denote the fact this application uses only a single instance of it
+    static var engine: StandardEngine = StandardEngine(rows: defaultGridSize, cols: defaultGridSize)
     private static var iterator: Grid.GridIterator?
     
     required init(rows: Int, cols: Int, intPairsDict: [String:[[Int]]] = [:]) {
@@ -316,8 +319,6 @@ class StandardEngine: EngineProtocol {
             forName: name,
             object: nil,
             queue: nil) { (n) in
-                //self.engine = StandardEngine.getEngine()
-                //self.gridView.gridViewDataSource = self
                 self.receivedManualTouch = true
         }
     }
@@ -363,10 +364,6 @@ class StandardEngine: EngineProtocol {
         // However, making a new iterator would discard the history
         // and thus fail to detect a cycle against any state prior
         // to that of the manually updated grid.
-        //
-        // Regarding the statistics of a cycle, they accumulate
-        // for 1-2 steps too many, depending upon whether you want
-        // to count
         if self.receivedManualTouch {
             StandardEngine.iterator?.replaceGrid(grid: self.grid)
             self.receivedManualTouch = false
@@ -383,6 +380,9 @@ class StandardEngine: EngineProtocol {
             return grid
         } else {
             // Pre-stepped grid state formed a cycle
+            if self.grid.living.count > 0 {
+                self.cycleNotify()
+            }
             return nil
         }
     }
@@ -428,7 +428,12 @@ class StandardEngine: EngineProtocol {
         nc.post(n)
     }
     
-    static func getEngine() -> StandardEngine {
-        return StandardEngine.engine
+    func cycleNotify() {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "CycleOccurred")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["none" : "none"])
+        nc.post(n)
     }
 }

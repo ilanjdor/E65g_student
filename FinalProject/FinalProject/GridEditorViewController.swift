@@ -58,12 +58,13 @@ class GridEditorViewController: UIViewController, GridViewDataSource {
          
          1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
          
-         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
-         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
+         */
         if !SimulationViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Simulation tab once before you can save.") {}
             return
         }
+        // end of tab click validation
         
         self.grid!.setConfiguration()
         let defaults = UserDefaults.standard
@@ -72,7 +73,7 @@ class GridEditorViewController: UIViewController, GridViewDataSource {
         if let newValue = gridNameTextField.text,
             let saveClosure = saveClosure {
             saveClosure(newValue)
-            engine = StandardEngine.getEngine()
+            engine = StandardEngine.engine
             engine.setGrid(grid: self.grid!)
             _ = self.navigationController?.popViewController(animated: true)
         }
