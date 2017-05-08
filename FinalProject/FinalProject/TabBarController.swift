@@ -1,4 +1,4 @@
-//
+/*//
 //  TabBarController.swift
 //
 //  Ilan Dor
@@ -37,4 +37,4 @@ class TabBarController: UITabBarController {
      static func disableSimulationTab() {
      items?[1].isEnabled = false
      }*/
-}
+}*/

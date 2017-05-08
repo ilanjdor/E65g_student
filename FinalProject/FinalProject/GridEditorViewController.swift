@@ -53,6 +53,18 @@ class GridEditorViewController: UIViewController, GridViewDataSource {
     }
     
     @IBAction func save(_ sender: UIBarButtonItem) {
+        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
+         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
+         
+         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
+         
+         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
+         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+        if !SimulationViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Simulation tab once before you can save.") {}
+            return
+        }
+        
         self.grid!.setConfiguration()
         let defaults = UserDefaults.standard
         defaults.set(self.grid!.configuration, forKey: "configuration")
@@ -64,5 +76,20 @@ class GridEditorViewController: UIViewController, GridViewDataSource {
             engine.setGrid(grid: self.grid!)
             _ = self.navigationController?.popViewController(animated: true)
         }
+    }
+    
+    //MARK: AlertController Handling
+    func showErrorAlert(withMessage msg:String, action: (() -> Void)? ) {
+        let alert = UIAlertController(
+            title: "Alert",
+            message: msg,
+            preferredStyle: .alert
+        )
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+            alert.dismiss(animated: true) { }
+            OperationQueue.main.addOperation { action?() }
+        }
+        alert.addAction(okAction)
+        self.present(alert, animated: true, completion: nil)
     }
 }

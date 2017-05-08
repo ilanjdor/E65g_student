@@ -149,7 +149,31 @@ extension Grid: Sequence {
             self.grid = newGrid
             return self.grid
         }
+        
+        // The function below could be used if we wanted
+        // to make the cycle halt on the first repeated state
+        // as opposed to the state after that. I created it
+        // and then wasn't sure which handling is preferable
+        // so I went with the original next() function above.
+        //
+        // The fact that we count the initial state in the statistics
+        // would seem to support using the function below
+        // since, when the initial state causes a cycle,
+        // we now count both the initial state twice AND
+        // the first transition twice by using the original next()
+        // function. That's why I created it in the first place.
+        //
+        /*public mutating func next() -> GridProtocol? {
+            history = GridHistory(self.grid.living, history)
+            if history.hasCycle { return nil }
+            let newGrid: Grid = self.grid.next() as! Grid
+            self.grid = newGrid
+            return self.grid
+        }*/
 
+        // As explained further in the comments in StandardEngine,
+        // we need to replace the grid before a step that succeeds
+        // manual touches.
         public mutating func replaceGrid(grid: GridProtocol) {
             self.grid = grid
         }
@@ -340,18 +364,9 @@ class StandardEngine: EngineProtocol {
         // and thus fail to detect a cycle against any state prior
         // to that of the manually updated grid.
         //
-        // Here are some possible grid-stepping handlings
-        // in order of increasing rigor:
-        //
-        // 1) Use Grid's next() method without iterator (cannot detect a cycle)
-        // 2) Use iterator; replace entire iterator on manual touch (can detect a cycle since manual touch)
-        // 3) Use iterator; replace iterator's grid on manual touch (can detect a cycle since beginning)
-        // 4) Use iterator; make the simulator's GridViewDataSource
-        // be the iterator's grid. I think that this is the ultimate
-        // solution since it only allows for a very specific modification
-        // of the iterator's grid as opposed to exposing the grid for replacement
-        // as I've done here. Well, if this wasn't due tomorrow as I write this...
-        //
+        // Regarding the statistics of a cycle, they accumulate
+        // for 1-2 steps too many, depending upon whether you want
+        // to count
         if self.receivedManualTouch {
             StandardEngine.iterator?.replaceGrid(grid: self.grid)
             self.receivedManualTouch = false

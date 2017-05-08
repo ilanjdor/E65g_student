@@ -17,6 +17,18 @@ class SimulationViewController: UIViewController, GridViewDataSource {
     @IBOutlet weak var refreshOnOffSwitch: UISwitch!
     
     @IBAction func refreshOnOff(_ sender: UISwitch) {
+        /* The following code overcomes item 2 on my Discussion post, "Problems if Tabs Not Clicked":
+         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
+         
+         2) Actions taking place in SimulationVC before StatisticsVC has been clicked for the time (so that its viewDidLoad method can execute)
+         
+         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
+         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+        if !StatisticsViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Statistics tab once before you can step.") {}
+            return
+        }
+        
         if sender.isOn {
             engine.refreshRate = engine.prevRefreshRate
         } else {
@@ -25,6 +37,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
     }
     
     var engine: StandardEngine!
+    static var tabWasClicked: Bool = false
     
     public subscript (row: Int, col: Int) -> CellState {
         get { return engine.grid[row,col] }
@@ -36,7 +49,8 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         engine = StandardEngine.getEngine()
         gridView.gridViewDataSource = self
         refreshOnOffSwitch.isOn = false
-        
+        SimulationViewController.tabWasClicked = true
+        self.gridView.setNeedsDisplay()
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
         nc.addObserver(
@@ -50,6 +64,17 @@ class SimulationViewController: UIViewController, GridViewDataSource {
     }
     
     @IBAction func next(_ sender: Any) {
+        /* The following code overcomes item 2 on my Discussion post, "Problems if Tabs Not Clicked":
+         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
+         
+         2) Actions taking place in SimulationVC before StatisticsVC has been clicked for the time (so that its viewDidLoad method can execute)
+         
+         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
+         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+        if !StatisticsViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Statistics tab once before you can step.") {}
+            return
+        }
         if self.gridView.gridViewDataSource != nil {
             _ = self.engine.step()
         }
@@ -76,5 +101,20 @@ class SimulationViewController: UIViewController, GridViewDataSource {
                              object: nil,
                              userInfo: ["engine" : engine])
         nc.post(n)
+    }
+    
+    //MARK: AlertController Handling
+    func showErrorAlert(withMessage msg:String, action: (() -> Void)? ) {
+        let alert = UIAlertController(
+            title: "Alert",
+            message: msg,
+            preferredStyle: .alert
+        )
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+            alert.dismiss(animated: true) { }
+            OperationQueue.main.addOperation { action?() }
+        }
+        alert.addAction(okAction)
+        self.present(alert, animated: true, completion: nil)
     }
 }

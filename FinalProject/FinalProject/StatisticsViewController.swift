@@ -16,6 +16,7 @@ class StatisticsViewController: UIViewController {
     @IBOutlet weak var diedCountTextField: UITextField!
     @IBOutlet weak var emptyCountTextField: UITextField!
 
+    static var tabWasClicked: Bool = false
     var statistics: [String:Int] = [:]
     
     override func viewDidLoad() {
@@ -24,6 +25,7 @@ class StatisticsViewController: UIViewController {
         bornCountTextField.isEnabled = false
         diedCountTextField.isEnabled = false
         emptyCountTextField.isEnabled = false
+        StatisticsViewController.tabWasClicked = true
         
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "StatisticsUpdate")

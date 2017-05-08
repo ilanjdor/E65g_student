@@ -26,6 +26,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // unless the user saves a configuration during the current session
         defaults.set([:], forKey: "configuration")
         defaults.set(StandardEngine.defaultGridSize, forKey: "size")
+        
+        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
+         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
+         
+         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
+         
+         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
+         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+        /*if self.window == nil {
+            self.window = UIWindow(frame: UIScreen.main.bounds)
+        }
+        let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let mySimulationVC = storyboard.instantiateViewController(withIdentifier: "mySimulationViewController")
+        mySimulationVC.loadView()
+        mySimulationVC.viewDidLoad()
+        
+        let myStatisticsVC = storyboard.instantiateViewController(withIdentifier: "myStatisticsViewController")
+        myStatisticsVC.loadView()
+        myStatisticsVC.viewDidLoad()*/    
         return true
     }
     

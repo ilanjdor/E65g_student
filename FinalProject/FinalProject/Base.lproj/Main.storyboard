@@ -14,7 +14,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
             <objects>
-                <tabBarController storyboardIdentifier="myTabBarController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="49e-Tb-3d3" sceneMemberID="viewController">
+                <tabBarController id="49e-Tb-3d3" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">
                         <rect key="frame" x="0.0" y="975" width="768" height="49"/>
@@ -34,7 +34,7 @@
         <!--SimulationViewController-->
         <scene sceneID="TMv-iT-RjT">
             <objects>
-                <viewController id="fBe-dM-iGP" userLabel="SimulationViewController" customClass="SimulationViewController" customModule="FinalProject" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mySimulationViewController" id="fBe-dM-iGP" userLabel="SimulationViewController" customClass="SimulationViewController" customModule="FinalProject" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="uhw-KM-3cg"/>
                         <viewControllerLayoutGuide type="bottom" id="M7S-m0-ye9"/>
@@ -190,7 +190,7 @@
         <!--InstrumentationViewController-->
         <scene sceneID="8au-3E-tmA">
             <objects>
-                <viewController id="hRw-nI-kcm" userLabel="InstrumentationViewController" customClass="InstrumentationViewController" customModule="FinalProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="myInstrumentationViewController" id="hRw-nI-kcm" userLabel="InstrumentationViewController" customClass="InstrumentationViewController" customModule="FinalProject" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="HX4-b9-ttI"/>
                         <viewControllerLayoutGuide type="bottom" id="Aka-YU-Kdc"/>
@@ -233,6 +233,7 @@
                                                                 <connections>
                                                                     <action selector="sizeEditingDidEnd:" destination="hRw-nI-kcm" eventType="editingDidEnd" id="DQM-U7-qj1"/>
                                                                     <action selector="sizeEditingDidEndOnExit:" destination="hRw-nI-kcm" eventType="editingDidEndOnExit" id="aFN-Dc-Hwv"/>
+                                                                    <action selector="sizeTouchDown:" destination="hRw-nI-kcm" eventType="touchDown" id="DQL-ZW-92u"/>
                                                                     <outlet property="delegate" destination="hRw-nI-kcm" id="FoR-UJ-FBC"/>
                                                                 </connections>
                                                             </textField>
@@ -244,6 +245,7 @@
                                                                 </constraints>
                                                                 <connections>
                                                                     <action selector="sizeStep:" destination="hRw-nI-kcm" eventType="touchUpInside" id="YT5-nz-YZS"/>
+                                                                    <action selector="sizeStepperTouchDown:" destination="hRw-nI-kcm" eventType="touchDown" id="iot-mX-BT6"/>
                                                                 </connections>
                                                             </stepper>
                                                         </subviews>
@@ -273,6 +275,7 @@
                                                                 <connections>
                                                                     <action selector="refreshRateEditingDidEnd:" destination="hRw-nI-kcm" eventType="editingDidEnd" id="gfU-v1-97z"/>
                                                                     <action selector="refreshRateEditingDidEndOnExit:" destination="hRw-nI-kcm" eventType="editingDidEndOnExit" id="CZE-QG-nil"/>
+                                                                    <action selector="refreshRateTouchDown:" destination="hRw-nI-kcm" eventType="touchDown" id="0Td-Vx-GSI"/>
                                                                     <outlet property="delegate" destination="hRw-nI-kcm" id="fOp-KY-Ch3"/>
                                                                 </connections>
                                                             </textField>
@@ -284,6 +287,7 @@
                                                                 </constraints>
                                                                 <connections>
                                                                     <action selector="refreshRateSlideMove:" destination="hRw-nI-kcm" eventType="touchUpInside" id="A5m-Gu-pG3"/>
+                                                                    <action selector="refreshRateSliderTouchDown:" destination="hRw-nI-kcm" eventType="touchDown" id="b5G-1G-eay"/>
                                                                 </connections>
                                                             </slider>
                                                         </subviews>
@@ -419,7 +423,7 @@
         <!--StatisticsViewController-->
         <scene sceneID="jUe-KL-GSe">
             <objects>
-                <viewController id="Zel-if-sYf" userLabel="StatisticsViewController" customClass="StatisticsViewController" customModule="FinalProject" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="myStatisticsViewController" id="Zel-if-sYf" userLabel="StatisticsViewController" customClass="StatisticsViewController" customModule="FinalProject" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FCQ-Xt-Fww"/>
                         <viewControllerLayoutGuide type="bottom" id="TWB-hn-EgG"/>

@@ -66,6 +66,18 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
+         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
+         
+         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
+         
+         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
+         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+        if !SimulationViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Simulation tab once before you can load a configuration.") {}
+            return
+        }
+        
         if isNewTableViewRow {
             let nextSize = engine.rows
             index = nil
@@ -117,12 +129,8 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 let jsonContents = nextItem["contents"] as! [[Int]]
                 nextSize = 1
                 for intPair in jsonContents {
-                    if intPair[0] > nextSize {
-                        nextSize = intPair[0]
-                    }
-                    if intPair[1] > nextSize {
-                        nextSize = intPair[1]
-                    }
+                    if intPair[0] > nextSize { nextSize = intPair[0] }
+                    if intPair[1] > nextSize { nextSize = intPair[1] }
                 }
                 nextSize = (nextSize + 1) * 2
                 nextIntPairsDict["alive"] = jsonContents
@@ -137,6 +145,17 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     @IBAction func addRow(_ sender: UIBarButtonItem) {
+        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
+         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
+         
+         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
+         
+         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
+         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+        if !SimulationViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Simulation tab once before you can load a new grid.") {}
+            return
+        }
         isNewTableViewRow = true
         self.performSegue(withIdentifier: "gridEditor", sender: nil)
     }
@@ -205,6 +224,19 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
+    @IBAction func sizeTouchDown(_ sender: UITextField) {
+        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
+         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
+         
+         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
+         
+         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
+         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+        if !SimulationViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Simulation tab once before you can change size.") {}
+            return
+        }
+    }
     @IBAction func sizeEditingDidEnd(_ sender: UITextField) {
         guard let text = sender.text else { return }
         guard let val = Int(text) else {
@@ -226,6 +258,20 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     @IBAction func sizeEditingDidEndOnExit(_ sender: UITextField) {
     }
     
+    @IBAction func sizeStepperTouchDown(_ sender: UIStepper) {
+        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
+         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
+         
+         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
+         
+         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
+         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+        if !SimulationViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Simulation tab once before you can change size.") {}
+            return
+        }
+    }
+    
     @IBAction func sizeStep(_ sender: UIStepper) {
         let val = Int(sizeStepper.value)
         updateGridSize(size: val)
@@ -239,6 +285,34 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             engine.refreshRate = 0.0
             engine.setGrid(rows: size, cols: size)
             sizeTextField.text = "\(size)"
+        }
+    }
+    
+    @IBAction func refreshRateSliderTouchDown(_ sender: UISlider) {
+        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
+         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
+         
+         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
+         
+         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
+         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+        if !SimulationViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Simulation tab once before you can change speed.") {}
+            return
+        }
+    }
+    
+    @IBAction func refreshRateTouchDown(_ sender: UITextField) {
+        /* The following code overcomes item 1 on my Discussion post, "Problems if Tabs Not Clicked":
+         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
+         
+         1) Actions taking place in InstrumentationVC and GridEditorVC before SimulationVC has been clicked for the first time (so that its viewDidLoad method can execute)
+         
+         Insofar as a more elegant or idiomatic solution to that problem exists, it is useless to me at the moment
+         for the sole reason that I don't actually have it (or, if the solution was addressed in a lecture or section, I don't recall it) */
+        if !SimulationViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Simulation tab once before you can change speed.") {}
+            return
         }
     }
     
