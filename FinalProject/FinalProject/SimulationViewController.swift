@@ -11,50 +11,18 @@
 import UIKit
 
 class SimulationViewController: UIViewController, GridViewDataSource {
-    var cycleOccurred: Bool = false
-    
+    static var tabWasClicked: Bool = false
     @IBOutlet weak var gridView: GridView!
     @IBOutlet weak var refreshOnOffSwitch: UISwitch!
-    
-    @IBAction func refreshOnOff(_ sender: UISwitch) {
-        /* The following code overcomes item 2 on my Discussion post, "Problems if Tabs Not Clicked":
-         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
-         
-         2) Actions taking place in SimulationVC before StatisticsVC has been clicked for the time (so that its viewDidLoad method can execute)
-         
-         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
-         */
-        if !StatisticsViewController.tabWasClicked {
-            showErrorAlert(withMessage: "You must click Statistics tab once before you can step.") {
-                self.refreshOnOffSwitch.isOn = false
-            }
-            return
-        }
-        // end of tab click validation
-        
-        if self.cycleOccurred {
-            showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
-                + "or manually touch the grid before you can step.") {
-                self.engine.refreshRate = 0.0
-                self.refreshOnOffSwitch.isOn = false
-            }
-            return
-        }
-        if sender.isOn {
-            speedSwitchTurnedOnNotify()
-        } else {
-            self.engine.refreshRate = 0.0
-        }
-    }
-    
-    var engine: StandardEngine!
-    static var tabWasClicked: Bool = false
+    private var cycleOccurred: Bool = false
+    private var configuration: [String:[[Int]]]?
+    private var engine: StandardEngine!
     
     public subscript (row: Int, col: Int) -> CellState {
         get { return engine.grid[row,col] }
         set { engine.grid[row,col] = newValue }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         engine = StandardEngine.engine
@@ -66,30 +34,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         let nc = NotificationCenter.default
         
         nc.addObserver(
-            forName: Notification.Name(rawValue: "EngineGridChanged"),
-            object: nil,
-            queue: nil) { (n) in
-                self.gridView.setNeedsDisplay()
-        }
-        
-        nc.addObserver(
-            forName: Notification.Name(rawValue: "GoLCycled"),
-            object: nil,
-            queue: nil) { (n) in
-                self.cycleOccurred = true
-                self.showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
-                    + "or manually touch the grid before you can step.") {}
-        }
-        
-        nc.addObserver(
             forName: Notification.Name(rawValue: "EngineGridReceivedManualTouch"),
-            object: nil,
-            queue: nil) { (n) in
-                self.cycleOccurred = false
-        }
-        
-        nc.addObserver(
-            forName: Notification.Name(rawValue: "EngineInitializedOrLoadedOrSteppedGrid"),
             object: nil,
             queue: nil) { (n) in
                 self.cycleOccurred = false
@@ -104,30 +49,34 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         }
         
         nc.addObserver(
+            forName: Notification.Name(rawValue: "EngineGridChanged"),
+            object: nil,
+            queue: nil) { (n) in
+                self.gridView.setNeedsDisplay()
+        }
+        
+        nc.addObserver(
+            forName: Notification.Name(rawValue: "EngineGridInitializedOrLoadedOrStepped"),
+            object: nil,
+            queue: nil) { (n) in
+                self.cycleOccurred = false
+        }
+        
+        nc.addObserver(
             forName: Notification.Name(rawValue: "GoLEnded"),
             object: nil,
             queue: nil) { (n) in
                 self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false
         }
-    }
-    
-    @IBAction func next(_ sender: Any) {
-        if !StatisticsViewController.tabWasClicked {
-            showErrorAlert(withMessage: "You must click Statistics tab once before you can step.") {}
-            return
-        }
         
-        if self.cycleOccurred {
-            showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
-                + "or manually touch the grid before you can step.") {
-                self.engine.refreshRate = 0.0
-                self.refreshOnOffSwitch.isOn = false
-            }
-            return
-        }
-        if self.gridView.gridViewDataSource != nil {
-            _ = self.engine.step()
+        nc.addObserver(
+            forName: Notification.Name(rawValue: "GoLCycled"),
+            object: nil,
+            queue: nil) { (n) in
+                self.cycleOccurred = true
+                self.showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
+                    + "or manually touch the grid before you can step.") {}
         }
     }
     
@@ -139,13 +88,55 @@ class SimulationViewController: UIViewController, GridViewDataSource {
     }
     
     @IBAction func save(_ sender: Any) {
-        engine.grid.setConfiguration()
+        self.engine.grid.setConfiguration()
         let configuration = engine.grid.configuration
         let size = engine.grid.size.rows
         let defaults = UserDefaults.standard
         defaults.set(configuration, forKey: "configuration")
         defaults.set(size, forKey: "size")
         simulationStateSavedNotify()
+    }
+    
+    @IBAction func next(_ sender: Any) {
+        if !StatisticsViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Statistics tab once before you can step.") {}
+            return
+        }
+        
+        if self.cycleOccurred {
+            showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
+                + "or manually touch the grid before you can step.") {
+                    self.engine.refreshRate = 0.0
+                    self.refreshOnOffSwitch.isOn = false
+            }
+            return
+        }
+        if self.gridView.gridViewDataSource != nil {
+            _ = self.engine.step()
+        }
+    }
+    
+    @IBAction func refreshOnOff(_ sender: UISwitch) {
+        if !StatisticsViewController.tabWasClicked {
+            showErrorAlert(withMessage: "You must click Statistics tab once before you can step.") {
+                self.refreshOnOffSwitch.isOn = false
+            }
+            return
+        }
+        
+        if self.cycleOccurred {
+            showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
+                + "or manually touch the grid before you can step.") {
+                    self.engine.refreshRate = 0.0
+                    self.refreshOnOffSwitch.isOn = false
+            }
+            return
+        }
+        if sender.isOn {
+            speedSwitchTurnedOnNotify()
+        } else {
+            self.engine.refreshRate = 0.0
+        }
     }
     
     private let nc = NotificationCenter.default
@@ -164,7 +155,6 @@ class SimulationViewController: UIViewController, GridViewDataSource {
                     userInfo: ["none" : "none"]))
     }
     
-    //MARK: AlertController Handling
     private func showErrorAlert(withMessage msg:String, action: (() -> Void)? ) {
         let alert = UIAlertController(
             title: "Alert",

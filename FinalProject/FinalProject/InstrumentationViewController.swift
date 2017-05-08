@@ -375,7 +375,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                     userInfo: ["none" : "none"]))
     }
     
-    //MARK: AlertController Handling
     func showErrorAlert(withMessage msg:String, action: (() -> Void)? ) {
         let alert = UIAlertController(
             title: "Alert",

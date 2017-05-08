@@ -451,7 +451,7 @@ class StandardEngine: EngineProtocol {
     
     private func replacedGridNotify() {
         nc.post(Notification(
-                    name: Notification.Name(rawValue: "EngineInitializedOrLoadedOrSteppedGrid"),
+                    name: Notification.Name(rawValue: "EngineGridInitializedOrLoadedOrStepped"),
                     object: nil,
                     userInfo: ["none" : "none"]))
     }
@@ -463,16 +463,16 @@ class StandardEngine: EngineProtocol {
                     userInfo: ["statistics" : self.statistics]))
     }
     
+    private func GoLEndedNotify() {
+        nc.post(Notification(
+            name: Notification.Name(rawValue: "GoLEnded"),
+            object: nil,
+            userInfo: ["none" : "none"]))
+    }
+    
     private func GoLCycledNotify() {
         nc.post(Notification(
                     name: Notification.Name(rawValue: "GoLCycled"),
-                    object: nil,
-                    userInfo: ["none" : "none"]))
-    }
-    
-    private func GoLEndedNotify() {
-        nc.post(Notification(
-                    name: Notification.Name(rawValue: "GoLEnded"),
                     object: nil,
                     userInfo: ["none" : "none"]))
     }

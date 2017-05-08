@@ -13,7 +13,6 @@ import UIKit
 class GridEditorViewController: UIViewController, GridViewDataSource {
     @IBOutlet weak var gridNameTextField: UITextField!
     @IBOutlet weak var gridView: GridView!
-    
     var grid: GridProtocol?
     var gridNameValue: String?
     var saveClosure: ((String) -> Void)?
@@ -71,7 +70,6 @@ class GridEditorViewController: UIViewController, GridViewDataSource {
         }
     }
     
-    //MARK: AlertController Handling
     private func showErrorAlert(withMessage msg:String, action: (() -> Void)? ) {
         let alert = UIAlertController(
             title: "Alert",
