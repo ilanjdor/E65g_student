@@ -193,7 +193,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         refreshRateSlider.isEnabled = true
         refreshRateTextField.text = "\(refreshRateSlider.value)"
         refreshRateTextField.isEnabled = true
-        engine.prevRefreshRate = Double(1 / refreshRateSlider.value)
         
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "EngineUpdate")
@@ -297,9 +296,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     private func updateGridSize(size: Int) {
         if engine.rows != size {
-            //if engine.refreshRate > 0.0 {
-                engine.prevRefreshRate = engine.refreshRate
-            //}
             engine.refreshRate = 0.0
             engine.setGrid(rows: size, cols: size)
             sizeTextField.text = "\(size)"
@@ -359,8 +355,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             return
         }
         refreshRateSlider.value = Float(val)
-        //engine.prevRefreshRate = 1 / val
-        //engine.refreshRate = 1 / val
         self.speedAdjustNotify()
     }
     
@@ -369,8 +363,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     @IBAction func refreshRateSlideMove(_ sender: UISlider) {
         refreshRateTextField.text = "\(refreshRateSlider.value)"
-        //engine.prevRefreshRate = Double(1 / refreshRateSlider.value)
-        //engine.refreshRate = Double(1 / refreshRateSlider.value)
         self.speedAdjustNotify()
     }
     

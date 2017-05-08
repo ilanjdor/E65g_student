@@ -35,17 +35,14 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         if self.cycleOccurred {
             showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
                 + "or manually touch the grid before you can step.") {
-                self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false
             }
             return
         }
         if sender.isOn {
-            //engine.refreshRate = engine.prevRefreshRate
             self.speedSwitchTurnedOnNotify()
         } else {
-            self.engine.prevRefreshRate = engine.refreshRate
             self.engine.refreshRate = 0.0
         }
     }
@@ -81,9 +78,6 @@ class SimulationViewController: UIViewController, GridViewDataSource {
             object: nil,
             queue: nil) { (n) in
                 self.cycleOccurred = true
-                /*self.engine.prevRefreshRate = self.engine.refreshRate
-                self.engine.refreshRate = 0.0
-                self.refreshOnOffSwitch.isOn = false*/
                 self.showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
                     + "or manually touch the grid before you can step.") {}
         }
@@ -101,16 +95,12 @@ class SimulationViewController: UIViewController, GridViewDataSource {
             object: nil,
             queue: nil) { (n) in
                 self.cycleOccurred = false
-                /*self.engine.prevRefreshRate = self.engine.refreshRate
-                self.engine.refreshRate = 0.0
-                self.refreshOnOffSwitch.isOn = false*/
         }
         
         nc.addObserver(
             forName: Notification.Name(rawValue: "SpeedWasAdjusted"),
             object: nil,
             queue: nil) { (n) in
-                self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false
         }
@@ -119,7 +109,6 @@ class SimulationViewController: UIViewController, GridViewDataSource {
             forName: Notification.Name(rawValue: "GoLEnded"),
             object: nil,
             queue: nil) { (n) in
-                self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false
         }
@@ -142,7 +131,6 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         if self.cycleOccurred {
             showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
                 + "or manually touch the grid before you can step.") {
-                self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false
             }
@@ -154,7 +142,6 @@ class SimulationViewController: UIViewController, GridViewDataSource {
     }
     
     @IBAction func reset(_ sender: Any) {
-        self.engine.prevRefreshRate = self.engine.refreshRate
         self.engine.refreshRate = 0.0
         self.refreshOnOffSwitch.isOn = false
         engine.setGrid(rows: engine.rows, cols: engine.cols)
