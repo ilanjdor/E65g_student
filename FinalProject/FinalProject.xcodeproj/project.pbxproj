@@ -12,7 +12,6 @@
 		723307FB1EB18EBC0093802F /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723307FA1EB18EBC0093802F /* Grid.swift */; };
 		723307FD1EB18EC30093802F /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723307FC1EB18EC30093802F /* GridView.swift */; };
 		723307FF1EB194090093802F /* GridEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723307FE1EB194090093802F /* GridEditorViewController.swift */; };
-		7263989C1EBD77F300BC653C /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7263989B1EBD77F300BC653C /* TabBarController.swift */; };
 		72A9DAE01EB23A6700B97C81 /* InstrumentationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A9DADF1EB23A6700B97C81 /* InstrumentationViewController.swift */; };
 		72CDF0071EB26DB900BE1E7B /* Fetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CDF0061EB26DB900BE1E7B /* Fetcher.swift */; };
 		FBAD2E271E2BE417008207C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAD2E261E2BE417008207C0 /* AppDelegate.swift */; };
@@ -27,7 +26,6 @@
 		723307FA1EB18EBC0093802F /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
 		723307FC1EB18EC30093802F /* GridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		723307FE1EB194090093802F /* GridEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GridEditorViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		7263989B1EBD77F300BC653C /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		72A9DADF1EB23A6700B97C81 /* InstrumentationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = InstrumentationViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		72CDF0061EB26DB900BE1E7B /* Fetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fetcher.swift; sourceTree = "<group>"; };
 		FBAD2E231E2BE417008207C0 /* FinalProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FinalProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,7 +71,6 @@
 				FBAD2E261E2BE417008207C0 /* AppDelegate.swift */,
 				72A9DADF1EB23A6700B97C81 /* InstrumentationViewController.swift */,
 				723307F61EB18EA90093802F /* SimulationViewController.swift */,
-				7263989B1EBD77F300BC653C /* TabBarController.swift */,
 				723307F81EB18EAF0093802F /* StatisticsViewController.swift */,
 				FBAD2E2C1E2BE417008207C0 /* Main.storyboard */,
 				723307FE1EB194090093802F /* GridEditorViewController.swift */,
@@ -161,7 +158,6 @@
 				723307F71EB18EA90093802F /* SimulationViewController.swift in Sources */,
 				72CDF0071EB26DB900BE1E7B /* Fetcher.swift in Sources */,
 				72A9DAE01EB23A6700B97C81 /* InstrumentationViewController.swift in Sources */,
-				7263989C1EBD77F300BC653C /* TabBarController.swift in Sources */,
 				FBAD2E271E2BE417008207C0 /* AppDelegate.swift in Sources */,
 				723307FB1EB18EBC0093802F /* Grid.swift in Sources */,
 				723307FD1EB18EC30093802F /* GridView.swift in Sources */,
