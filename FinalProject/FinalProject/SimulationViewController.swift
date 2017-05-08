@@ -33,7 +33,8 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         // end of tab click validation
         
         if self.cycleOccurred {
-            showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid or load a new grid before you can step.") {
+            showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
+                + "or manually touch the grid before you can step.") {
                 self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false
@@ -83,7 +84,8 @@ class SimulationViewController: UIViewController, GridViewDataSource {
                 /*self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false*/
-                self.showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid or load a new grid before you can step.") {}
+                self.showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
+                    + "or manually touch the grid before you can step.") {}
         }
         
         let name3 = Notification.Name(rawValue: "EngineGridReceivedManualTouch")
@@ -138,7 +140,8 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         // end of tab click validation
         
         if self.cycleOccurred {
-            showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid or load a new grid before you can step.") {
+            showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
+                + "or manually touch the grid before you can step.") {
                 self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false

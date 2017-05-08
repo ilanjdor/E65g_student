@@ -386,7 +386,7 @@ class StandardEngine: EngineProtocol {
             self.isNewlyLoadedGrid = true
             self.statistics = Grid.getZeroedOutStateCounts()
             self.setGridNotify()
-            self.GoLEndNotify()
+            //self.GoLEndNotify()
             self.receivedManualTouch = false
         }
 
