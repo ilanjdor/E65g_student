@@ -113,18 +113,10 @@ class SimulationViewController: UIViewController, GridViewDataSource {
     }
     
     @IBAction func next(_ sender: Any) {
-        /* The following code overcomes item 2 on my Discussion post, "Problems if Tabs Not Clicked":
-         What is the preferred way of overcoming the bugs that, at least in my own app, occur as a result of:
-         
-         2) Actions taking place in SimulationVC before StatisticsVC has been clicked for the time (so that its viewDidLoad method can execute)
-         
-         If I knew of a more elegant or idiomatic solution to this issue, I would have used it
-        */
         if !StatisticsViewController.tabWasClicked {
             showErrorAlert(withMessage: "You must click Statistics tab once before you can step.") {}
             return
         }
-        // end of tab click validation
         
         if self.cycleOccurred {
             showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid, load a new grid "
@@ -156,16 +148,16 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         simulationStateSavedNotify()
     }
     
-    let nc = NotificationCenter.default
+    private let nc = NotificationCenter.default
 
-    func simulationStateSavedNotify() {
+    private func simulationStateSavedNotify() {
         nc.post(Notification(
                     name: Notification.Name(rawValue: "SimulationStateSaved"),
                     object: nil,
                     userInfo: ["engine" : engine]))
     }
     
-    func speedSwitchTurnedOnNotify() {
+    private func speedSwitchTurnedOnNotify() {
         nc.post(Notification(
                     name: Notification.Name(rawValue: "SpeedSwitchTurnedOn"),
                     object: nil,
@@ -173,7 +165,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
     }
     
     //MARK: AlertController Handling
-    func showErrorAlert(withMessage msg:String, action: (() -> Void)? ) {
+    private func showErrorAlert(withMessage msg:String, action: (() -> Void)? ) {
         let alert = UIAlertController(
             title: "Alert",
             message: msg,

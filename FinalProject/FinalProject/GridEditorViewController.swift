@@ -16,10 +16,10 @@ class GridEditorViewController: UIViewController, GridViewDataSource {
     
     var grid: GridProtocol?
     var gridNameValue: String?
-    var configuration: [String:[[Int]]]?
     var saveClosure: ((String) -> Void)?
-    var tableViewIndex: Int?
-    var engine: StandardEngine!
+    private var tableViewIndex: Int?
+    private var configuration: [String:[[Int]]]?
+    private var engine: StandardEngine!
     
     public subscript (row: Int, col: Int) -> CellState {
         get { return self.grid![row,col] }

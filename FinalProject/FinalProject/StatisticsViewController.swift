@@ -17,7 +17,7 @@ class StatisticsViewController: UIViewController {
     @IBOutlet weak var diedCountTextField: UITextField!
     @IBOutlet weak var emptyCountTextField: UITextField!
 
-    var statistics: [String:Int] = [:]
+    private var statistics: [String:Int] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
