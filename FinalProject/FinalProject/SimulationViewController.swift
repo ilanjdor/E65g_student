@@ -41,10 +41,11 @@ class SimulationViewController: UIViewController, GridViewDataSource {
             return
         }
         if sender.isOn {
-            engine.refreshRate = engine.prevRefreshRate
+            //engine.refreshRate = engine.prevRefreshRate
+            self.speedSwitchTurnedOnNotify()
         } else {
-            engine.prevRefreshRate = engine.refreshRate
-            engine.refreshRate = 0.0
+            self.engine.prevRefreshRate = engine.refreshRate
+            self.engine.refreshRate = 0.0
         }
     }
     
@@ -79,9 +80,9 @@ class SimulationViewController: UIViewController, GridViewDataSource {
             object: nil,
             queue: nil) { (n) in
                 self.cycleOccurred = true
-                self.engine.prevRefreshRate = self.engine.refreshRate
+                /*self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
-                self.refreshOnOffSwitch.isOn = false
+                self.refreshOnOffSwitch.isOn = false*/
                 self.showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid or load a new grid before you can step.") {}
         }
         
@@ -98,13 +99,22 @@ class SimulationViewController: UIViewController, GridViewDataSource {
             object: nil,
             queue: nil) { (n) in
                 self.cycleOccurred = false
+                /*self.engine.prevRefreshRate = self.engine.refreshRate
+                self.engine.refreshRate = 0.0
+                self.refreshOnOffSwitch.isOn = false*/
+        }
+        
+        nc.addObserver(
+            forName: Notification.Name(rawValue: "SpeedWasAdjusted"),
+            object: nil,
+            queue: nil) { (n) in
                 self.engine.prevRefreshRate = self.engine.refreshRate
                 self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false
         }
         
         nc.addObserver(
-            forName: Notification.Name(rawValue: "SpeedWasAdjusted"),
+            forName: Notification.Name(rawValue: "GoLEnded"),
             object: nil,
             queue: nil) { (n) in
                 self.engine.prevRefreshRate = self.engine.refreshRate
@@ -164,6 +174,15 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         let n = Notification(name: name,
                              object: nil,
                              userInfo: ["engine" : engine])
+        nc.post(n)
+    }
+    
+    func speedSwitchTurnedOnNotify() {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "SpeedSwitchTurnedOn")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["none" : "none"])
         nc.post(n)
     }
     

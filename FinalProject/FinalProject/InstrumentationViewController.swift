@@ -231,6 +231,13 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 // User must select the desired table view row to retrieve the updated grid
                 _ = self.navigationController?.popViewController(animated: true)
         }
+        
+        nc.addObserver(
+            forName: Notification.Name(rawValue: "SpeedSwitchTurnedOn"),
+            object: nil,
+            queue: nil) { (n) in
+                self.engine.refreshRate = Double(1 / self.refreshRateSlider.value)
+        }
     }
     
     @IBAction func sizeTouchDown(_ sender: UITextField) {
@@ -375,8 +382,6 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                              userInfo: ["none" : "none"])
         nc.post(n)
     }
-    
-    
     
     //MARK: AlertController Handling
     func showErrorAlert(withMessage msg:String, action: (() -> Void)? ) {

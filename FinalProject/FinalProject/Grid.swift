@@ -386,6 +386,7 @@ class StandardEngine: EngineProtocol {
             self.isNewlyLoadedGrid = true
             self.statistics = Grid.getZeroedOutStateCounts()
             self.setGridNotify()
+            self.GoLEndNotify()
             self.receivedManualTouch = false
         }
 
@@ -411,6 +412,7 @@ class StandardEngine: EngineProtocol {
                 self.statistics = Grid.getZeroedOutStateCounts()
             }
             self.statisticsNotify()
+            self.GoLEndNotify()
             return nil
         }
     }
@@ -436,6 +438,7 @@ class StandardEngine: EngineProtocol {
         StandardEngine.iterator = self.grid.makeIterator()
         self.statistics = Grid.getZeroedOutStateCounts()
         self.setGridNotify()
+        self.GoLEndNotify()
         self.statisticsNotify()
     }
     
@@ -470,6 +473,15 @@ class StandardEngine: EngineProtocol {
     func cycleNotify() {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "CycleOccurred")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["none" : "none"])
+        nc.post(n)
+    }
+    
+    func GoLEndNotify() {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "GoLEnded")
         let n = Notification(name: name,
                              object: nil,
                              userInfo: ["none" : "none"])
