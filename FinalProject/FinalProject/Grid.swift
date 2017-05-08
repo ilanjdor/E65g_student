@@ -433,7 +433,7 @@ class StandardEngine: EngineProtocol {
     
     func notify() {
         nc.post(Notification(
-                    name: Notification.Name(rawValue: "EngineUpdate"),
+                    name: Notification.Name(rawValue: "EngineGridChanged"),
                     object: nil,
                     //userInfo: ["engine" : self]) /* now, engine is static */
                     userInfo: ["none" : "none"]))
@@ -441,7 +441,7 @@ class StandardEngine: EngineProtocol {
     
     func setGridNotify() {
         nc.post(Notification(
-                    name: Notification.Name(rawValue: "EngineSetGrid"),
+                    name: Notification.Name(rawValue: "EngineInitializedOrLoadedOrSteppedGrid"),
                     object: nil,
                     userInfo: ["none" : "none"]))
     }

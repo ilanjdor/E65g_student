@@ -64,7 +64,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         self.gridView.setNeedsDisplay()
         
         let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EngineUpdate")
+        let name = Notification.Name(rawValue: "EngineGridChanged")
         nc.addObserver(
             forName: name,
             object: nil,
@@ -91,7 +91,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         }
         
         nc.addObserver(
-            forName: Notification.Name(rawValue: "EngineSetGrid"),
+            forName: Notification.Name(rawValue: "EngineInitializedOrLoadedOrSteppedGrid"),
             object: nil,
             queue: nil) { (n) in
                 self.cycleOccurred = false

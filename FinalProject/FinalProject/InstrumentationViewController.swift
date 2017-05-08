@@ -195,7 +195,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         refreshRateTextField.isEnabled = true
         
         let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EngineUpdate")
+        let name = Notification.Name(rawValue: "EngineGridChanged")
         nc.addObserver(
             forName: name,
             object: nil,
