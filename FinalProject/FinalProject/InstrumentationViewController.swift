@@ -15,14 +15,13 @@ import UIKit
 
 let finalProjectURL = "https://dl.dropboxusercontent.com/u/7544475/S65g.json"
 
-var dataKeys: [String] = []
-var dataGrids: [GridProtocol] = []
-var gridEditorVC: GridEditorViewController?
-var tableViewHeader: String = "Configurations"
 var isNewTableViewRow: Bool = false
-var newRowName: String = "New GridEditor Grid"
-
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+    var dataKeys: [String] = []
+    var dataGrids: [GridProtocol] = []
+    var gridEditorVC: GridEditorViewController?
+    var tableViewHeader: String = "Configurations"
+    var newRowName: String = "New GridEditor Grid"
     var jsonContents: String?
     var index: Int?
     var grid: GridProtocol?
@@ -106,12 +105,12 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             vc.grid = grid
             vc.saveClosure = { newValue in
                 if isNewTableViewRow {
-                    dataKeys.append(newValue)
-                    dataGrids.append(vc.grid!)
-                    self.index = dataKeys.count - 1
+                    self.dataKeys.append(newValue)
+                    self.dataGrids.append(vc.grid!)
+                    self.index = self.dataKeys.count - 1
                 } else {
-                    dataKeys[self.index!] = newValue
-                    dataGrids[self.index!] = vc.grid!
+                    self.dataKeys[self.index!] = newValue
+                    self.dataGrids[self.index!] = vc.grid!
                 }
                 self.tableView.reloadData()
                 isNewTableViewRow = false
@@ -137,7 +136,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 var nextSize: Int
                 let nextItem = item as! NSDictionary
                 let jsonTitle = nextItem["title"] as! String
-                dataKeys.append(jsonTitle)
+                self.dataKeys.append(jsonTitle)
                 let jsonContents = nextItem["contents"] as! [[Int]]
                 nextSize = 1
                 for intPair in jsonContents {
@@ -148,7 +147,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 nextIntPairsDict["alive"] = jsonContents
                 let nextCellInitializer = Grid.makeCellInitializer(intPairsDict: nextIntPairsDict)
                 let nextGrid = Grid(nextSize, nextSize, cellInitializer: nextCellInitializer) as GridProtocol
-                dataGrids.append(nextGrid)
+                self.dataGrids.append(nextGrid)
             }
             OperationQueue.main.addOperation {
                 self.tableView.reloadData()
@@ -220,11 +219,11 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
                 let engine = n.userInfo?["engine"] as! StandardEngine
                 self.grid = engine.grid
                 if isNewTableViewRow {
-                    dataKeys.append(self.gridNameValue)
-                    dataGrids.append(self.grid!)
+                    self.dataKeys.append(self.gridNameValue)
+                    self.dataGrids.append(self.grid!)
                 } else {
-                    dataKeys[self.index!] = self.gridNameValue
-                    dataGrids[self.index!] = self.grid!
+                    self.dataKeys[self.index!] = self.gridNameValue
+                    self.dataGrids[self.index!] = self.grid!
                 }
                 isNewTableViewRow = false
                 // User must select the desired table view row to retrieve the updated grid
@@ -289,9 +288,9 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
     
     private func updateGridSize(size: Int) {
         if engine.rows != size {
-            if engine.refreshRate > 0.0 {
+            //if engine.refreshRate > 0.0 {
                 engine.prevRefreshRate = engine.refreshRate
-            }
+            //}
             engine.refreshRate = 0.0
             engine.setGrid(rows: size, cols: size)
             sizeTextField.text = "\(size)"
@@ -362,6 +361,16 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         refreshRateTextField.text = "\(refreshRateSlider.value)"
         engine.prevRefreshRate = Double(1 / refreshRateSlider.value)
         engine.refreshRate = Double(1 / refreshRateSlider.value)
+    }
+    
+    func notify() {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "GridSizeChanged")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["none" : "none"])
+        // SEND GRID SIZE!!!
+        nc.post(n)
     }
     
     //MARK: AlertController Handling

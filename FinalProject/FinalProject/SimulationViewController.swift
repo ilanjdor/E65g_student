@@ -36,6 +36,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         if sender.isOn {
             engine.refreshRate = engine.prevRefreshRate
         } else {
+            engine.prevRefreshRate = engine.refreshRate
             engine.refreshRate = 0.0
         }
     }
@@ -52,6 +53,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
         super.viewDidLoad()
         engine = StandardEngine.engine
         gridView.gridViewDataSource = self
+        SimulationViewController.cycleOccurred = false
         refreshOnOffSwitch.isOn = false
         SimulationViewController.tabWasClicked = true
         self.gridView.setNeedsDisplay()
@@ -71,7 +73,18 @@ class SimulationViewController: UIViewController, GridViewDataSource {
             object: nil,
             queue: nil) { (n) in
                 SimulationViewController.cycleOccurred = true
+                self.engine.prevRefreshRate = self.engine.refreshRate
+                self.engine.refreshRate = 0.0
                 self.refreshOnOffSwitch.isOn = false
+                self.showErrorAlert(withMessage: "A cycle has occurred. You must reset the grid or load a new grid before you can step.") {}
+        }
+        
+        let name3 = Notification.Name(rawValue: "EngineGridReceivedManualTouch")
+        nc.addObserver(
+            forName: name3,
+            object: nil,
+            queue: nil) { (n) in
+                SimulationViewController.cycleOccurred = false
         }
     }
     
