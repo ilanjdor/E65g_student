@@ -368,8 +368,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
         let name = Notification.Name(rawValue: "GridSizeChanged")
         let n = Notification(name: name,
                              object: nil,
-                             userInfo: ["none" : "none"])
-        // SEND GRID SIZE!!!
+                             userInfo: ["refreshRate" : refreshRateSlider.value])
         nc.post(n)
     }
     

@@ -419,6 +419,15 @@ class StandardEngine: EngineProtocol {
         nc.post(n)
     }
     
+    func setGridNotify() {
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "EngineSetGrid")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["none" : "none"])
+        nc.post(n)
+    }
+    
     func statisticsNotify() {
         let nc = NotificationCenter.default
         let name = Notification.Name(rawValue: "StatisticsUpdate")

@@ -86,6 +86,39 @@ class SimulationViewController: UIViewController, GridViewDataSource {
             queue: nil) { (n) in
                 SimulationViewController.cycleOccurred = false
         }
+        
+        /*let name4 = Notification.Name(rawValue: "GridSizeChanged")
+        nc.addObserver(
+            forName: name4,
+            object: nil,
+            queue: nil) { (n) in
+                SimulationViewController.cycleOccurred = false
+                self.engine.prevRefreshRate = n.userInfo!["refreshRate"] as! Double
+                self.engine.refreshRate = 0.0
+                self.refreshOnOffSwitch.isOn = false
+        }*/
+        
+        /*let name5 = Notification.Name(rawValue: "GridEditorGridSaved")
+        nc.addObserver(
+            forName: name5,
+            object: nil,
+            queue: nil) { (n) in
+                SimulationViewController.cycleOccurred = false
+                self.engine.prevRefreshRate = self.engine.refreshRate
+                self.engine.refreshRate = 0.0
+                self.refreshOnOffSwitch.isOn = false
+        }*/
+        
+        let name6 = Notification.Name(rawValue: "EngineSetGrid")
+        nc.addObserver(
+            forName: name6,
+            object: nil,
+            queue: nil) { (n) in
+                SimulationViewController.cycleOccurred = false
+                self.engine.prevRefreshRate = self.engine.refreshRate
+                self.engine.refreshRate = 0.0
+                self.refreshOnOffSwitch.isOn = false
+        }
     }
     
     @IBAction func next(_ sender: Any) {
@@ -116,6 +149,9 @@ class SimulationViewController: UIViewController, GridViewDataSource {
     }
     
     @IBAction func reset(_ sender: Any) {
+        self.engine.prevRefreshRate = self.engine.refreshRate
+        self.engine.refreshRate = 0.0
+        self.refreshOnOffSwitch.isOn = false
         engine.setGrid(rows: engine.rows, cols: engine.cols)
         SimulationViewController.cycleOccurred = false
     }
