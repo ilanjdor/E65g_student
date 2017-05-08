@@ -254,7 +254,7 @@ class StandardEngine: EngineProtocol {
         didSet {
             self.rows = grid.size.rows
             self.cols = grid.size.cols
-            self.notify()
+            self.changedGridNotify()
         }
     }
     var isNewlyLoadedGrid: Bool = true
@@ -289,7 +289,7 @@ class StandardEngine: EngineProtocol {
         self.cols = cols
         StandardEngine.iterator = self.grid.makeIterator()
         self.statistics = Grid.getZeroedOutStateCounts()
-        self.setGridNotify()
+        self.replacedGridNotify()
         self.statisticsNotify()
         
         let nc = NotificationCenter.default
@@ -351,7 +351,7 @@ class StandardEngine: EngineProtocol {
             StandardEngine.iterator = self.grid.makeIterator()
             self.isNewlyLoadedGrid = true
             self.statistics = Grid.getZeroedOutStateCounts()
-            self.setGridNotify()
+            self.replacedGridNotify()
             self.receivedManualTouch = false
         }
 
@@ -379,7 +379,7 @@ class StandardEngine: EngineProtocol {
             // for the revisited state.
             if self.grid.living.count > 0 {
                 self.removeFromStatistics(grid: self.grid)
-                self.cycleNotify()
+                self.GoLCycledNotify()
             } /* else {
                 // The special case is the empty intial grid.
                 // The GoL, again, as I've implemented it, should
@@ -389,7 +389,7 @@ class StandardEngine: EngineProtocol {
                 // empty grid never accumulates statistics.
             } */
             self.statisticsNotify()
-            self.GoLEndNotify()
+            self.GoLEndedNotify()
             return nil
         }
     }
@@ -404,8 +404,8 @@ class StandardEngine: EngineProtocol {
         self.cols = grid.size.cols
         StandardEngine.iterator = self.grid.makeIterator()
         self.statistics = Grid.getZeroedOutStateCounts()
-        self.setGridNotify()
-        self.GoLEndNotify()
+        self.replacedGridNotify()
+        self.GoLEndedNotify()
         self.statisticsNotify()
     }
     
@@ -424,14 +424,14 @@ class StandardEngine: EngineProtocol {
         self.cols = cols
         StandardEngine.iterator = self.grid.makeIterator()
         self.statistics = Grid.getZeroedOutStateCounts()
-        self.setGridNotify()
-        self.GoLEndNotify()
+        self.replacedGridNotify()
+        self.GoLEndedNotify()
         self.statisticsNotify()
     }
     
     let nc = NotificationCenter.default
     
-    func notify() {
+    func changedGridNotify() {
         nc.post(Notification(
                     name: Notification.Name(rawValue: "EngineGridChanged"),
                     object: nil,
@@ -439,7 +439,7 @@ class StandardEngine: EngineProtocol {
                     userInfo: ["none" : "none"]))
     }
     
-    func setGridNotify() {
+    func replacedGridNotify() {
         nc.post(Notification(
                     name: Notification.Name(rawValue: "EngineInitializedOrLoadedOrSteppedGrid"),
                     object: nil,
@@ -453,14 +453,14 @@ class StandardEngine: EngineProtocol {
                     userInfo: ["statistics" : self.statistics]))
     }
     
-    func cycleNotify() {
+    func GoLCycledNotify() {
         nc.post(Notification(
-                    name: Notification.Name(rawValue: "CycleOccurred"),
+                    name: Notification.Name(rawValue: "GoLCycled"),
                     object: nil,
                     userInfo: ["none" : "none"]))
     }
     
-    func GoLEndNotify() {
+    func GoLEndedNotify() {
         nc.post(Notification(
                     name: Notification.Name(rawValue: "GoLEnded"),
                     object: nil,

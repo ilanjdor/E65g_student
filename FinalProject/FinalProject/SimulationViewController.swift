@@ -72,7 +72,7 @@ class SimulationViewController: UIViewController, GridViewDataSource {
                 self.gridView.setNeedsDisplay()
         }
         
-        let name2 = Notification.Name(rawValue: "CycleOccurred")
+        let name2 = Notification.Name(rawValue: "GoLCycled")
         nc.addObserver(
             forName: name2,
             object: nil,
