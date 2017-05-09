@@ -7,14 +7,18 @@
 //  All modules created and/or modified by Van Simmons and/or Ilan Dor
 //  Copyright © 2017 Harvard Division of Continuing Education. All rights reserved.
 //
-//  Tab icons from: https://icons8.com
-//  App icon from http://www.directindustry.com/prod/teledyne-dalsa/product-25439-1174957.html
-//
+/*  Tab icons from: http://www.flaticon.com/packs/ios7-set-lined-1
+
+  <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+  App icon from http://www.directindustry.com/prod/teledyne-dalsa/product-25439-1174957.html
+ */
 
 import UIKit
 
 let finalProjectURL = "https://dl.dropboxusercontent.com/u/7544475/S65g.json"
-
+// Might have been able to replace "isNewTableViewRow" with a notification
+// but I'm out of time. It's due in 22 minutes.
 var isNewTableViewRow: Bool = false
 class InstrumentationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     @IBOutlet weak var sizeTextField: UITextField!
@@ -235,6 +239,7 @@ class InstrumentationViewController: UIViewController, UITableViewDelegate, UITa
             return
         }
     }
+    
     @IBAction func sizeEditingDidEnd(_ sender: UITextField) {
         guard let text = sender.text else { return }
         guard let val = Int(text) else {

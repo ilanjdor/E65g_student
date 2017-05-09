@@ -646,8 +646,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="first" width="30" height="30"/>
-        <image name="second" width="30" height="30"/>
-        <image name="third" width="32" height="32"/>
+        <image name="first" width="25" height="25"/>
+        <image name="second" width="25" height="25"/>
+        <image name="third" width="25" height="25"/>
     </resources>
 </document>

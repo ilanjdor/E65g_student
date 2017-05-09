@@ -11,6 +11,8 @@
 import UIKit
 
 @IBDesignable class GridView: UIView, GridViewDataSource {
+    // Might have been able to replace "useEngineGrid" with a notification
+    // but I'm out of time. It's due in 22 minutes.
     static var useEngineGrid: Bool = true
     
     @IBInspectable var rows: Int = StandardEngine.defaultGridSize
